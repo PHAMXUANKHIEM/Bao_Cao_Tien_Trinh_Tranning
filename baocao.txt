@@ -1,4 +1,22 @@
+I. Cài đặt linux 
 1.Cai dat linux tren moi truong ao hoa VMware Workstation
 -- Tai ban ubuntu 24.04.3 server, ubuntu 24.04.3 desktop
 -- Vao phan mem VMware Workstation chon File - New Virtual Machine - chon file iso ubuntu - chon 30G disk, 2GB ram
--- Cai dat phan 
+-- Chon Next lien tuc de cai dat 
+2. Cai dat song song window bang UNetbootin
+-- Truy cap trang https://unetbootin.github.io/ --> chon he dieu hanh minh dang dung va tai ve
+-- Sau khi tải xuống, hãy mở thư mục Tải xuống và chạy file cài đặt
+-- Chọn phiên bản mà muốn cài đặt có thể từ Unetbootin hoặc từ file iso
+-- Chọn phân vùng ổ cứng và OK để cài đặt
+II. Linux
+1. Nắm được các kiến thức cơ bản trong Linux
+-- Các loại shell trong linux: 
+- sh: bản tiêu chuẩn chạy script trên hệ thống Unix
+- bash: nâng cao của sh có nhiều tính năng hơn và chạy chủ yếu trên Linux
+- csh: tương tự như sh và có nhiều tính năng hơn 
+- ksh : một trong những shell phổ biến nhất trên các hệ thống UNIX hỗ trợ cho biến mảng (array variables) cú pháp lặp for cải tiến 
+-- Cách thay đổi thư mục làm việc dùng lệnh cd, cách xem thư mục đang làm việc dùng lệnh pwd
+-- Xem lịch sử các lệnh đã gõ dùng lệnh history, cách để thực hiện 1 lệnh đã làm trong quá khứ dùng nút lên xuống để tìm kiếm
+-- Biến môi trường là các giá trị hệ điều hành lưu trữ để các chương trình, shell và ứng dụng sử dụng. Để gán giá trị biến dùng lệnh export TEN_BIEN="gia_tri_gan", xem giá trị của 1 biến dùng lệnh echo $TEN_BIEN, xem toàn bộ biến của môi trường dùng lệnh env
+-- Để tìm hiểu cách sử dụng chi tiết về 1 lệnh ta dùng cú pháp man [Ten_Lenh] vd: man ls
+ 
