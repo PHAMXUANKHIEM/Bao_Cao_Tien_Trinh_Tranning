@@ -1,0 +1,4 @@
+1.Cai dat linux tren moi truong ao hoa VMware Workstation
+-- Tai ban ubuntu 24.04.3 server, ubuntu 24.04.3 desktop
+-- Vao phan mem VMware Workstation chon File - New Virtual Machine - chon file iso ubuntu - chon 30G disk, 2GB ram
+-- Cai dat phan 
