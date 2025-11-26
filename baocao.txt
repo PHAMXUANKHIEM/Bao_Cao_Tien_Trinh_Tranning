@@ -31,4 +31,12 @@ II. Linux
   - Ghi thêm vào file: cat file1.txt >> file2.txt
   - Tạo nhanh file: cat > newfile.txt
   - Các option: -n: đánh số dòng, -A: hiển thị các kí tự đặc biệt, -b: đánh số dòng không rỗng, -s: Xóa dòng trống lặp lại
- 
+ -- join: Kết hợp 2 file theo cột khóa giống nhau, chúng phải có chung khóa và phải được xắp xếp trước. Nếu chưa sắp xếp thì phải dùng lệnh sort. Các ví dụ câu lệnh join và các option quan trọng gồm:
+  - Default join: kiểu này join sẽ mặc định lấy cột đầu tiên làm khóa. Vd: join file.txt file1.txt (cần phải chắc chắn các dòng có ID giống nhau ở đầu dòng)
+  - Các option: -a [số_thứ_tự_file_muốn_in]: in hết dự liệu của 1 trong 2 file hoặc cả 2, 
+                -v [số_thứ_tự_file_muốn_in]: in ra tất cả dữ liệu không khớp của 1 trong 2 file, 
+                -t [char]: nếu file là CSV ngăn cách bằng dấu phẩy, 
+                -o [Tên file].[Tên cột]: chỉ định tên in ra cột nào của file nào, 
+                -[Số thứ tự file] [Tên cột]: để ghép in ra cột này file này sẽ được ghép với cột này file kia
+                -e: điền giá trị vào ô trống   
+  
