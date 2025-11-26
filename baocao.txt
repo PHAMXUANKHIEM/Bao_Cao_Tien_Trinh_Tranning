@@ -11,12 +11,24 @@ I. Cài đặt linux
 II. Linux
 1. Nắm được các kiến thức cơ bản trong Linux
 -- Các loại shell trong linux: 
-- sh: bản tiêu chuẩn chạy script trên hệ thống Unix
-- bash: nâng cao của sh có nhiều tính năng hơn và chạy chủ yếu trên Linux
-- csh: tương tự như sh và có nhiều tính năng hơn 
-- ksh : một trong những shell phổ biến nhất trên các hệ thống UNIX hỗ trợ cho biến mảng (array variables) cú pháp lặp for cải tiến 
+ - sh: bản tiêu chuẩn chạy script trên hệ thống Unix
+ - bash: nâng cao của sh có nhiều tính năng hơn và chạy chủ yếu trên Linux
+ - csh: tương tự như sh và có nhiều tính năng hơn 
+ - ksh : một trong những shell phổ biến nhất trên các hệ thống UNIX hỗ trợ cho biến mảng (array variables) cú pháp lặp for cải tiến 
 -- Cách thay đổi thư mục làm việc dùng lệnh cd, cách xem thư mục đang làm việc dùng lệnh pwd
 -- Xem lịch sử các lệnh đã gõ dùng lệnh history, cách để thực hiện 1 lệnh đã làm trong quá khứ dùng nút lên xuống để tìm kiếm
 -- Biến môi trường là các giá trị hệ điều hành lưu trữ để các chương trình, shell và ứng dụng sử dụng. Để gán giá trị biến dùng lệnh export TEN_BIEN="gia_tri_gan", xem giá trị của 1 biến dùng lệnh echo $TEN_BIEN, xem toàn bộ biến của môi trường dùng lệnh env
 -- Để tìm hiểu cách sử dụng chi tiết về 1 lệnh ta dùng cú pháp man [Ten_Lenh] vd: man ls
+-- Khi chạy 1 chương trình hệ điều hành sẽ cho ra 3 dòng dữ liệu Standard input, Standard output, Standard error
+ - Standard input (STDIN): là luồng dữ liệu đầu vào của chương trình lấy mặc định từ bàn phím. VD: lệnh cat < file.txt sẽ chuyển hướng lệnh cat tới thư mục file.txt
+ - Standard output (STDOUT): là luồng dữ liệu đầu ra chuẩn, chương trình sẽ ghi kết quả vào đây và hiển thị lên terminal
+ - Standard error (STDERR): là thông báo lỗi khi chương trình gửi lỗi và cũng mặc định hiển thị trên terminal
+ - Piping: dùng dấu | là cách lấy stdout của chương trình A và dùng nó làm STDIN của chương trình B. VD (ip a | grep ens32) là nó sẽ chỉ hiển thị ra ens32 
+--- Một số lệnh quan trọng:
+ -- cat: Dùng để xem, ghép, nhân bản nội dung file. Các ví dụ câu lệnh cat và các option quan trọng gồm:
+  - Xem file: cat file.txt
+  - Ghép file: cat file.txt file1.txt >> output.txt
+  - Ghi thêm vào file: cat file1.txt >> file2.txt
+  - Tạo nhanh file: cat > newfile.txt
+  - Các option: -n: đánh số dòng, -A: hiển thị các kí tự đặc biệt, -b: đánh số dòng không rỗng, -s: Xóa dòng trống lặp lại
  
