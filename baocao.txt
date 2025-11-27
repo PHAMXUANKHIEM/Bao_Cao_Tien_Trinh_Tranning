@@ -141,4 +141,17 @@ II. Linux
  -- B1: tìm tên tiến trình mà cần kill: ps aux | grep ten_tien_trinh
  -- B2: Copy PID của tiến trình
  -- B3: Lệnh kill + PID 
-5.
+5.Manage Software
+--- Package: Là phần mềm đã được đóng gói trên linux bao gồm các file thực thi, file cấu hình, thư viện liên quan, metadata, các script cài đặt, gỡ cài đặt
+    Dependencies: Là các gói phụ thuộc đề cài package, nó như là các gói hỗ trợ mà phần mềm dùng để chạy
+    Conflicts: Là 2 gói không thể cài đặt được cùng nhau 
+    Binary packet: là gói đã biên dịch sẵn chỉ cần cài và chạy	
+--- Nén và giải nén có nhiều cách:
+ -- Tar: - Nén file ta dùng lệnh tar -czvf name.tar.gz folder_name/ (c: create, z: zip, v: verbose, f: file)
+         - Giải nén file ta dùng lệnh tar -xzvf folder_name/ (x: extract, z: zip, v: verbose, f: file)
+ -- Zip: - Nén file: zip name.zip folder_name/
+         - Giải nén file: unzip name.zip 
+ -- Gzip: Chỉ nén file đơn không nén thư mục. - Nén file gzip ten_file
+                                              - Giải nén gzip -d ten_file
+ -- Unrar: Nén file rar: unrar d 
+    
