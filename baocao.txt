@@ -174,5 +174,42 @@ II. Linux
          - Giải nén file: unzip name.zip 
  -- Gzip: Chỉ nén file đơn không nén thư mục. - Nén file gzip ten_file
                                               - Giải nén gzip -d ten_file
- -- Unrar: Nén file rar: unrar d 
+ -- Unrar: - Nén file rar: unrar x tenfile.rar
+           - Giai nen file rar: unrar d tenfile.rar
+6.File System
+--- Duoc dung de quan ly du lieu duoc doc, luu tren thiet bi va cho phep nguoi dung truy cap nhanh chong va an toan
+--- File system duoc chia lam 4 loai chinh: 
+ -- Filesystem co ban: - EXT4: Ho tro file sieu lon, hieu nang cao
+                       - XFS: Xu ly duoc cac file lon va bang thong cao
+                       - Btrfs: Co the Copy-on-write, snapshot, RAID
+                       - 
+--- Kiem tra dung luong ta dung 2 lenh df va du
+ -- df (disk free): check xem he thong con bao nhieu dung luong trong. Cac option dung trong df: -T : hien thi loai Type(ext4,tmpfs,vfat,...)
+                 -h : chuyen doi don vi block thanh GB,MB,KB 
+                 -i: Hien thi Inode
+                 --total: them dong total tong o cuoi 
+ -- du (disk usage): check xem thu muc nay nang bao nhieu. Cac option dung trong du: -h: chuyen doi don vi thanh GB,MB,KB
+     -s: Chi hien tong dung luong co trong thu muc do
+     -a: hien thi tat ca cac file co trong thu muc do (mac dinh du khong co option thi chi hien dung luong cua cac thu muc)
+     -c: Hien thi total tong o duoi
+--- Cac lenh quan ly file thu muc: 
+ -- ls: Liet ke trong thu muc co nhung file hay thu muc con nao. Cac option: 
+  -l: hien thi chi tiet (quyen, chu so huu, dung luong, ngay sua)
+  -a: Hien thi tat ca cac file ke ca file an 
+  -h: Hien thi dung luong duoi dang MB,GB,KB
+  -R: Hien thi tat ca cac file trong tat ca cac thu muc con
+ -- cp: Copy thu muc nay sang thu muc khac. Cau lenh cp [nguon][dich]. Cac option:
+  - r: Bat buoc khi copy thu muc  
+  - p: Giu nguyen quyen han, chu so huu
+  - v: Hien thi qua trinh copy
+ -- mv: Lenh doi ten hoac di chuyen. Cu phap: mv [nguon][dich]. Cac option:
+  - f: ghi de khong can hoi
+  - i: ghi de co hoi xac nhan
+ -- rm: Xoa thu muc va file. Cu phap rm [ten_file]. Cac option:
+  - r: Xoa thu muc va tat ca cac tap con trong thu muc do
+  - f: Xoa ep buoc
+ -- touch: tao ra 1 file rong (neu file chua ton tai). Cu phap touch [ten_file] 
+
+7. 
+8. Quan ly he thong
     
