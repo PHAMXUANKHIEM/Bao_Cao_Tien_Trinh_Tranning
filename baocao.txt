@@ -3,11 +3,10 @@ I. Cài đặt linux
 -- Tai ban ubuntu 24.04.3 server, ubuntu 24.04.3 desktop
 -- Vao phan mem VMware Workstation chon File - New Virtual Machine - chon file iso ubuntu - chon 30G disk, 2GB ram
 -- Chon Next lien tuc de cai dat 
-2. Cai dat song song window bang UNetbootin
--- Truy cap trang https://unetbootin.github.io/ --> chon he dieu hanh minh dang dung va tai ve
--- Sau khi tải xuống, hãy mở thư mục Tải xuống và chạy file cài đặt
--- Chọn phiên bản mà muốn cài đặt có thể từ Unetbootin hoặc từ file iso
--- Chọn phân vùng ổ cứng và OK để cài đặt
+2. Cai dat song song window bang dual boot
+-- Phan vung bo nho
+-- Cam USB, reset lai may va bat BIOS len
+-- Chon Linux va cai dat
 II. Linux
 1. Nắm được các kiến thức cơ bản trong Linux
 -- Các loại shell trong linux: 
@@ -177,39 +176,73 @@ II. Linux
  -- Unrar: - Nén file rar: unrar x tenfile.rar
            - Giai nen file rar: unrar d tenfile.rar
 6.File System
---- Duoc dung de quan ly du lieu duoc doc, luu tren thiet bi va cho phep nguoi dung truy cap nhanh chong va an toan
---- File system duoc chia lam 4 loai chinh: 
- -- Filesystem co ban: - EXT4: Ho tro file sieu lon, hieu nang cao
-                       - XFS: Xu ly duoc cac file lon va bang thong cao
-                       - Btrfs: Co the Copy-on-write, snapshot, RAID
-                       - 
---- Kiem tra dung luong ta dung 2 lenh df va du
- -- df (disk free): check xem he thong con bao nhieu dung luong trong. Cac option dung trong df: -T : hien thi loai Type(ext4,tmpfs,vfat,...)
-                 -h : chuyen doi don vi block thanh GB,MB,KB 
-                 -i: Hien thi Inode
-                 --total: them dong total tong o cuoi 
- -- du (disk usage): check xem thu muc nay nang bao nhieu. Cac option dung trong du: -h: chuyen doi don vi thanh GB,MB,KB
-     -s: Chi hien tong dung luong co trong thu muc do
-     -a: hien thi tat ca cac file co trong thu muc do (mac dinh du khong co option thi chi hien dung luong cua cac thu muc)
-     -c: Hien thi total tong o duoi
---- Cac lenh quan ly file thu muc: 
- -- ls: Liet ke trong thu muc co nhung file hay thu muc con nao. Cac option: 
-  -l: hien thi chi tiet (quyen, chu so huu, dung luong, ngay sua)
-  -a: Hien thi tat ca cac file ke ca file an 
-  -h: Hien thi dung luong duoi dang MB,GB,KB
-  -R: Hien thi tat ca cac file trong tat ca cac thu muc con
- -- cp: Copy thu muc nay sang thu muc khac. Cau lenh cp [nguon][dich]. Cac option:
-  - r: Bat buoc khi copy thu muc  
-  - p: Giu nguyen quyen han, chu so huu
-  - v: Hien thi qua trinh copy
- -- mv: Lenh doi ten hoac di chuyen. Cu phap: mv [nguon][dich]. Cac option:
-  - f: ghi de khong can hoi
-  - i: ghi de co hoi xac nhan
- -- rm: Xoa thu muc va file. Cu phap rm [ten_file]. Cac option:
-  - r: Xoa thu muc va tat ca cac tap con trong thu muc do
-  - f: Xoa ep buoc
- -- touch: tao ra 1 file rong (neu file chua ton tai). Cu phap touch [ten_file] 
-
-7. 
+ 6.1 Cac loai File System
+ --- File system duoc chia lam 4 loai chinh: 
+  -- Filesystem co ban: - EXT4: Ho tro file sieu lon, hieu nang cao
+                        - XFS: Xu ly duoc cac file lon va bang thong cao
+                        - Btrfs: Co the Copy-on-write, snapshot, RAID
+                        -
+ --- Sua file system bang fsck 
+ 6.2 Kiem tra dung luong
+ --- Kiem tra dung luong ta dung 2 lenh df va du
+  -- df (disk free): check xem he thong con bao nhieu dung luong trong. Cac option dung trong df: -T : hien thi loai Type(ext4,tmpfs,vfat,...)
+                  -h : chuyen doi don vi block thanh GB,MB,KB 
+                  -i: Hien thi Inode
+                  --total: them dong total tong o cuoi 
+  -- du (disk usage): check xem thu muc nay nang bao nhieu. Cac option dung trong du: -h: chuyen doi don vi thanh GB,MB,KB
+      -s: Chi hien tong dung luong co trong thu muc do
+      -a: hien thi tat ca cac file co trong thu muc do (mac dinh du khong co option thi chi hien dung luong cua cac thu muc)
+      -c: Hien thi total tong o duoi
+ --- Cac lenh quan ly file thu muc: 
+  -- ls: Liet ke trong thu muc co nhung file hay thu muc con nao. Cac option: 
+   -l: hien thi chi tiet (quyen, chu so huu, dung luong, ngay sua)
+   -a: Hien thi tat ca cac file ke ca file an 
+   -h: Hien thi dung luong duoi dang MB,GB,KB
+   -R: Hien thi tat ca cac file trong tat ca cac thu muc con
+  -- cp: Copy thu muc nay sang thu muc khac. Cau lenh cp [nguon][dich]. Cac option:
+   - r: Bat buoc khi copy thu muc  
+   - p: Giu nguyen quyen han, chu so huu
+   - v: Hien thi qua trinh copy
+  -- mv: Lenh doi ten hoac di chuyen. Cu phap: mv [nguon][dich]. Cac option:
+   - f: ghi de khong can hoi
+   - i: ghi de co hoi xac nhan
+  -- rm: Xoa thu muc va file. Cu phap rm [ten_file]. Cac option:
+   - r: Xoa thu muc va tat ca cac tap con trong thu muc do
+   - f: Xoa ep buoc
+  -- touch: tao ra 1 file rong (neu file chua ton tai). Cu phap touch [ten_file] 
+6.3 Phan quyen, user dung chmod, chown
+ -- chmod: Cu phap chmod + so_thu_thi + duong_dan_file, so_thuc_thi la tong cua 
+read: 4, write: 2, excute: 1
+ -- chown: Cu phap chown ten_nguoi_so_huu + ten_thu_muc
+6.4 Cac tool de tim vi tri cua cac files
+ -- find: tim vi tri file tren o cung. Cu phap: find [noi_can_tim] [option] [hanhdong]. Cac option:
+  - name: tim file theo ten (phan biet chu hoa chu thuong)
+  - iname: giong name nhung khong phan biet chu hoa 
+  - type f: chi tim file va bo qua thu muc
+  - type d: chi tim thu muc bo qua file
+ -- grep: Tim noi dung trong thu muc hoac trong file. Cu phap grep [option] "tu_can_tim" [ten_file hoac thu muc]. Cac option:
+  - r: de quy quet tat ca cac thu muc con
+  - i: Khong phan biet chu hoa chu thuong
+ -- which: Xac dinh vi tri duong dan tuyet doi cua mot file thuc thi khi no duoc khai bao trong bien moi truong $PATH. Cu phap which [option] [ten_lenh]. Cac option: 
+  - a: liet ke duong dan cua tat ca cac file thuc thi trung nhau
+7. Quy trinh khoi dong
+--- Quy trinh khoi dong gom 4 buoc chinh:
+ -- BIOS/UEFI: Buoc nay se check CPU,RAM
+ -- GRUB: Buoc nay se giup ta chon he dieu hanh Linux hay Window
+ -- Kernel: Phan nhan Kernel se tu chay va khoi dong chinh no 
+ -- Init: He thong Init (thuong la systemd) se doc cau hinh va bat cac dich vu can thiet
+--- Runlevels: Day la cac cap do van hanh. Co 5 cap do:
+ -- Shutdow: tat may --> Cap do 0
+ -- Single User Mode: Che do don nguoi dung: - Khong co mang 
+                                             - Chi root dang nhap duoc
+                                             - Co the reset mat khau root, sua loi file cau hinh
+                                             --> Cap do 1
+ -- Multi-user: Khong co mang --> Cap do 2
+ -- Full Multi-user ( giong linux-server): - Co mang
+                                           - Nhieu nguoi dung
+                                           - Chi co CLI
+                                           --> Cap do 3
+ -- Graphical mode: -Giong het cap do 3 nhung co GUI --> Cap do 4
+ -- Reboot: Khoi dong lai may
 8. Quan ly he thong
     
