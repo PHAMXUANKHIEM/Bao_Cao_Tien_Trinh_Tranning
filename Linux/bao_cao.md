@@ -182,7 +182,18 @@ II. Linux
                         - XFS: Xu ly duoc cac file lon va bang thong cao
                         - Btrfs: Co the Copy-on-write, snapshot, RAID
                         -
- --- Sua file system bang fsck 
+ --- fsck: Dung de quet toan bo o dia de tim cac loi du lieu, file hong, bad block va sua chung
+  -- Ta chi dung fsck khi:- May khong khoi dong duoc
+                          - O cung bi chuyen sang Read-only
+                          - O cung bi bad
+  -- Lenh co ban: fsck [option] [ten_phan_vung]. Cac option:
+   - -A: Kiem tra tat ca cac filesystem
+   - -C: hien thi thanh tien trinh
+   - -M: Khong kiem filesystem dang mounted
+   - -N: Hien thi cac thao tac da lam
+   - -t: chi dinh kieu filesystem
+   - -y: Tu dong dong y sua moi loi
+ --- mkfs: Dung de tao ra filesystem
  6.2 Kiem tra dung luong
  --- Kiem tra dung luong ta dung 2 lenh df va du
   -- df (disk free): check xem he thong con bao nhieu dung luong trong. Cac option dung trong df: -T : hien thi loai Type(ext4,tmpfs,vfat,...)
