@@ -1,17 +1,4 @@
- -- Foreground Processes: Là quy trình mà người dùng tương tác trực tiếp, có độ ưu tiên cao nhất, và được hiển thị thông báo để người dùng biết nó đang chạy
- -- Background Processes: Là quy trình chạy ngầm mà người dùng không chú ý, có độ ưu tiên thấp hơn và không được hiển thị thông báo
- -- ps: Hiển thị các tiến trình tại 1 thời điểm. Câu lệnh hay dùng để tìm tiến trình: ps aux | grep ten_tien_trinh
- -- top: Cập nhật liên tục 3 giây /lần về trạng thái CPU, RAM.
-  - Các phím tắt dùng trong top: Shift+P: xem tiến trình nào tốn CPU nhất
-                                 Shift+M: xem tiến trình nào tốn RAM nhất 
-                                 k+số PID: kill tiến trình
- -- htop: Giống top nhưng cao cấp hơn và có màu
-  - Các phím tắt trong htop: F3: search tên tiến trình                    
-                             F9: kill tiến trình
-
- -- B1: tìm tên tiến trình mà cần kill: ps aux | grep ten_tien_trinh
- -- B2: Copy PID của tiến trình
- -- B3: Lệnh kill + PID 
+ 
 # Processes (Tiến trình)
 
 Quản lý tiến trình trong Linux: loại tiến trình, cách xem, theo dõi và dừng tiến trình.
