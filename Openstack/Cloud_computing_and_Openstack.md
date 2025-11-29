@@ -1,0 +1,43 @@
+1.Cloud Computing 
+- Cloud Computing (Điện toán đám mây) là mô hình cung cấp tài nguyên công nghệ thông tin như máy chủ, lưu trữ, cơ sở dữ liệu, mạng, phần mềm và các dịch vụ khác qua Internet.
+- Các đặc điểm chính của Cloud Computing bao gồm:
+  - On-Demand Self-Service: Người dùng có thể tự động cấp phát tài nguyên mà không cần sự can thiệp của nhà cung cấp dịch vụ.
+  - Broad Network Access: Tài nguyên có thể truy cập qua mạng từ nhiều thiết bị khác nhau như máy tính, điện thoại thông minh, máy tính bảng.
+  - Resource Pooling: Tài nguyên được chia sẻ giữa nhiều người dùng, giúp tối ưu hóa việc sử dụng tài nguyên.
+  - Rapid Elasticity: Tài nguyên có thể được mở rộng hoặc thu hẹp nhanh chóng theo nhu cầu của người dùng.
+  - Measured Service: Việc sử dụng tài nguyên được theo dõi, kiểm soát và báo cáo, giúp người dùng chỉ trả tiền cho những gì họ sử dụng.
+- Các mô hình triển khai Cloud Computing bao gồm:
+  - Public Cloud: Dịch vụ được cung cấp công khai qua Internet và được quản lý bởi các nhà cung cấp dịch vụ bên thứ ba.
+  - Private Cloud: Dịch vụ được cung cấp riêng cho một tổ chức và có thể được quản lý nội bộ hoặc bởi bên thứ ba.
+  - Hybrid Cloud: Kết hợp giữa Public Cloud và Private Cloud, cho phép di chuyển dữ liệu và ứng dụng giữa hai môi trường.
+- Các mô hình dịch vụ Cloud Computing bao gồm:
+  - Infrastructure as a Service (IaaS): Cung cấp tài nguyên hạ tầng như máy chủ, lưu trữ và mạng.
+  - Platform as a Service (PaaS): Cung cấp nền tảng phát triển ứng dụng mà không cần quản lý hạ tầng.   
+  - Software as a Service (SaaS): Cung cấp phần mềm ứng dụng qua Internet mà không cần cài đặt trên thiết bị của người dùng.
+2.OpenStack 
+- OpenStack là một nền tảng mã nguồn mở để xây dựng và quản lý các đám mây công cộng và riêng tư.
+- Mục đích chính của OpenStack bao gồm:
+  - Cung cấp một giải pháp linh hoạt và mở để triển khai các dịch vụ đám mây.
+  - Hỗ trợ nhiều loại tài nguyên như tính toán, lưu trữ và mạng.
+  - Tích hợp với các công nghệ và dịch vụ khác trong hệ sinh thái mã nguồn mở.
+- OpenStack bao gồm nhiều thành phần chính như:
+  - Nova: Quản lý tài nguyên tính toán và máy ảo.
+  - Neutron: Quản lý mạng và kết nối mạng ảo.
+  - Cinder: Quản lý lưu trữ khối (block storage).
+  - Swift: Quản lý lưu trữ đối tượng (object storage).
+  - Glance: Quản lý hình ảnh máy ảo.
+  - Keystone: Quản lý xác thực và ủy quyền người dùng.
+  - Horizon: Giao diện người dùng web để quản lý OpenStack.
+- OpenStack thường được sử dụng trong các môi trường đám mây công cộng và riêng tư để cung cấp tài nguyên theo yêu cầu cho người dùng.
+- Các lợi ích của việc sử dụng OpenStack bao gồm:
+  - Tính linh hoạt và mở: Người dùng có thể tùy chỉnh và mở rộng nền tảng theo nhu cầu.
+  - Chi phí thấp: Sử dụng mã nguồn mở giúp giảm chi phí bản quyền phần mềm.
+  - Hỗ trợ cộng đồng: OpenStack có một cộng đồng phát triển lớn và năng động, cung cấp hỗ trợ và tài liệu phong phú.
+- OpenStack thường được triển khai trên các cụm máy chủ vật lý để cung cấp tài nguyên tính toán, lưu trữ và mạng cho người dùng thông qua giao diện web hoặc API. 
+- Quản lý và điều phối các tài nguyên này thông qua các dịch vụ và thành phần khác nhau của OpenStack.
+3. Ứng dụng của OpenStack trong Cloud Computing
+- OpenStack được sử dụng rộng rãi trong các môi trường đám mây công cộng và riêng tư để cung cấp tài nguyên theo yêu cầu cho người dùng.
+- Các ứng dụng chính của OpenStack trong Cloud Computing bao gồm:
+  - Triển khai và quản lý các máy ảo và tài nguyên tính toán.
+  - Cung cấp dịch vụ lưu trữ khối và lưu trữ đối tượng cho các ứng dụng đám mây.
+  - Quản lý mạng ảo và kết nối mạng cho các máy ảo và dịch vụ đám mây.  
