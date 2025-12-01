@@ -1,47 +1,32 @@
-Glance 
-1. Khai niệm Glance
-- Glance là thành phần quản lý images máy ảo trong OpenStack, chịu trách nhiệm lưu trữ, truy xuất và quản lý các hình ảnh máy ảo (VM images).   
-- Mục đích chính của Glance bao gồm:
-  - Cung cấp dịch vụ lưu trữ và quản lý hình ảnh máy ảo cho các thành phần khác trong OpenStack.
-  - Hỗ trợ nhiều định dạng hình ảnh khác nhau như QCOW2, RAW, VMDK, v.v.
-  - Tích hợp với các dịch vụ khác trong OpenStack như Nova (compute) để cung cấp hình ảnh máy ảo khi cần thiết.
-- Glance thường được sử dụng trong các môi trường đám mây công cộng và riêng tư để cung cấp hình ảnh máy ảo cho người dùng và các dịch vụ khác.
-- Glance bao gồm các thành phần chính như:
-  - Glance API: Cung cấp giao diện lập trình ứng dụng để tương tác với dịch vụ Glance.
-  - Glance Registry: Quản lý metadata của các hình ảnh máy ảo.
-  - Glance Store: Lưu trữ trữ các hình ảnh máy ảo trên các backend khác nhau như file system, object storage, v.v.
-2. Cách hoạt động của Glance
-- Khi người dùng hoặc dịch vụ khác trong OpenStack gửi yêu cầu tải lên hoặc truy xuất hình ảnh máy ảo thông qua giao diện API của Glance, Glance sẽ thực hiện các bước sau:
-  1. Xác thực và ủy quyền yêu cầu từ người dùng hoặc dịch vụ.
-  2. Đối với yêu cầu tải lên, Glance sẽ lưu trữ hình ảnh máy ảo vào Glance Store và lưu metadata liên quan trong Glance Registry. 
-  3. Đối với yêu cầu truy xuất, Glance sẽ tìm kiếm hình ảnh máy ảo trong Glance Store và trả về hình ảnh cùng với metadata liên quan.
-- Glance cũng tích hợp với các dịch vụ khác trong OpenStack để cung cấp hình ảnh máy ảo khi cần thiết, ví dụ như khi Nova yêu cầu một hình ảnh để tạo máy ảo.
-3. Ứng dụng của Glance trong OpenStack
-- Glance được sử dụng rộng rãi trong các môi trường đám mây công cộng và riêng tư để quản lý hình ảnh máy ảo.
-- Các ứng dụng chính của Glance trong OpenStack bao gồm:
-  - Lưu trữ và quản lý hình ảnh máy ảo cho các máy ảo và dịch vụ đám mây.
-  - Cung cấp hình ảnh máy ảo cho các thành phần khác trong OpenStack như Nova khi cần thiết.
-  - Hỗ trợ nhiều định dạng hình ảnh máy ảo để đáp ứng các yêu cầu đa dạng của người dùng.
-- Glance giúp đảm bảo tính linh hoạt, mở rộng và quản lý hiệu quả hình ảnh máy ảo trong môi trường đám mây OpenStack.
-4. Cấu hình Glance
-- Cài đặt Glance trên máy chủ OpenStack bằng cách sử dụng các công cụ quản lý gói như apt hoặc yum.
-- Cấu hình tệp cấu hình Glance (thường là glance-api.conf và glance-registry.conf) để thiết lập các thông số như cơ sở dữ liệu, backend lưu trữ, và các điểm cuối dịch vụ.
-- Thiết lập cơ sở dữ liệu cho Glance để lưu trữ metadata của hình ảnh máy ảo.
-- Cấu hình backend lưu trữ trong Glance Store để xác định nơi lưu trữ các hình ảnh máy ảo.
-- Tạo các dịch vụ và điểm cuối trong Keystone để các thành phần khác trong OpenStack có thể truy cập Glance.
-- Kiểm tra và xác nhận hoạt động của Glance bằng cách sử dụng các công cụ dòng lệnh OpenStack CLI hoặc giao diện người dùng Horizon.
-- Duy trì và cập nhật Glance định kỳ để đảm bảo an ninh và hiệu suất hoạt động tốt trong môi trường OpenStack.  
-5. Bảo mật Glance
-- Sử dụng các phương thức xác thực mạnh mẽ thông qua Keystone để đảm bảo an ninh.
-- Mã hóa thông tin nhạy cảm như hình ảnh máy ảo trong quá trình truyền tải và lưu trữ.
-- Giới hạn quyền truy cập vào Glance chỉ cho các dịch vụ và người dùng cần thiết.
-- Theo dõi và ghi lại các hoạt động liên quan đến việc tải lên và truy xuất hình ảnh máy ảo để phát hiện các hành vi đáng ngờ.
-- Cập nhật Glance và các thành phần liên quan định kỳ để vá các lỗ hổng bảo mật.
-- Sử dụng các công cụ giám sát và cảnh báo để theo dõi tình trạng bảo mật của Glance trong môi trường OpenStack.
-6. Tích hợp Glance với các dịch vụ khác trong OpenStack
-- Cấu hình các dịch vụ khác trong OpenStack như Nova để sử dụng Glance làm dịch vụ quản lý hình ảnh máy ảo.
-- Thiết lập các điểm cuối dịch vụ trong Keystone để các dịch vụ khác có thể kết nối và tương tác với Glance.
-- Sử dụng hình ảnh máy ảo do Glance quản lý để tạo máy ảo trong Nova.
-- Quản lý quyền truy cập hình ảnh máy ảo thông qua Keystone để đảm bảo an ninh và kiểm soát truy cập.
-- Kiểm tra và xác nhận tích hợp giữa Glance và các dịch vụ khác để đảm bảo hoạt động trơn tru trong môi trường OpenStack.
-- Duy trì và cập nhật tích hợp định kỳ để đảm bảo tính tương thích và an ninh giữa Glance và các dịch vụ khác trong OpenStack.
+# Glance
+
+## 1. Khái niệm
+Glance là dịch vụ quản lý hình ảnh (VM images) trong OpenStack, chịu trách nhiệm lưu trữ, truy xuất và quản lý metadata của ảnh máy ảo.
+
+Mục tiêu:
+- Cung cấp dịch vụ lưu trữ và quản lý image cho các thành phần khác (Nova...).
+- Hỗ trợ nhiều định dạng image: QCOW2, RAW, VMDK, v.v.
+- Tích hợp với Nova để cung cấp image khi tạo VM.
+
+## 2. Cách hoạt động
+- Người dùng hoặc dịch vụ gửi yêu cầu tải lên hoặc truy xuất image qua API Glance.
+- Đối với upload: Glance lưu image vào Glance Store và metadata vào Glance Registry (nếu dùng).
+- Đối với truy xuất: Glance tìm image trong store và trả về dữ liệu cùng metadata.
+
+## 3. Ứng dụng
+- Lưu trữ và chia sẻ các image máy ảo.
+- Cung cấp image cho Nova khi tạo VM.
+- Quản lý phiên bản image, thực hiện chuyển đổi định dạng.
+
+## 4. Cấu hình
+- Các file cấu hình: `glance-api.conf`, `glance-registry.conf`.
+- Cấu hình backend của Glance Store để xác định nơi lưu image (file system, object storage...).
+- Tích hợp với Keystone để xác thực và phân quyền.
+
+## 5. Bảo mật
+- Dùng Keystone cho xác thực.
+- Mã hóa dữ liệu nhạy cảm khi truyền tải và lưu trữ.
+- Giới hạn quyền truy cập vào image theo nhu cầu.
+
+## 6. Tích hợp
+- Thiết lập endpoints và service trong Keystone để Nova và các dịch vụ khác truy cập Glance.
