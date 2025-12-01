@@ -16,7 +16,7 @@ Quy trình cơ bản khi tạo/gắn/xóa volume:
 3. Cinder Volume Service tạo/gắn/xóa volume trên backend được chọn.
 4. Cinder theo dõi trạng thái các volume và cung cấp chức năng quản lý (sao lưu, phục hồi...).
 
-![](image/Cinder/anh2.png) 
+![](images/Cinder/anh2.png) 
 ## 3. Ứng dụng
 Cinder được dùng để:
 - Cung cấp ổ đĩa khối cho máy ảo.
@@ -29,17 +29,46 @@ Cinder được dùng để:
    sudo apt update
    sudo apt install cinder-api cinder-scheduler cinder-volume python3-cinderclient
 ```
-- File cấu hình chính: `cinder.conf` — cấu hình cơ sở dữ liệu, backend lưu trữ, authentication (Keystone), endpoints.
-
-[](images/Cinder/anh4.png)
-
-- Cấu hình backend trong `cinder.conf` để định tuyến volume tới storage phù hợp.
-
-[](images/Cinder/anh5.png)
-
+- File cấu hình chính: `cinder.conf` nam tai  /etc/cinder/cinder.conf — cấu hình cơ sở dữ liệu, backend lưu trữ, authentication (Keystone), endpoints.
+- Cấu hình database cho Cinder:
+```sh
+   [database]
+   connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
+```
+- Cấu hình backend trong `cinder.conf` để định tuyến volume tới storage phù hợp. Ví dụ cấu hình backend LVM:
+```sh
+[lvm]
+volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
+volume_group = cinder-volumes
+iscsi_protocol = iscsi
+iscsi_helper = tgtadm
+```
+- Cấu hình Keystone để xác thực:
+```sh
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = cinder
+password = CINDER_PASS
+```
+- Cấu hình Logging & Scheduler trong `cinder.conf`:
+```sh
+[DEFAULT]
+log_file = /var/log/cinder/cinder.log
+scheduler_driver = cinder.scheduler.filter_scheduler.FilterScheduler
+``` 
 - Khởi động dịch vụ Cinder (API, Scheduler, Volume).
-
-[](images/Cinder/anh6.png)
-
+```sh
+   sudo systemctl enable cinder-volume cinder-scheduler cinder-api
+   sudo systemctl start cinder-volume cinder-scheduler cinder-api
+```
 - Kiểm tra Cinder sau khi triển khai.
- 
+ ```sh
+   cinder service-list
+   cinder list
+```
