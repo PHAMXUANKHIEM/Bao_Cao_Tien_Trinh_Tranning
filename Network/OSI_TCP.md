@@ -45,6 +45,8 @@ OSI là mô hình tham chiếu gồm 7 tầng, giúp phân tách chức năng m�
 
 ---
 
+![](images/anh1.png)
+
 ## 2. Mô hình TCP/IP (Internet model)
 
 TCP/IP thường có 4 tầng (hay 5 tùy cách chia):
@@ -54,3 +56,18 @@ TCP/IP thường có 4 tầng (hay 5 tùy cách chia):
 - **Transport** ≈ OSI L4 (TCP/UDP).
 - **Application** ≈ OSI L5-L7 (HTTP, DNS,...).
 
+![](images/anh2.png)
+## 3. So sánh OSI và TCP/IP
+| Khía cạnh          | Mô hình OSI               | Mô hình TCP/IP            |
+|--------------------|---------------------------|---------------------------|
+| Số tầng            | 7 tầng                    | 4-5 tầng                  |
+| Mục đích           | Chuẩn hóa giao tiếp mạng   | Thiết kế giao thức Internet    |
+| Tầng vật lý        | Layer 1                   | Link Layer                |
+| Tầng liên kết dữ liệu | Layer 2                   | Link Layer                |
+| Tầng mạng          | Layer 3                   | Internet Layer            |
+| Tầng vận chuyển    | Layer 4                   | Transport Layer           |
+| Tầng phiên         | Layer 5                   | Không tách riêng          |
+| Tầng trình diễn    | Layer 6                   | Không tách riêng          |
+| Tầng ứng dụng      | Layer 7                   | Application Layer         |   
+
+![](images/anh3.png)

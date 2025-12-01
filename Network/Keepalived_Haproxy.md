@@ -1,11 +1,11 @@
-## I. Keepalived + HAProxy 
-#  1. Khai niệm
+# I. Keepalived + HAProxy 
+##  1. Khai niệm
 - Keepalived là một phần mềm mã nguồn mở dùng để cung cấp tính năng High Availability (HA) cho các dịch vụ mạng, đặc biệt là trong môi trường Linux. Nó thường được sử dụng kết hợp với HAProxy để đảm bảo rằng các dịch vụ web hoặc ứng dụng luôn sẵn sàng và có thể chịu lỗi.
 - HAProxy là một phần mềm cân bằng tải (load balancer) mã nguồn mở, được thiết kế để phân phối lưu lượng mạng đến nhiều máy chủ backend nhằm tối ưu hiệu suất và độ tin cậy của ứng dụng.
-#  2. Cách hoạt động
+##  2. Cách hoạt động
 - Keepalived sử dụng giao thức VRRP (Virtual Router Redundancy Protocol) để tạo ra một địa chỉ IP ảo (VIP - Virtual IP) mà các máy chủ trong cụm có thể chia sẻ. Khi một máy chủ chính (master) gặp sự cố, Keepalived sẽ tự động chuyển quyền điều khiển VIP sang máy chủ dự phòng (backup), đảm bảo rằng dịch vụ vẫn tiếp tục hoạt động mà không bị gián đoạn.
 - HAProxy sẽ lắng nghe trên VIP và phân phối lưu lượng đến các máy chủ backend dựa trên các thuật toán cân bằng tải như round-robin, least connections, v.v. Khi một máy chủ backend không phản hồi, HAProxy sẽ tự động loại bỏ nó khỏi danh sách phân phối lưu lượng cho đến khi nó trở lại hoạt động.
-#  3. Cấu hình cơ bản
+##  3. Cấu hình cơ bản
 - Ta sẽ cấu hình Keepalived và HAProxy trên hai máy chủ Linux để thiết lập một hệ thống cân bằng tải với tính năng High Availability.
 - Giả sử ta có hai máy chủ web backend với địa chỉ IP là 10.40.3.201 va 10.40.3.17
 - Cài đặt Keepalived và HAProxy trên các máy chủ Linux.
