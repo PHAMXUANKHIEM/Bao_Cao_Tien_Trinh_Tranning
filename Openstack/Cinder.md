@@ -7,7 +7,7 @@ Mục đích chính của Cinder:
 - Hỗ trợ nhiều backend lưu trữ như LVM, NFS, iSCSI, và các hệ thống lưu trữ mạng (NAS).
 - Tích hợp với các dịch vụ OpenStack khác (ví dụ Nova) để cung cấp lưu trữ khi cần thiết.
 
-[](image/Cinder/anh1.png)
+[](images/Cinder/anh1.png)
 
 ## 2. Cách hoạt động
 Quy trình cơ bản khi tạo/gắn/xóa volume:
@@ -25,5 +25,21 @@ Cinder được dùng để:
 
 ## 4. Cấu hình
 - Cài đặt Cinder bằng các công cụ quản lý gói (apt, yum).
+
+sudo apt update
+sudo apt install cinder-api cinder-scheduler cinder-volume python3-cinderclient
+
 - File cấu hình chính: `cinder.conf` — cấu hình cơ sở dữ liệu, backend lưu trữ, authentication (Keystone), endpoints.
+
+[](images/Cinder/anh4.png)
+
 - Cấu hình backend trong `cinder.conf` để định tuyến volume tới storage phù hợp.
+
+[](images/Cinder/anh5.png)
+
+- Khởi động dịch vụ Cinder (API, Scheduler, Volume).
+
+[](images/Cinder/anh6.png)
+
+- Kiểm tra Cinder sau khi triển khai.
+ 
