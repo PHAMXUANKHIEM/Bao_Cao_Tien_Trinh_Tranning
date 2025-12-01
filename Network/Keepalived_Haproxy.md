@@ -1,19 +1,24 @@
-I. Keepalived + HAProxy 
-  1. Khai niệm
+## I. Keepalived + HAProxy 
+#  1. Khai niệm
 - Keepalived là một phần mềm mã nguồn mở dùng để cung cấp tính năng High Availability (HA) cho các dịch vụ mạng, đặc biệt là trong môi trường Linux. Nó thường được sử dụng kết hợp với HAProxy để đảm bảo rằng các dịch vụ web hoặc ứng dụng luôn sẵn sàng và có thể chịu lỗi.
 - HAProxy là một phần mềm cân bằng tải (load balancer) mã nguồn mở, được thiết kế để phân phối lưu lượng mạng đến nhiều máy chủ backend nhằm tối ưu hiệu suất và độ tin cậy của ứng dụng.
-  2. Cách hoạt động
+#  2. Cách hoạt động
 - Keepalived sử dụng giao thức VRRP (Virtual Router Redundancy Protocol) để tạo ra một địa chỉ IP ảo (VIP - Virtual IP) mà các máy chủ trong cụm có thể chia sẻ. Khi một máy chủ chính (master) gặp sự cố, Keepalived sẽ tự động chuyển quyền điều khiển VIP sang máy chủ dự phòng (backup), đảm bảo rằng dịch vụ vẫn tiếp tục hoạt động mà không bị gián đoạn.
 - HAProxy sẽ lắng nghe trên VIP và phân phối lưu lượng đến các máy chủ backend dựa trên các thuật toán cân bằng tải như round-robin, least connections, v.v. Khi một máy chủ backend không phản hồi, HAProxy sẽ tự động loại bỏ nó khỏi danh sách phân phối lưu lượng cho đến khi nó trở lại hoạt động.
-  3. Cấu hình cơ bản
+#  3. Cấu hình cơ bản
 - Ta sẽ cấu hình Keepalived và HAProxy trên hai máy chủ Linux để thiết lập một hệ thống cân bằng tải với tính năng High Availability.
 - Giả sử ta có hai máy chủ web backend với địa chỉ IP là 10.40.3.201 va 10.40.3.17
 - Cài đặt Keepalived và HAProxy trên các máy chủ Linux.
+```sh
+   sudo -i
    apt install keepalived haproxy -y
-- Cấu hình HAProxy để thiết lập các backend server và các quy tắc cân bằng tải.
-  /etc/haproxy/haproxy.cfg
-- Ví dụ cấu hình HAProxy:
 ```
+- Cấu hình HAProxy để thiết lập các backend server và các quy tắc cân bằng tải.
+```sh
+  /etc/haproxy/haproxy.cfg
+```
+- Ví dụ cấu hình HAProxy:
+```sh
       global
       log /dev/log    local0
       maxconn 4096
@@ -40,7 +45,7 @@ I. Keepalived + HAProxy
 - Cấu hình Keepalived để thiết lập VIP và các tham số VRRP.
   /etc/keepalived/keepalived.conf
 - Ví dụ cấu hình Keepalived:
-```
+```sh
     global_defs {
     router_id LVS_DEVEL
     enable_script_security
@@ -74,7 +79,7 @@ I. Keepalived + HAProxy
 ```
 - Tạo script kiểm tra trạng thái của HAProxy.
   /etc/keepalived/check_haproxy.sh
-```
+```sh
     #!/bin/bash
 
     LOG_FILE="/var/log/haproxy.log"
@@ -90,17 +95,24 @@ I. Keepalived + HAProxy
     exit 0
 
     fi
-    ```
+  ```
 - Cấp quyền thực thi cho script.
+```sh
    chmod +x /etc/keepalived/check_haproxy.sh
+```
 - Khởi động và kích hoạt dịch vụ Keepalived và HAProxy.
+```sh
    systemctl start keepalived haproxy
    systemctl enable keepalived haproxy
+```   
 4. Kiểm tra và giám sát
 - Kiểm tra trạng thái của dịch vụ Keepalived và HAProxy.
+```sh
    systemctl status keepalived haproxy
+```
 - Sử dụng lệnh `ip addr` để xác nhận rằng VIP đã được gán đúng trên máy chủ chính.
 - Kiểm tra cân bằng tải bằng cách truy cập VIP từ trình duyệt web hoặc sử dụng công cụ như `curl` để gửi yêu cầu HTTP và xác nhận rằng lưu lượng được phân phối đều đến các máy chủ backend.
 - Giám sát log của HAProxy để theo dõi hiệu suất và các lỗi có thể xảy ra.
+```sh
    tail -f /var/log/haproxy.log
-  
+``` 
