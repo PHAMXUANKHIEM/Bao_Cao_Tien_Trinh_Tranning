@@ -9,33 +9,33 @@ Cloud Computing (Điện toán đám mây) là mô hình cung cấp tài nguyên
 - Rapid Elasticity: Mở rộng/thu hẹp nhanh theo nhu cầu.
 - Measured Service: Việc sử dụng được theo dõi và báo cáo.
 
-[](images/cloud_openstack/anh1.png)
+![](images/cloud_openstack/anh1.png)
 
 Mô hình triển khai:
 - Public Cloud: Dich vụ đám mây công cộng duoc cung cấp bởi bên thứ ba qua Internet.
 
-[](images/cloud_openstack/anh2.png)
+![](images/cloud_openstack/anh2.png)
 
 - Private Cloud: Đám mây riêng duoc xây dựng và quản lý nội bộ cho một tổ chức.
 
-[](images/cloud_openstack/anh3.png)
+![](images/cloud_openstack/anh3.png)
 
 - Hybrid Cloud: Kết hợp cua mô hình đám mây Public Cloud và Private Cloud.
 
-[](images/cloud_openstack/anh4.png)
+![](images/cloud_openstack/anh4.png)
 
 Mô hình dịch vụ:
 - IaaS (Infrastructure as a Service): Cung cấp hạ tầng CNTT (máy chủ, lưu trữ, mạng).
 
-[](images/cloud_openstack/anh5.png)
+![](images/cloud_openstack/anh5.png)
 
 - PaaS (Platform as a Service): Cung cấp nền tảng phát triển ứng dụng.
 
-[](images/cloud_openstack/anh6.png)
+![](images/cloud_openstack/anh6.png)
 
 - SaaS (Software as a Service): Cung cấp phần mềm qua Internet.
 
-[](images/cloud_openstack/anh7.png)
+![](images/cloud_openstack/anh7.png)
 
 # OpenStack
 
