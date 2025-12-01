@@ -7,7 +7,7 @@ Mục tiêu:
 - Cung cấp dịch vụ lưu trữ và quản lý image cho các thành phần khác (Nova...).
 - Hỗ trợ nhiều định dạng image: QCOW2, RAW, VMDK, v.v.
 - Tích hợp với Nova để cung cấp image khi tạo VM.
-<img src="/home/xuankhiem/Bao_Cao/Bao_Cao_Tien_Trinh_Tranning/Openstack/images/Screenshot from 2025-12-01 15-15-09"/>
+!(images/Screenshot from 2025-12-01 15-15-09.png)
 
 ## 2. Cách hoạt động
 - Người dùng hoặc dịch vụ gửi yêu cầu tải lên hoặc truy xuất image qua API Glance.
