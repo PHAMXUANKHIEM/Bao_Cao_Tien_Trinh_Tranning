@@ -8,12 +8,16 @@ Mục đích:
 - Hỗ trợ các mô hình mạng phức tạp: VLAN, VXLAN, overlay, v.v.
 - Tích hợp với Nova và Cinder để phục vụ yêu cầu mạng của VM.
 
+![](images/neutron/anh1.png)
+
 ## 2. Cách hoạt động
 Quy trình xử lý yêu cầu mạng:
 1. Xác thực và ủy quyền yêu cầu từ người dùng.
 2. Neutron Server xử lý API và tạo các tài nguyên mạng cần thiết.
 3. Neutron Agents cấu hình các thành phần mạng trên compute nodes hoặc network nodes.
 4. Neutron theo dõi trạng thái và quản lý lifecycle của tài nguyên mạng.
+
+![](images/neutron/anh2.png)
 
 ## 3. Tính năng chính
 - Quản lý mạng ảo (networks, subnets, ports).

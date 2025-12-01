@@ -44,8 +44,17 @@ Khi người dùng yêu cầu tạo VM:
 Các bước triển khai cơ bản:
 1. Cài đặt và cấu hình Keystone, Glance, Neutron trước.
 2. Cài đặt và cấu hình Nova Controller (API, Scheduler, Conductor).
+```sh
+   sudo apt update
+   sudo apt install nova-api nova-conductor nova-scheduler nova-compute
+```
 3. Cài đặt Nova Compute trên các host vật lý.
+```sh
+   sudo apt update
+   sudo apt install nova-compute
+```
 4. Cấu hình `nova.conf` và khởi động dịch vụ.
+```sh
+   sudo systemctl restart nova-api nova-conductor nova-scheduler nova-compute
+```
 5. Kiểm tra và theo dõi hoạt động của Nova sau khi triển khai.
-
-Tài liệu, các lệnh CLI và Horizon (giao diện web) thường được dùng để quản lý và kiểm tra trạng thái Nova.
