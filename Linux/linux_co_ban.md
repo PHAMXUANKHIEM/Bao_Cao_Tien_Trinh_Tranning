@@ -1,5 +1,4 @@
 
-                -
  # Linux cơ bản
 
  Tài liệu tóm tắt các kiến thức cơ bản về Linux: shell, thao tác thư mục, luồng I/O và một số lệnh thường dùng.
