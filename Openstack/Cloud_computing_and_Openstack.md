@@ -43,13 +43,13 @@ Mô hình dịch vụ:
 OpenStack là nền tảng mã nguồn mở để xây dựng và quản lý cloud (public và private). Mục tiêu là cung cấp giải pháp linh hoạt để triển khai dịch vụ đám mây.
 
 Thành phần chính:
-- Nova: Compute
-- Neutron: Network
-- Cinder: Block Storage
-- Swift: Object Storage
-- Glance: Image service
-- Keystone: Identity service
-- Horizon: Dashboard (giao diện web)
+- Nova: Compute Service trong OpenStack. Nova quản lý vòng đời của các máy ảo (VM), bao gồm việc tạo, lên lịch, và quản lý tài nguyên tính toán.
+- Neutron: Network Service, cung cấp dịch vụ mạng ảo cho các máy ảo và tài nguyên đám mây.
+- Cinder: Block Storage, cung cấp dịch vụ lưu trữ khối cho các máy ảo và ứng dụng đám mây.
+- Swift: Object Storage, cung cấp lưu trữ đối tượng quy mô lớn, phù hợp cho lưu trữ dữ liệu không cấu trúc.
+- Glance: Image service, quản lý hình ảnh máy ảo (VM images) trong OpenStack.
+- Keystone: Identity service, quản lý xác thực và ủy quyền cho người dùng và dịch vụ trong OpenStack. 
+- Horizon: Dashboard (giao diện web), cung cấp giao diện người dùng để quản lý và tương tác với các dịch vụ OpenStack.
 
 ## 2. Ứng dụng và lợi ích
 - Triển khai và quản lý máy ảo, mạng, lưu trữ theo yêu cầu.
