@@ -1,21 +1,32 @@
-TC
-1. Khai niệm Bandwidth Limiting
-- Bandwidth Limiting (Giới hạn băng thông) là kỹ thuật kiểm soát lưu lượng mạng để đảm bảo rằng các ứng dụng và dịch vụ quan trọng có đủ băng thông hoạt động hiệu quả.
-- Mục đích của Bandwidth Limiting bao gồm:
-  - Ngăn chặn việc sử dụng băng thông quá mức bởi các ứng dụng không quan trọng.
-  - Đảm bảo chất lượng dịch vụ (QoS) cho các ứng dụng quan trọng như VoIP, video conferencing.
-  - Quản lý lưu lượng mạng để tránh tắc nghẽn và cải thiện hiệu suất mạng.
-2. Các phương pháp Bandwidth Limiting
-- Traffic Shaping: Điều chỉnh lưu lượng mạng bằng cách trì hoãn các gói tin không quan trọng để ưu tiên các gói tin quan trọng hơn.
-- Rate Limiting: Giới hạn tốc độ truyền dữ liệu cho một ứng dụng hoặc dịch vụ cụ thể.
-- Policing: Loại bỏ các gói tin vượt quá giới hạn băng thông đã định sẵn.
-3. TC trên Linux
-- TC (Traffic Control) là công cụ dòng lệnh trên Linux dùng để quản lý và điều khiển lưu lượng mạng.
-- Các thành phần chính của TC:
-  - Queues: Hàng đợi lưu trữ các gói tin chờ xử lý.
-  - Classes: Lớp phân loại lưu lượng để áp dụng các chính sách khác nhau.
-  - Filters: Bộ lọc để xác định lưu lượng nào sẽ được áp dụng chính sách.
-- Cú pháp cơ bản của TC:
+# Bandwidth Limiting
+
+## 1. Khái niệm
+Giới hạn băng thông (bandwidth limiting) là việc kiểm soát lưu lượng mạng để đảm bảo chất lượng dịch vụ, tránh quá tải và phân bổ công bằng cho các ứng dụng.
+
+## 2. Các phương pháp chính
+- Traffic shaping (ví dụ: tc với qdisc/classful qdiscs).
+- Policing (giới hạn và bỏ gói vượt).
+- Rate limiting trên firewall (iptables + hashlimit/module tương tự).
+- QoS trên thiết bị mạng (DSCP, queuing).
+
+## 3. Công cụ phổ biến (Linux)
+- tc (traffic control) — netem, htb, tbf.
+- iptables/xtables với các module như limit, hashlimit.
+- Wondershaper (dùng nhanh để giới hạn uplink/downlink).
+
+## 4. Ví dụ cơ bản (tc + htb)
+```bash
+# Tạo root qdisc
+tc qdisc add dev eth0 root handle 1: htb default 30
+
+# Tạo class cho tổng băng thông 10mbit
+tc class add dev eth0 parent 1: classid 1:1 htb rate 10mbit
+
+# Tạo class con (5mbit)
+tc class add dev eth0 parent 1:1 classid 1:10 htb rate 5mbit ceil 5mbit
+tc qdisc add dev eth0 parent 1:10 handle 10: sfq
 ```
-tc [ OPTIONS ] OBJECT { COMMAND | help }
-```
+
+## 5. Lời khuyên
+- Test trên môi trường staging trước khi áp dụng production.
+- Kết hợp đo lường (vnstat, iftop, tc -s qdisc) để tinh chỉnh.

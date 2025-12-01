@@ -1,4 +1,5 @@
-1. Bảng (tables) chính và chuỗi (chains)
+# IPTABLES 
+## 1. Bảng (tables) chính và chuỗi (chains)
 
 - Bảng phổ biến:
   - `filter` — mặc định, dùng để chặn/cho phép (ACCEPT, DROP, REJECT).
@@ -13,7 +14,7 @@
   - `FORWARD` — gói đi qua máy (khi làm router).
 
 Luồng xử lý gói (tóm tắt): `raw` → `mangle` PREROUTING → `nat` PREROUTING → routing → `filter` (FORWARD/INPUT/OUTPUT) → `nat` POSTROUTING → `mangle` POSTROUTING.
-2. Target (hành động) thông dụng
+## 2. Target (hành động) thông dụng
 
 - `ACCEPT`: cho phép gói tiếp tục.
 - `DROP`: loại bỏ gói, không phản hồi.
@@ -30,7 +31,7 @@ iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o eth0 -j MASQUERADE
 iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ```
-3. Các điều kiện (matches) hay dùng
+## 3. Các điều kiện (matches) hay dùng
 
 - `-p <protocol>`: `tcp`, `udp`, `icmp`.
 - `-s <ip>` / `-d <ip>`: IP nguồn / đích (hỗ trợ CIDR).
@@ -42,7 +43,7 @@ iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 Chú ý: `-m state` cũ được thay bằng `-m conntrack` trên hệ thống hiện đại.
 
-4. Lệnh quản lý cơ bản
+## 4. Lệnh quản lý cơ bản
 
 - Thêm rule vào cuối chuỗi:
 ```sh
@@ -68,7 +69,7 @@ iptables -F            # flush filter (mặc định)
 iptables -t nat -F     # flush table nat
 ```
 
-5. Lưu/khôi phục cấu hình
+## 5. Lưu/khôi phục cấu hình
 
 - Lưu: `iptables-save > /path/to/file`
 - Khôi phục: `iptables-restore < /path/to/file`
@@ -83,7 +84,7 @@ sudo sysctl -w net.ipv4.ip_forward=1
 # net.ipv4.ip_forward = 1
 ```
 
-6. NAT (SNAT / DNAT / MASQUERADE)
+## 6. NAT (SNAT / DNAT / MASQUERADE)
 
 - SNAT: thay địa chỉ nguồn cố định (thường dùng cho IP tĩnh):
 ```sh
@@ -98,7 +99,7 @@ iptables -t nat -A POSTROUTING -s 10.10.0.0/24 -o eth0 -j MASQUERADE
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.10.0.2:80
 ```
 
-7. Ví dụ cấu hình cơ bản
+## 7. Ví dụ cấu hình cơ bản
 
 1) Cho phép SSH & HTTP, chặn các kết nối mới khác vào máy:
 
@@ -136,14 +137,14 @@ iptables -A FORWARD -i br-lan -o eth0 -j ACCEPT
 iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
 iptables -A INPUT -j DROP
 ```
-8. Module kernel & cấu hình hệ thống
+## 8. Module kernel & cấu hình hệ thống
 
 - Một số module/xtables extension cần thiết có thể bao gồm: `nf_conntrack`, `iptable_nat`, `xt_conntrack`, `xt_multiport`, v.v. Hiện các kernel mới dùng `nf-*` và `xt_*`.
 - Kiểm tra các module đã load bằng `lsmod | grep conntrack`.
 
 ---
 
-9. Ưu điểm, hạn chế và công cụ cao cấp
+## 9. Ưu điểm, hạn chế và công cụ cao cấp
 
 - Ưu điểm: tích hợp trong kernel, hiệu năng cao, rất linh hoạt.
 - Hạn chế: cú pháp rườm rà, khó quản lý rule lớn.
