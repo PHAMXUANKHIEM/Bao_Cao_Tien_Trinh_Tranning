@@ -8,6 +8,8 @@ Mục tiêu:
 - Hỗ trợ nhiều hypervisor (KVM, Xen, VMware...).
 - Tích hợp với Neutron, Cinder, Glance để cung cấp một hệ sinh thái đầy đủ.
 
+![](images/Nova/anh2.png)
+
 ## 2. Cách hoạt động
 Khi người dùng yêu cầu tạo VM:
 1. Xác thực qua Keystone.
@@ -30,6 +32,8 @@ Khi người dùng yêu cầu tạo VM:
 - Dùng thuật toán và policy để chọn host triển khai.
 - Hỗ trợ các chính sách: least-loaded, random, filter-based, custom filters.
 - Cập nhật liên tục trạng thái tài nguyên để ra quyết định chính xác.
+
+![](images/Nova/anh1.png)
 
 ## 6. Nova API
 - Cung cấp các endpoint để tạo, quản lý VM.
