@@ -58,3 +58,6 @@ Các bước triển khai cơ bản:
    sudo systemctl restart nova-api nova-conductor nova-scheduler nova-compute
 ```
 5. Kiểm tra và theo dõi hoạt động của Nova sau khi triển khai.
+```sh
+   openstack compute service list
+```   
