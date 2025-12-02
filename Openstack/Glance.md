@@ -23,6 +23,18 @@ Mục tiêu:
 - Quản lý phiên bản image, thực hiện chuyển đổi định dạng.
 
 ## 4. Cấu hình
+### Truoc khi cài đặt Glance phải chuẩn bị co sở dữ liệu
+```sh
+   mariadb
+```
+```sh
+   MariaDB [(none)]> CREATE DATABASE glance;
+   MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \
+  IDENTIFIED BY 'GLANCE_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
+  IDENTIFIED BY 'GLANCE_DBPASS';
+```
+
 - Cài đặt Glance bằng các công cụ quản lý gói (apt, yum).
 ```sh
    sudo apt update

@@ -22,10 +22,36 @@ Mục đích:
 - Quản lý người dùng, nhóm, vai trò và policy.
 
 ## 4. Cấu hình
+###  Cai dat va cau hinh mariadb cho Keystone
+- Trước khi cài đặt, cần chuẩn bị cơ sở dữ liệu (MySQL, PostgreSQL) và tạo database cho Keystone.
+- Cai dat openstack-client de quan ly openstack:
+```sh
+   sudo apt update
+   sudo apt install python3-openstackclient
+```
+- Cài đặt MariaDB:
+```sh
+   apt install mariadb-server 
+```
+- Tao Keystone database:
+```sh
+   MariaDB [(none)]> CREATE DATABASE keystone;
+```
+- Cap quyen truy cap cho user keystone: (Thay KEYSTONE_DBPASS bang mat khau thuc)
+```sh
+   MariaDB [(none)]> CREATE USER 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE-DBPASS';
+   MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost';
+   MariaDB [(none)]> CREATE USER 'keystone'@'%' IDENTIFIED BY 'KEYSTONE-DBPASS';
+   MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%';
+```
+
+![](images/keystone/anh3.png)
+
+### Cai dat va cau hinh Keystone
 - Cài đặt Keystone qua gói quản lý (apt, yum).
 ```sh
    sudo apt update
-   sudo apt install keystone python3-keystoneclient
+   sudo apt install keystone 
 ```
 - File cấu hình: `keystone.conf`.
 - Cấu hình cơ sở dữ liệu để lưu người dùng, vai trò, token.
@@ -38,15 +64,29 @@ Mục đích:
    [token]
    provider = fernet
 ```
-- Cấu hình catalog service:
+- Điền thông tin vào cơ sở dữ liệu dịch vụ Identity:
 ```sh
-   [catalog]
-   driver = sql
+   su -s /bin/sh -c "keystone-manage db_sync" keystone
 ```
-- Tạo service và endpoints cho các dịch vụ OpenStack khác.
+- Tạo khóa Fernet để mã hóa token:
 ```sh
-   openstack service create --name nova --description "OpenStack Compute" compute
-   openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
+   keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
+   keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+```
+- Khoi động dịch vụ Identity (Thay thế ADMIN_PASSbằng mật khẩu phù hợp cho người dùng quản trị):
+```sh
+   keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
+  --bootstrap-admin-url http://controller:5000/v3/ \
+  --bootstrap-internal-url http://controller:5000/v3/ \
+  --bootstrap-public-url http://controller:5000/v3/ \
+  --bootstrap-region-id RegionOne
+```
+- Cau hinh may chu Apache de chay Keystone:
+```sh
+   sudo apt install apache2 
+   sudo cp /etc/keystone/wsgi-keystone.conf /etc/apache2/sites-available/
+   sudo a2ensite wsgi-keystone
+   sudo systemctl restart apache2
 ```
 ## 5. Bảo mật
 - Sử dụng các phương thức xác thực mạnh (password + token, chứng chỉ).
