@@ -224,7 +224,7 @@ Mô hình triển khai:
     openstack endpoint create --region RegionOne image admin http://controller:9292
   ``` 
   ![](images/deloy_openstack/anh5.png)
-  
+
   -Cài đặt Glance:
   -Trên Controller Node:
   ```sh
@@ -267,4 +267,106 @@ Mô hình triển khai:
   ```sh
     sudo systemctl restart glance-api
     sudo systemctl enable glance-api
-  ```  
+  ``` 
+  ### Cài đặt Placement
+  -Trên Controller Node tạo database cho Placement:
+  ```sh
+    sudo mysql -u root -p
+  ```
+  ```sql
+    DROP DATABASE IF EXISTS placement;
+    CREATE DATABASE IF NOT EXISTS placement;
+    GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'localhost' \
+    IDENTIFIED BY 'PLACEMENT_DBPASS'; 
+    GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'%' \
+    IDENTIFIED BY 'PLACEMENT_DBPASS';
+  ```
+  -Vào lại môi trường admin:
+  ```sh
+    source admin-openrc.sh
+  ``` 
+  -Tạo người dùng, vai trò, dịch vụ và endpoint cho Placement:
+  ```sh
+    openstack user create --domain default --password PLACEMENT_PASS placement
+    openstack role add --project service --user placement admin
+    openstack service create --name placement --description "OpenStack Placement" placement
+    openstack endpoint create --region RegionOne placement public http://controller:8778
+    openstack endpoint create --region RegionOne placement internal http://controller:8778
+    openstack endpoint create --region RegionOne placement admin http://controller:8778
+  ``` 
+  ![](images/deloy_openstack/anh7.png)
+  -Cài đặt Placement:
+  -Trên Controller Node:
+  ```sh
+    sudo apt install placement-api -y
+  ``` 
+  -Sửa file cấu hình Placement:
+  ```sh
+    sudo nano /etc/placement/placement.conf
+  ```
+  -Cấu hình database trong file `placement.conf`:
+  ```sh
+      [database]
+      connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement  
+      [keystone_authtoken]
+      www_authenticate_uri = http://controller:5000
+      auth_url = http://controller:5000
+      memcached_servers = controller:11211
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      project_name = service
+      username = placement
+      password = PLACEMENT_PASS
+  ```
+  ```sh
+    su -s /bin/sh -c "placement-manage db sync" placement
+  ```
+  -Khởi động lại dịch vụ Placement:
+  ```sh
+    sudo systemctl restart apache2
+    sudo systemctl enable apache2
+  ```
+  ### Cài đặt Nova
+  -Trên Controller Node tạo database cho Nova:
+  ```sh
+    sudo mysql -u root -p
+  ```
+  ```sql
+    CREATE DATABASE nova_api;
+    CREATE DATABASE nova;
+    CREATE DATABASE nova_cell0;
+
+    GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' \
+      IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' \
+      IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
+      IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
+      IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' \
+      IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' \
+      IDENTIFIED BY 'NOVA_DBPASS';
+  ```
+  -Vào lại môi trường admin:
+  ```sh
+    source admin-openrc.sh
+  ```
+  -Tạo người dùng, vai trò, dịch vụ và endpoint cho Nova:
+  ```sh
+    openstack user create --domain default --password NOVA_PASS nova
+    openstack role add --project service --user nova admin
+    openstack service create --name nova --description "OpenStack Compute" compute
+    openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
+    openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
+    openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
+  ``` 
+  ![](images/deloy_openstack/anh6.png)
+  -Cài đặt Nova:
+  -Trên Controller Node:
+  ```sh
+    sudo apt install nova-api nova-conductor nova-novncproxy \
+    nova-scheduler nova-placement-api python3-novaclient -y
+  ```
