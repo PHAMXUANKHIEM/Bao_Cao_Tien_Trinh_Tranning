@@ -198,4 +198,72 @@ Mô hình triển khai:
   ```
   ![](images/deloy_openstack/anh4.png)
   ### Cài đặt Glance:
-  
+   -Trên Controller Node tạo database cho Glance:
+  ```sh
+    sudo mysql -u root -p
+  ```
+  ```sql
+    MariaDB [(none)]> CREATE DATABASE glance;
+    Grant proper access to the glance database:
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \ 
+    IDENTIFIED BY 'GLANCE_DBPASS';
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
+    IDENTIFIED BY 'GLANCE_DBPASS';
+  ```
+  -Vào lại môi trường admin:
+  ```sh
+    source admin-openrc.sh
+  ``` 
+  -Tạo người dùng, vai trò, dịch vụ và endpoint cho Glance:
+  ```sh
+    openstack user create --domain default --password GLANCE_PASSWORD glance
+    openstack role add --project service --user glance admin
+    openstack service create --name glance --description "OpenStack Image" image
+    openstack endpoint create --region RegionOne image public http://controller:9292
+    openstack endpoint create --region RegionOne image internal http://controller:9292
+    openstack endpoint create --region RegionOne image admin http://controller:9292
+  ``` 
+  ![](images/deloy_openstack/anh5.png)
+  -Cài đặt Glance:
+  -Trên Controller Node:
+  ```sh
+    sudo apt install glance -y
+  ```
+  -Sửa file cấu hình Glance:
+  ```sh
+    sudo nano /etc/glance/glance-api.conf
+  ```
+  -Cấu hình database trong file `glance-api.conf`:
+  ```sh
+      [database]
+      connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+
+      [keystone_authtoken]
+      www_authenticate_uri  = http://controller:5000
+      auth_url = http://controller:5000
+      memcached_servers = controller:11211
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      project_name = service
+      username = glance
+      password = GLANCE_PASS
+
+      [paste_deploy]
+      # ...
+      flavor = keystone
+
+      [glance_store]
+      # ...
+      stores = file,http
+      default_store = file
+      filesystem_store_datadir = /var/lib/glance/images/
+  ```
+  ```sh
+    su -s /bin/sh -c "glance-manage db_sync" glance
+  ```
+  -Khởi động lại dịch vụ Glance:
+  ```sh
+    sudo systemctl restart glance-api
+    sudo systemctl enable glance-api
+  ```  
