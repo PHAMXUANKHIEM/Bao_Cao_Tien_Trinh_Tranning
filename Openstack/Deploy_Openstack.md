@@ -106,13 +106,54 @@ Mô hình triển khai:
   ```
   -Cấu hình Memcached:
   ```sh
-    sudo nano /etc/sysconfig/memcached
+    sudo nano /etc/memcached.conf
   ```
   ```sh
-    OPTIONS="-l 127.0.0.1
-  
+    -l 127.0.0.1,192.168.1.76
+  ```
+  -Khởi động lại dịch vụ Memcached:
+  ```sh
+    sudo systemctl restart memcached
+    sudo systemctl enable memcached
+  ```
   ### Tắt UFW trên tất cả các nút (nếu đang bật):
   ```sh
     sudo ufw disable
+  ```
+## 2. Cấu hình OpenStack Identity Service (Keystone)
+-Trên Controller Node:
+  ###  Tạo biến môi trường cho admin:
+  -Tạo file `admin-openrc.sh` để lưu thông tin xác thực:
+  ```sh
+    nano admin-openrc.sh
+  ```
+  -Nội dung file: 
+  ```sh
+      export OS_USERNAME=admin
+      export OS_PASSWORD=ADMIN_PASS #Thay ADMIN_PASS bằng mật khẩu mạnh
+      export OS_PROJECT_NAME=admin
+      export OS_USER_DOMAIN_NAME=Default
+      export OS_PROJECT_DOMAIN_NAME=Default
+      export OS_AUTH_URL=http://controller:35357/v3
+      export OS_IDENTITY_API_VERSION=3
+  ``` 
+  ### Tạo Database cho Keystone:
+  -Trên Controller Node kết nối vào MariaDB bằng root:
+  ```sh
+    sudo mysql -u root -p
+  ```
+  -Tạo database và người dùng cho Keystone:
+  ```sql
+    MariaDB [(none)]> CREATE DATABASE keystone;
+    Grant proper access to the keystone database:
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' \ 
+    IDENTIFIED BY '123123Aa';
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' \
+    IDENTIFIED BY '123123Aa';
+  ```
+  ### Cài đặt Keystone:
+  -Trên Controller Node:
+  ```sh
+    sudo apt install keystone apache2 libapache2-mod-wsgi-py3 -y
   ```
   
