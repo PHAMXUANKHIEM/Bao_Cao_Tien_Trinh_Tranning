@@ -295,7 +295,7 @@ Mô hình triển khai:
     openstack endpoint create --region RegionOne placement admin http://controller:8778
   ``` 
   ![](images/deloy_openstack/anh7.png)
-  
+
   -Cài đặt Placement:
   -Trên Controller Node:
   ```sh
@@ -437,6 +437,7 @@ Mô hình triển khai:
       su -s /bin/sh -c "nova-manage cell_v2 list_cells" nova
   ```
   ![](images/deloy_openstack/anh8.png)
+
   -Khởi động lại dịch vụ Nova:
   ```sh
     sudo systemctl restart nova-api nova-scheduler nova-conductor nova-novncproxy
@@ -454,4 +455,246 @@ Mô hình triển khai:
   ```sh
       [DEFAULT]
       transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
-      my_ip =
+      my_ip = 192.168.1.53
+      use_neutron = true
+      firewall_driver = nova.virt.firewall.NoopFirewallDriver
+      [keystone_authtoken]
+      www_authenticate_uri = http://controller:5000/
+      auth_url = http://controller:5000/
+      memcached_servers = controller:11211
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      project_name = service
+      username = nova
+      password = NOVA_PASS
+      [placement]
+      region_name = RegionOne
+      project_domain_name = Default
+      project_name = service
+      auth_type = password
+      user_domain_name = Default
+      auth_url = http://controller:5000/v3
+      username = placement
+      password = PLACEMENT_PASS
+      [libvirt]
+      virt_type = qemu
+      [oslo_concurrency]
+      lock_path = /var/lib/nova/tmp
+      [glance]    
+      api_servers = http://controller:9292
+      [vnc]
+      enabled = true
+      server_listen = $my_ip
+      server_proxyclient_address = $my_ip
+      novncproxy_base_url = http://controller:6080/vnc_auto.html
+      [api]
+      auth_strategy = keystone
+  ```
+  -Khởi động lại dịch vụ Nova trên Compute Node:
+  ```sh
+    sudo systemctl restart nova-compute
+    sudo systemctl enable nova-compute
+  ```
+  ### Cài đặt Neutron
+  -Trên Controller Node tạo database cho Neutron:
+  ```sh
+    sudo mysql -u root -p
+  ```
+  ```sql
+    CREATE DATABASE neutron;
+    GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' \
+      IDENTIFIED BY 'NEUTRON_DBPASS';
+    GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
+      IDENTIFIED BY 'NEUTRON_DBPASS';
+  ```
+  -Vào lại môi trường admin:
+  ```sh
+    source admin-openrc.sh
+  ``` 
+  -Tạo người dùng, vai trò, dịch vụ và endpoint cho Neutron:
+  ```sh 
+    openstack user create --domain default --password NEUTRON_PASS neutron
+    openstack role add --project service --user neutron admin
+    openstack service create --name neutron --description "OpenStack Networking" network
+    openstack endpoint create --region RegionOne network public http://controller:9696
+    openstack endpoint create --region RegionOne network internal http://controller:9696
+    openstack endpoint create --region RegionOne network admin http://controller:9696
+  ```
+  ![](images/deloy_openstack/anh9.png)
+
+  -Cài đặt Neutron (Cài theo Provider Network với Open vSwitch):
+  -Trên Controller Node:
+  ```sh
+    sudo apt install neutron-server neutron-plugin-ml2 neutron-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent -y
+  ```
+  -Tạo bridge br-ex trên Controller Node:
+  ```sh
+    sudo ovs-vsctl add-br br-ex
+    sudo ovs-vsctl add-port br-ex enp0s8  #Thay enp0s8 bằng tên interface kết nối mạng ngoài
+  ```
+
+![](images/deloy_openstack/anh10.png)
+
+  -Sửa file cấu hình Neutron:
+  ```sh
+    sudo nano /etc/neutron/neutron.conf
+  ```
+  -Cấu hình file `neutron.conf`:
+  ```sh
+      [database]
+      connection = mysql+pymysql://neutron:NEUTRON_DBPASS@controller/neutron
+      [DEFAULT] 
+      core_plugin = ml2
+      service_plugins = 
+      transport_url = rabbit://openstack:RABBIT_PASS@controller
+      auth_strategy = keystone
+      notify_nova_on_port_status_changes = true
+      notify_nova_on_port_data_changes = true
+      [keystone_authtoken]
+      www_authenticate_uri = http://controller:5000
+      auth_url = http://controller:5000
+      memcached_servers = controller:11211
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      project_name = service
+      username = neutron
+      password = NEUTRON_PASS
+      [nova]
+      auth_url = http://controller:5000
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      region_name = RegionOne
+      project_name = service
+      username = nova
+      password = NOVA_PASS
+      [oslo_concurrency]
+      lock_path = /var/lib/neutron/tmp
+  ```
+  -Cấu hình ML2:
+  ```sh
+    sudo nano /etc/neutron/plugins/ml2/ml2_conf.ini 
+  ```
+  -Cấu hình file `ml2_conf.ini`:
+  ```sh
+      [ml2]
+      type_drivers = flat,vlan,vxlan
+      tenant_network_types = 
+      mechanism_drivers = openvswitch
+      extension_drivers = port_security
+      [ml2_type_flat]
+      flat_networks = provider
+  ``` 
+  -Cấu hình Open vSwitch Agent:
+  ```sh
+    sudo nano /etc/neutron/plugins/ml2/openvswitch_agent.ini
+  ```
+  -Cấu hình file `openvswitch_agent.ini`:
+  ```sh
+      [ovs]
+      bridge_mappings = provider:br-ex
+      [securitygroup]
+      enable_security_group = true
+      firewall_driver = openvswitch
+      #firewall_driver = iptables_hybrid
+  ```
+  -Cấu hình DHCP Agent:
+  ```sh
+    sudo nano /etc/neutron/dhcp_agent.ini
+  ```
+  -Cấu hình file `dhcp_agent.ini`:
+  ```sh
+      [DEFAULT]
+      dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+      enable_isolated_metadata = true
+  ```
+  -Cấu hình metadata_agent:
+  ```sh
+    sudo nano /etc/neutron/metadata_agent.ini
+  ```
+  -Cấu hình file `metadata_agent.ini`:
+  ```sh
+      [DEFAULT]
+      nova_metadata_host = controller
+      metadata_proxy_shared_secret = METADATA_SECRET
+  ```
+  -Cấu hình Nova: 
+  ```sh
+    sudo nano /etc/nova/nova.conf
+  ```
+  -Thêm cấu hình Neutron vào file `nova.conf`:
+  ```sh
+      [neutron]
+      auth_url = http://controller:5000
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      region_name = RegionOne
+      project_name = service
+      username = neutron
+      password = NEUTRON_PASS
+      service_metadata_proxy = true
+      metadata_proxy_shared_secret = METADATA_SECRET
+  ```
+  -Đồng bộ database Neutron:
+  ```sh
+    su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
+    --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
+  ```
+  ![](images/deloy_openstack/anh11.png)
+
+  -Khởi động lại dịch vụ Neutron trên Controller Node:
+  ```sh
+    sudo systemctl restart neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent
+    sudo systemctl enable neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent
+  ```
+  -Khởi động lại nova-api:
+  ```sh
+    sudo systemctl restart nova-api
+  ```
+### Cài đặt Horizon (Dashboard)
+  -Trên Controller Node:
+  ```sh
+    sudo apt install openstack-dashboard -y
+  ```
+  -Sửa file cấu hình Horizon:
+  ```sh
+    sudo nano /etc/openstack-dashboard/local_settings.py
+  ```
+  -Cấu hình file `local_settings.py`:
+  ```sh
+      ALLOWED_HOSTS = ['*']
+      OPENSTACK_HOST = "controller"
+      OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
+      OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+      SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+      CACHES = {
+          'default': {
+              'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+              'LOCATION': 'controller:11211',
+                    }
+                }
+      OPENSTACK_API_VERSIONS = {
+                "identity": 3,
+                "image": 2,
+                "volume": 3,
+            }
+      OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
+      OPENSTACK_NEUTRON_NETWORK = {
+    ...
+    'enable_router': False,
+    'enable_quotas': False,
+    'enable_ipv6': False,
+    'enable_distributed_router': False,
+    'enable_ha_router': False,
+    'enable_fip_topology_check': False,
+    }
+      TIME_ZONE = "Asia/Ho_Chi_Minh"
+  ```
+  -Cấu hình file `/etc/httpd/conf.d/openstack-dashboard.conf`:
+  ```sh
+      WSGIApplicationGroup %{GLOBAL}
+  ```
+  -Restart lại apache2
