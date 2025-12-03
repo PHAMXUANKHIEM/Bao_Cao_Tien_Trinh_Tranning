@@ -5,7 +5,7 @@ Mô hình triển khai:
 - Controller Node: Quản lý các dịch vụ OpenStack
 - Compute Node: Chạy các máy ảo
 
-![](images/deploy_openstack/anh1.png)
+![](images/deloy_openstack/anh1.png)
 
 - Cập nhật hệ thống:
 ```sh
