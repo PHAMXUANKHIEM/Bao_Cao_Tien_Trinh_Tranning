@@ -22,54 +22,10 @@ Mục tiêu:
 - Cung cấp image cho Nova khi tạo VM.
 - Quản lý phiên bản image, thực hiện chuyển đổi định dạng.
 
-## 4. Cấu hình
-### Truoc khi cài đặt Glance phải chuẩn bị co sở dữ liệu
-```sh
-   mariadb
-```
-```sh
-   MariaDB [(none)]> CREATE DATABASE glance;
-   MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \
-  IDENTIFIED BY 'GLANCE_DBPASS';
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
-  IDENTIFIED BY 'GLANCE_DBPASS';
-```
-
-- Cài đặt Glance bằng các công cụ quản lý gói (apt, yum).
-```sh
-   sudo apt update
-   sudo apt install glance python3-glanceclient
-```
-- Các file cấu hình: `glance-api.conf`, `glance-registry.conf`.
-- Cấu hình backend của Glance Store để xác định nơi lưu image (file system, object storage...).
-```sh
-   [glance_store]
-   stores = file,http
-   default_store = file
-   filesystem_store_datadir = /var/lib/glance/images/
-```
-- Cấu hình Keystone để xác thực:
-```sh
-   [keystone_authtoken]
-   auth_uri = http://controller:5000
-   auth_url = http://controller:35357
-   memcached_servers = controller:11211
-   auth_type = password
-   project_domain_name = Default
-   user_domain_name = Default
-   project_name = service
-   username = glance
-   password = GLANCE_PASS
-```
-- Cấu hình Logging trong `glance-api.conf` và `glance-registry.conf`:
-```sh
-   [DEFAULT]
-   log_file = /var/log/glance/glance-api.log
-```
-## 5. Bảo mật
+## 4. Bảo mật
 - Dùng Keystone cho xác thực.
 - Mã hóa dữ liệu nhạy cảm khi truyền tải và lưu trữ.
 - Giới hạn quyền truy cập vào image theo nhu cầu.
 
-## 6. Tích hợp
-- Thiết lập endpoints và service trong Keystone để Nova và các dịch vụ khác truy cập Glance.
+## 5. Tích hợp
+- Thiết lập endpoints và service trong Keystone để Nova và các dịch vụ khác truy cập Glance.s

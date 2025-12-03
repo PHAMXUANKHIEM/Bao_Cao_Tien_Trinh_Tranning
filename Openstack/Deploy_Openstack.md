@@ -137,6 +137,10 @@ Mô hình triển khai:
       export OS_AUTH_URL=http://controller:35357/v3
       export OS_IDENTITY_API_VERSION=3
   ``` 
+  -Nguồn file để sử dụng thông tin xác thực:
+  ```sh
+      source admin-openrc.sh
+  ```
   ### Tạo Database cho Keystone:
   -Trên Controller Node kết nối vào MariaDB bằng root:
   ```sh
@@ -156,4 +160,42 @@ Mô hình triển khai:
   ```sh
     sudo apt install keystone apache2 libapache2-mod-wsgi-py3 -y
   ```
+  -Sửa file cấu hình Keystone:
+  ```sh
+    sudo nano /etc/keystone/keystone.conf
+  ```
+  -Cấu hình database trong file `keystone.conf`:
+  ```sh
+    [database]
+    connection = mysql+pymysql://keystone:123123Aa@controller/keystone
+  ```
+  -Cấu hình token trong file `keystone.conf`:
+  ```sh
+    [token]
+    provider = fernet
+  ``` 
+  -Tạo database cho dịch vụ xác thực:
+  ```sh
+    su -s /bin/sh -c "keystone-manage db_sync" keystone
+  ```
+  -Tạo khoá Fernet và các khoá mã hoá:
+  ```sh
+    keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
+    keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+  ```
+  -Bootstrap Keystone để tạo dịch vụ ban đầu và tài khoản admin:
+  ```sh
+    keystone-manage bootstrap \                                                
+    --bootstrap-password ADMIN_PASS \                                                                   
+    --bootstrap-admin-url http://controller:5000/v3/ \                                                    
+    --bootstrap-internal-url http://controller:5000/v3/ \                                               
+    --bootstrap-public-url http://controller:5000/v3/ \                                                 
+    --bootstrap-region-id RegionOne 
+  ``` 
+  -Kiểm tra cài đặt Keystone:
+  ```sh
+    openstack service list
+  ```
+  ![](images/deloy_openstack/anh4.png)
+  ### Cài đặt Glance:
   
