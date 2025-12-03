@@ -295,6 +295,7 @@ Mô hình triển khai:
     openstack endpoint create --region RegionOne placement admin http://controller:8778
   ``` 
   ![](images/deloy_openstack/anh7.png)
+  
   -Cài đặt Placement:
   -Trên Controller Node:
   ```sh
@@ -364,9 +365,93 @@ Mô hình triển khai:
     openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
   ``` 
   ![](images/deloy_openstack/anh6.png)
+
   -Cài đặt Nova:
   -Trên Controller Node:
   ```sh
-    sudo apt install nova-api nova-conductor nova-novncproxy \
-    nova-scheduler nova-placement-api python3-novaclient -y
+    sudo apt install nova-api nova-conductor nova-novncproxy nova-scheduler -y
   ```
+  -Sửa file cấu hình Nova:
+  ```sh
+    sudo nano /etc/nova/nova.conf
+  ```
+  -Cấu hình database trong file `nova.conf`:
+  ```sh
+      [database]
+      connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+      [api_database]
+      connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
+      [api]
+      auth_strategy = keystone
+      [keystone_authtoken]
+      www_authenticate_uri = http://controller:5000/
+      auth_url = http://controller:5000/
+      memcached_servers = controller:11211
+      auth_type = password
+      project_domain_name = Default
+      user_domain_name = Default
+      project_name = service
+      username = nova
+      password = NOVA_PASS
+      [placement]
+      region_name = RegionOne
+      project_domain_name = Default
+      project_name = service
+      auth_type = password
+      user_domain_name = Default
+      auth_url = http://controller:5000/v3
+      username = placement
+      password = PLACEMENT_PASS
+      [vnc]
+      enabled = true
+      server_listen = $my_ip
+      server_proxyclient_address = $my_ip
+      [DEFAULT]
+      transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
+      myip = 192.168.1.76
+      [service_user]
+      send_service_user_token = true
+      auth_url = https://controller/identity
+      auth_strategy = keystone
+      auth_type = password
+      project_domain_name = Default
+      project_name = service
+      user_domain_name = Default
+      username = nova
+      password = NOVA_PASS
+      [glance]
+      api_servers = http://controller:9292
+      [oslo_concurrency]
+      lock_path = /var/lib/nova/tmp
+  ```
+  -Dồng bộ database:
+  ```sh
+      su -s /bin/sh -c "nova-manage api_db sync" nova
+
+      su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
+
+      su -s /bin/sh -c "nova-manage cell_v2 create_cell --name=cell1 --verbose" nova
+
+      su -s /bin/sh -c "nova-manage db sync" nova
+
+      su -s /bin/sh -c "nova-manage cell_v2 list_cells" nova
+  ```
+  ![](images/deloy_openstack/anh8.png)
+  -Khởi động lại dịch vụ Nova:
+  ```sh
+    sudo systemctl restart nova-api nova-scheduler nova-conductor nova-novncproxy
+    sudo systemctl enable nova-api nova-scheduler nova-conductor nova-novncproxy
+  ```
+  -Trên Compute Node:
+  ```sh
+    sudo apt install nova-compute -y
+  ```
+  -Sửa file cấu hình Nova trên Compute Node:
+  ```sh
+    sudo nano /etc/nova/nova.conf
+  ```
+  -Cấu hình file `nova.conf` trên Compute Node:
+  ```sh
+      [DEFAULT]
+      transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
+      my_ip =
