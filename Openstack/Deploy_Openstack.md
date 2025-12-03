@@ -224,6 +224,7 @@ Mô hình triển khai:
     openstack endpoint create --region RegionOne image admin http://controller:9292
   ``` 
   ![](images/deloy_openstack/anh5.png)
+  
   -Cài đặt Glance:
   -Trên Controller Node:
   ```sh
@@ -242,7 +243,7 @@ Mô hình triển khai:
       www_authenticate_uri  = http://controller:5000
       auth_url = http://controller:5000
       memcached_servers = controller:11211
-      auth_type = password
+      auth_type = password 
       project_domain_name = Default
       user_domain_name = Default
       project_name = service
