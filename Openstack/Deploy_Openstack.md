@@ -683,7 +683,6 @@ Mô hình triển khai:
             }
       OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
       OPENSTACK_NEUTRON_NETWORK = {
-    ...
     'enable_router': False,
     'enable_quotas': False,
     'enable_ipv6': False,
@@ -698,3 +697,5 @@ Mô hình triển khai:
       WSGIApplicationGroup %{GLOBAL}
   ```
   -Restart lại apache2
+  - Đăng nhập với tài khoản admin và mật khẩu là pass của KEYSTONE (lấy bằng cách export admin-openrc.sh)
+  
