@@ -1,7 +1,8 @@
-# Triển khai cụm Ceph (Manual)
+# Triển khai cụm Ceph (ceph-deploy)
 ## Chuẩn bị 
+
 ![](/home/xuankhiem/Bao_Cao/Bao_Cao_Tien_Trinh_Tranning/Ceph/imgaes/anh2.png)
-)
+
 ## Cấu hình cài đặt 
  ### Cài đặt môi trường: 
  Ceph-deploy không còn hỗ trợ CentOS 8 kể từ Ceph Nautilus trở lên, vì RedHat chuyển sang CentOS Stream → khiến ceph-deploy bỏ luôn hỗ trợ do xung đột Python + repo. Ta phải cài python3+pip3 để ceph-deploy hỗ trợ
