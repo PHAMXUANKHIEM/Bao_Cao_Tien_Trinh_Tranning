@@ -654,6 +654,35 @@ Mô hình triển khai:
   ```sh
     sudo systemctl restart nova-api
   ```
+### Cài đặt Cinder 
+  -Trên Controller tạo database cho Cinder:
+  ```sh
+    mysql -u root -p
+  ```
+  ```sh
+    MariaDB [(none)]> CREATE DATABASE cinder;
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'CINDER_DBPASS';
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'CINDER_DBPASS';
+  ```
+  -Vào lại môi trường admin:
+  ```sh
+    source admin-opensc.sh
+  ```
+  -Tạo và cấu hình user, service cho cinder:
+  ```sh
+    openstack user create --domain default --password-prompt cinder
+    openstack role add --project service --user cinder admin
+    openstack service create --name cinder --description "OpenStack Block Storage" block-storage
+    openstack endpoint create --region RegionOne block-storage public http://controller:8776/v3
+    openstack endpoint create --region RegionOne block-storage internal http://controller:8776/v3
+    openstack endpoint create --region RegionOne block-storage admin http://controller:8776/v3
+  ```
+![](images/deloy_openstack/anh13.png)
+
+  -Cài đặt các gói cần thiết:
+  ```sh
+     apt install cinder-api cinder-scheduler
+  ```
 ### Cài đặt Horizon (Dashboard)
   -Trên Controller Node:
   ```sh
@@ -698,4 +727,6 @@ Mô hình triển khai:
   ```
   -Restart lại apache2
   - Đăng nhập với tài khoản admin và mật khẩu là pass của KEYSTONE (lấy bằng cách export admin-openrc.sh)
-  
+
+  ![](images/deloy_openstack/anh12.png)
+
