@@ -1,15 +1,7 @@
 # Triển khai cụm Ceph (Manual)
 ## Chuẩn bị 
-   |
-            +----------------------------+----------------------------+
-            |                            |                            |
-            |10.2.1.54                   |10.2.1.81                   |10.2.1.83 
-+-----------+-----------+    +-----------+-----------+    +-----------+-----------+
-|        [ceph1]        |    |       [ceph2]         |    |       [ceph3]         |
-|     Object Storage    +----+     Object Storage    +----+     Object Storage    |
-|     Monitor Daemon    |    |                       |    |                       |
-|     Manager Daemon    |    |                       |    |                       |
-+-----------------------+    +-----------------------+    +-----------------------+
+![](/home/xuankhiem/Bao_Cao/Bao_Cao_Tien_Trinh_Tranning/Ceph/imgaes/anh2.png)
+)
 ## Cấu hình cài đặt 
  ### Cài đặt môi trường: 
  Ceph-deploy không còn hỗ trợ CentOS 8 kể từ Ceph Nautilus trở lên, vì RedHat chuyển sang CentOS Stream → khiến ceph-deploy bỏ luôn hỗ trợ do xung đột Python + repo. Ta phải cài python3+pip3 để ceph-deploy hỗ trợ
