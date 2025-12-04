@@ -1,7 +1,7 @@
 # Triển khai cụm Ceph (ceph-deploy)
 ## Chuẩn bị 
 
-![](/home/xuankhiem/Bao_Cao/Bao_Cao_Tien_Trinh_Tranning/Ceph/imgaes/anh2.png)
+![](imgaes/anh2.png)
 
 ## Cấu hình cài đặt 
  ### Cài đặt môi trường: 
@@ -131,7 +131,7 @@ Tạo OSD trên Ceph
  ```sh
   ceph -s
  ```
-![](/home/xuankhiem/Bao_Cao/Bao_Cao_Tien_Trinh_Tranning/Ceph/imgaes/anh1.png)
+![](imgaes/anh1.png)
 
  -Khi out user ceph ra vao lai phai nhap lenh 
  ```sh
