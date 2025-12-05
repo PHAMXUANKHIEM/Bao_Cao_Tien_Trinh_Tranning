@@ -137,3 +137,30 @@ Tạo OSD trên Ceph
  ```sh
  export PATH=$PATH:/usr/local/bin
  ```
+Cài đặt Dashboard cho Ceph
+-Tải gói cài đặt:
+```sh
+   sudo dnf install -y ceph-mgr-dashboard   
+```
+-Bật chức năng Dashboard:
+```sh
+   ceph mgr module enable dashboard --force   
+```
+-Tạo chứng chỉ HTTPS:
+```sh
+    ceph dashboard create-self-signed-cert 
+```
+-Đặt tài khoản và password cho Ceph:
+```sh
+    echo 'Kh12072004@' > dashboard-pwd.txt 
+    ceph dashboard set-login-credentials admin -i dashboard-pwd.txt
+```
+-Restart lại dịch vuceph-mrg:
+```sh
+    systemctl restart ceph-mgr@ceph1  
+    systemctl restart ceph-mgr@ceph2
+    systemctl restart ceph-mgr@ceph3
+```
+Truy cập vào địa chỉ ip: https://10.2.1.54:8443  
+![](imgaes/anh3.png)
+ 
