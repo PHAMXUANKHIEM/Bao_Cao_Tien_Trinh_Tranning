@@ -13,29 +13,60 @@
  ## Thao tác thư mục
 
  - Thay đổi thư mục: `cd <thư_mục>`
+
+![](images_linuxcoban/anh1.png)
+
  - Xem thư mục hiện tại: `pwd`
+
+![](images_linuxcoban/anh2.png)
+
 
  ## Lịch sử lệnh
 
  - Xem lịch sử: `history`
  - Dùng phím lên/xuống để chọn lại lệnh trước đó.
 
+![](images_linuxcoban/anh3.png)
+
+ -Tìm lệnh cũ theo ngược: `Ctrl + R`
+
+![](images_linuxcoban/anh4.png)
+ 
+ -Tìm lệnh cũ xuôi (Trong Ubuntu thì sẽ là Pause Terminal bật lên là : `stty -ixon`): `Ctrl + S`
+
+ ![](images_linuxcoban/anh5.png)
+
  ## Biến môi trường
 
  - Gán biến: `export TEN_BIEN="gia_tri_gan"`
  - Xem biến: `echo $TEN_BIEN`
- - Xem tất cả biến: `env`
 
+ ![](images_linuxcoban/anh6.png)
+
+ - Xem tất cả biến: `env`
  ## Trang hướng dẫn (man)
 
  - Xem hướng dẫn chi tiết: `man <ten_lenh>` (ví dụ `man ls`).
 
+ ![](images_linuxcoban/anh7.png)
+
  ## Luồng dữ liệu: STDIN / STDOUT / STDERR
 
  - **STDIN**: luồng vào (mặc định là bàn phím). Ví dụ: `cat < file.txt`.
- - **STDOUT**: luồng ra chuẩn, hiện trên terminal.
+
+![](images_linuxcoban/anh8.png)
+
+ - **STDOUT**: luồng ra chuẩn, hiện trên terminal. Ví dụ: `ls`
+
+![](images_linuxcoban/anh9.png)
+
  - **STDERR**: luồng lỗi, cũng hiện trên terminal.
+
+![](images_linuxcoban/anh10.png)
+
  - **Piping**: dùng `|` để lấy `STDOUT` của chương trình này làm `STDIN` của chương trình khác. Ví dụ: `ip a | grep ens32`.
+
+![](images_linuxcoban/anh11.png)
 
  ## Một số lệnh quan trọng
 
@@ -49,12 +80,25 @@
  cat > newfile.txt       # tạo file nhanh
  ```
 
+![](images_linuxcoban/anh12.png)
+
  Các option hữu ích:
 
  - `-n`: đánh số dòng (kể cả dòng trống)
+
+![](images_linuxcoban/anh13.png)
+
  - `-b`: đánh số dòng không rỗng
+
+![](images_linuxcoban/anh14.png)
+
  - `-A`: hiển thị ký tự đặc biệt
+
+![](images_linuxcoban/anh15.png)
+
  - `-s`: xóa dòng trống lặp
+
+![](images_linuxcoban/anh16.png)
 
  ### join
 
@@ -64,13 +108,29 @@
  join file1.txt file2.txt
  ```
 
+![](images_linuxcoban/anh17.png)
+
  Option thường dùng:
 
  - `-a N`: in toàn bộ dữ liệu của file N (1 hoặc 2)
+
+![](images_linuxcoban/anh18.png)
+
  - `-v N`: in dữ liệu không khớp của file N
+
+![](images_linuxcoban/anh19.png)
+
  - `-t CHAR`: chỉ định dấu phân cách (ví dụ CSV)
- - `-o`: chỉ định cột xuất ra
+
+![](images_linuxcoban/anh20.png)
+
+ - `-o + STT_file.STT_cột`: chỉ định cột của file nào được xuất ra
+
+![](images_linuxcoban/anh21.png)
+
  - `-e`: điền giá trị cho ô trống
+
+![](images_linuxcoban/anh18.png)
 
  ### paste
 
