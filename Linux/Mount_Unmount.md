@@ -6,6 +6,11 @@
 ```sh
 mount [option] [thiết_bị] [điểm gắn kết]
 ```
+Ví dụ khi cắm usb:
+```sh
+mount /dev/sdb1 /home/usb 
+```
+Ta có thể truy cập usb qua thư mục `/home/usb`
 ### Option:
           
                             |        Tên lệnh          |       Công dụng         |
@@ -30,3 +35,8 @@ mount [option] [thiết_bị] [điểm gắn kết]
                             |          -r              |mount ở chế độ chỉ đọc   |
                             |                          |                         |
 
+# Unmount
+- Dùng để ngắt kết nối tới hệ thống tệp tin hoặc dùng khi check fsck. Khi rút usb chạy lệnh:
+```sh 
+unmount /dev/sdb1 /home/usb
+```
