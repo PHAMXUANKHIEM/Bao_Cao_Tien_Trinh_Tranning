@@ -39,6 +39,8 @@ sudo systemctl set-default graphical.target
 sudo systemctl isolate multi-user.target
 ```
 
+![](images_boot_process/anh1.png)
+
 ## Kiểm tra trạng thái boot và gỡ lỗi
 
 - Xem log kernel ban đầu:
@@ -83,5 +85,3 @@ sudo update-grub      # (Debian/Ubuntu) cập nhật menu grub
 - `systemctl`, `journalctl`, `dmesg`, `grub-install`, `update-grub`, `update-initramfs`
 
 ---
-
-Nếu bạn muốn, tôi có thể: thêm sơ đồ đơn giản, phiên bản rút gọn để in, hoặc các ví dụ phục hồi GRUB chi tiết (bước bằng bước). Chọn phương án bạn muốn.

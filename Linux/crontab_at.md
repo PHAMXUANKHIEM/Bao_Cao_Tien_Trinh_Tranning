@@ -33,15 +33,33 @@
 |    └───────────────  Giờ (0-23)
 └────────────────────  Phút (0-59)
 - Sử dụng lệnh `crontab -e` để chỉnh sửa tệp Crontab của người dùng hiện tại.
+
+![](images_crontab/anh3.png)
+
+![](images_crontab/anh2.png)
+
 - Sử dụng lệnh `crontab -l` để liệt kê các tác vụ đã được lên lịch trong tệp Crontab.
+
+![](images_crontab/anh4.png)
+
 - Sử dụng lệnh `crontab -r` để xóa tệp Crontab của người dùng hiện tại.
+
+![](images_crontab/anh5.png)
+
 Ví dụ:
+1 = stdout (kết quả bình thường)
+
+2 = stderr (lỗi)
+
+> = redirect (chuyển hướng)
+
+2>&1 = gửi stderr (2) đến cùng nơi stdout (1) đang đi
 ```bash
-# Chạy script backup.sh vào lúc 2:30 sáng mỗi ngày
-30 2 * * * /path/to/backup.sh 
-# Gửi email nhắc nhở vào lúc 9:00 sáng mỗi thứ Hai
-0 9 * * 1 /path/to/send_reminder_email.sh
+# Chạy script chao.sh vào lúc 9h sáng mỗi ngày in vao file.log
+0 9 * * * /path/to/backup.sh >> file.log 2>&1
 ``` 
+![](images_crontab/anh1.png)
+
 - Thiết lập quyền truy cập cho tệp Crontab để đảm bảo chỉ người dùng có quyền thích hợp mới có thể chỉnh sửa hoặc xem nội dung.
 - Kiểm tra và xác nhận hoạt động của Crontab bằng cách theo dõi các tệp nhật ký hệ thống hoặc sử dụng các công cụ giám sát.
 - Duy trì và cập nhật tệp Crontab định kỳ để đảm bảo các tác vụ được thực thi đúng lịch trình và hiệu quả.
@@ -51,3 +69,12 @@ Ví dụ:
 - Theo dõi và ghi lại các hoạt động liên quan đến việc chỉnh sửa và thực thi các tác vụ trong Crontab để phát hiện các hành vi đáng ngờ.
 - Cập nhật hệ thống và các thành phần liên quan định kỳ để vá các lỗ hổng bảo mật có thể ảnh hưởng đến Crontab.
 - Sử dụng các công cụ giám sát và cảnh báo để theo dõi tình trạng bảo mật của Crontab trong môi trường Linux.
+# At
+## 1. Khái niệm at
+- `at` trong Linux là một cách thay thế cho trình xây dựng lịch – cron, để lên lịch cho các tác vụ thực hiện một lần. Nghĩa là bạn có thể chỉ định thời gian tùy ý để thực hiện các nhiệm vụ cụ thể. Hơn nữa, bạn có thể liệt kê hoặc xóa các tác vụ đã được lưu cần thực hiện trong tương lai gần. Tuy nhiên, người dùng càn quyền quản lý hệ thống để sử dụng lệnh này. Các lệnh `atq`, `atrm` và `batch` cũng là một phần của lệnh at, cho phép xếp hàng, kiểm tra hoặc xóa, hủy các tác vụ đã lên lịch.
+## 2. Cách sử dụng at
+                        |              Tùy chọn               |              Công Dụng                |
+                        |                 -b                  | Thực hiện lên lịch khi hệ thống không |
+                        |                                     | quá tải                               |  
+                        |                 -c                  | Xem chi tiết công việc cho thiết bị   | 
+                        |                                     | cuối                                  |  

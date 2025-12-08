@@ -6,11 +6,22 @@
 - **Cách tạo:**  
   - Tạo mới tmux:  
     - `tmux`: tạo mới một session  
-    - `tmux a`: attach vào session  
-    - `tmux new -s <ten_session>`: tạo một session mới với tên  
-    - `tmux a -t <ten_session>`: attach vào session có tên  
-    - `tmux kill-session -t <ten_session>`: xóa session đó  
 
+![](images_tmux_byobu/anh1.png)
+
+    - `tmux a`: attach vào session
+    - `tmux new -s <ten_session>`: tạo một session mới với tên
+  
+![](images_tmux_byobu/anh3.png)
+
+![](images_tmux_byobu/anh2.png)
+
+    - `tmux a -t <ten_session>`: attach vào session có tên  
+
+![](images_tmux_byobu/anh4.png)
+
+    - `tmux kill-session -t <ten_session>`: xóa session đó  
+![](images_tmux_byobu/anh5.png)
 - **Lệnh trong tmux:**  
   - Làm việc với cửa sổ:  
     - `Ctrl+b c`: tạo thêm một cửa sổ  

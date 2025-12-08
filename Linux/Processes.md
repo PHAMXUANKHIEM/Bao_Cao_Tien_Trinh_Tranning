@@ -12,20 +12,32 @@ Quản lý tiến trình trong Linux: loại tiến trình, cách xem, theo dõi
 
 - `ps` — chụp trạng thái tiến trình tại một thời điểm.
 
+![](images_process/anh1.png)
+
 ```sh
 ps aux | grep tên_tiến_trình   # tìm tiến trình theo tên
 ps -ef                         # dạng khác (UID, PID, PPID, CMD)
 ```
 
+![](images_process/anh2.png)
+
+
 - `top` — hiển thị thông tin động về CPU/RAM, cập nhật thường xuyên.
+
+![](images_process/anh3.png)
 
 Trong `top`:
 
 - `Shift+P`: sắp xếp theo sử dụng CPU.
 - `Shift+M`: sắp xếp theo sử dụng RAM.
+
+![](images_process/anh4.png)
+
 - `k` rồi nhập PID: kill tiến trình (theo prompt của top).
 
 - `htop` — phiên bản nâng cao, có giao diện màu và thao tác dễ dàng (nếu chưa cài: `sudo apt install htop`).
+
+![](images_process/anh5.png)
 
 Trong `htop`:
 

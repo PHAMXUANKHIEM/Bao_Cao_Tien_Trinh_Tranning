@@ -137,13 +137,21 @@
  Ghép hai file theo cột ngang (không dựa trên khóa).
 
  ```sh
- paste file1.txt file2.txt
+ paste file1.txt file2.txt > newfile.txt
  ```
+
+![](images_linuxcoban/anh22.png)
 
  Option:
 
  - `-d SEPARATOR`: thay đổi dấu phân cách
+
+![](images_linuxcoban/anh23.png)
+
+
  - `-s`: ghép các dòng của một file thành hàng ngang
+
+![](images_linuxcoban/anh24.png)
 
  ### tac
 
@@ -152,6 +160,8 @@
  ```sh
  tac /var/log/syslog | head -n 10
  ```
+
+![](images_linuxcoban/anh25.png)
 
  ### sort
 
@@ -164,6 +174,8 @@
  sort -k 2 -t ',' file.csv  # sắp theo cột 2 với dấu phẩy
  ```
 
+![](images_linuxcoban/anh26.png)
+
  ### uniq
 
  Lọc trùng lặp (thường dùng sau `sort`).
@@ -172,12 +184,21 @@
  sort file.txt | uniq
  sort file.txt | uniq -c   # đếm số lần xuất hiện
  ```
+ ![](images_linuxcoban/anh27.png)
 
  Option:
 
  - `-c`: đếm số lần xuất hiện
+
+  ![](images_linuxcoban/anh27.png)
+
  - `-d`: chỉ in dòng trùng
+
+   ![](images_linuxcoban/anh28.png)
+
  - `-u`: chỉ in dòng không trùng
+
+    ![](images_linuxcoban/anh29.png)
 
  ### split
 
@@ -197,3 +218,7 @@
  head file.txt
  head -n 20 file.txt   # xem 20 dòng đầu
  ```
+  ![](images_linuxcoban/anh30.png)
+
+
+  ![](images_linuxcoban/anh31.png)
