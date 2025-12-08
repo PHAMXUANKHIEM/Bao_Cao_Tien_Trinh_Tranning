@@ -2,17 +2,20 @@
 ## 1. Khái niệm 
 - Partition (phân vùng) là cách chia ổ đĩa vật lý thành các phần nhỏ hơn.
 - Có 2 cách để partition:
-   
-                        |              Tùy chọn               |              Công Dụng                |
-                        |                 -b                  | Thực hiện lên lịch khi hệ thống không |
-                        |                                     | quá tải                               |  
-                        |                 -c                  | Xem chi tiết công việc cho thiết bị   | 
-                        |                                     | cuối                                  |  
-                        |                 -f                  | Đọc các công việc của 1 file          |
-                        |                 -r ,-d              | Xóa công việc đã lên lịch và nhưng    | 
-                        |                                     | chưa làm trước đó bằng chỉ định số ID |  
-                        |                 -l                  | Hiển thị danh sách đã lên lịch nhưng  |
-                        |                                     | chưa làm                              |
-                        |                 -m                  | Gửi mail cho người dùng sau khi hoàn  |
-                        |                                     | thành công việc                       |
-                        |                 -M                  | Không gửi mail sau khi hoàn thành việc|  
+ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+|                       |               Ưu điểm               |              Nhược điểm               |
+|_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _| _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
+|                       | - Hoạt động tốt trên tất cả các nền | - Dữ liệu MBR được lưu trữ trên 1 vùng|
+|                       | tảng Window hiện nay                |nhất định vì thế dễ bị lỗi và không có |
+|         MBR           |                                     |khả năng khôi phục                     |
+|                       |                                     | - Hỗ trợ tối đa 4 phân vùng chính     | 
+|                       |                                     | - Muốn tạo nhiều phân vùng thì phải   |
+|                       |                                     |tạo kiểu Logical                       |
+|_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|
+|                       |- Hoạt động tốt trên hệ điều hành Mac|                                       |
+|                       |Window, Linux                        |                                       |
+|                       |- Dễ dàng khôi phục dữ liệu vì GPT   |                                       |
+|          GPT          |chạy trên nhiều ổ cứng               |                                       |
+|                       |                                     |                                       |
+|                       |                                     |                                       |
+|_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _| _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
