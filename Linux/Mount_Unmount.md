@@ -6,7 +6,7 @@
 ```sh
 mount [option] [thiết_bị] [điểm gắn kết]
 ```
--Option: 
+- Option: 
                       |        Tên lệnh          |       Công dụng        |
                       |          -l              |Liệt kê mọi filesystem  |
                       |                          |đã được mount           |
