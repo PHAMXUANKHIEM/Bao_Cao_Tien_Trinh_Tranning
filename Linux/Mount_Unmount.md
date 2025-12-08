@@ -6,26 +6,27 @@
 ```sh
 mount [option] [thiết_bị] [điểm gắn kết]
 ```
-- Option: 
-                      |        Tên lệnh          |       Công dụng        |
-                      |          -l              |Liệt kê mọi filesystem  |
-                      |                          |đã được mount           |
-                      |                          |                        |
-                      |          -h              |Hiển thị các option của |
-                      |                          |lệnh                    |
-                      |                          |                        |
-                      |          -v              |Hiển thị thông tin của  |
-                      |                          |phiên bản               |
-                      |                          |                        |
-                      |          -a              |Mount mọi thiết bị trong|
-                      |                          |/etc/fstab              |  
-                      |                          |                        |
-                      |          -t              |Loại filesystem nào được|
-                      |                          |sử dụng                 |
-                      |                          |                        |
-                      |          -T              |Mô tả file fstab bị thay|
-                      |                          |thế                     |
-                      |                          |                        |
-                      |          -r              |mount ở chế độ chỉ đọc  |
-                      |                          |                        |
+### Option:
+          
+                            |        Tên lệnh          |       Công dụng         |
+                            |          -l              |Liệt kê mọi filesystem   |
+                            |                          |đã được mount            |
+                            |                          |                         |
+                            |          -h              |Hiển thị các option của  |
+                            |                          |lệnh                     |
+                            |                          |                         |
+                            |          -v              |Hiển thị thông tin của   |
+                            |                          |phiên bản                |
+                            |                          |                         |
+                            |          -a              |Mount mọi thiết bị trong |
+                            |                          |/etc/fstab               |  
+                            |                          |                         |
+                            |          -t              |Loại filesystem nào được |
+                            |                          |sử dụng                  |
+                            |                          |                         |
+                            |          -T              |Mô tả file fstab bị thay |
+                            |                          |thế                      |
+                            |                          |                         |
+                            |          -r              |mount ở chế độ chỉ đọc   |
+                            |                          |                         |
 
