@@ -18,7 +18,7 @@ mount [option] [thiết_bị] [điểm gắn kết]
                       |                          |phiên bản               |
                       |                          |                        |
                       |          -a              |Mount mọi thiết bị trong|
-                      |                          |/etc/fstab              |  ### fstab là nơi cấu hình mount trong Linux khi khởi động
+                      |                          |/etc/fstab              |  
                       |                          |                        |
                       |          -t              |Loại filesystem nào được|
                       |                          |sử dụng                 |
