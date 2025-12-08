@@ -72,9 +72,55 @@ Ví dụ:
 # At
 ## 1. Khái niệm at
 - `at` trong Linux là một cách thay thế cho trình xây dựng lịch – cron, để lên lịch cho các tác vụ thực hiện một lần. Nghĩa là bạn có thể chỉ định thời gian tùy ý để thực hiện các nhiệm vụ cụ thể. Hơn nữa, bạn có thể liệt kê hoặc xóa các tác vụ đã được lưu cần thực hiện trong tương lai gần. Tuy nhiên, người dùng càn quyền quản lý hệ thống để sử dụng lệnh này. Các lệnh `atq`, `atrm` và `batch` cũng là một phần của lệnh at, cho phép xếp hàng, kiểm tra hoặc xóa, hủy các tác vụ đã lên lịch.
-## 2. Cách sử dụng at
+## 2. Các option trong at
                         |              Tùy chọn               |              Công Dụng                |
                         |                 -b                  | Thực hiện lên lịch khi hệ thống không |
                         |                                     | quá tải                               |  
                         |                 -c                  | Xem chi tiết công việc cho thiết bị   | 
                         |                                     | cuối                                  |  
+                        |                 -f                  | Đọc các công việc của 1 file          |
+                        |                 -r ,-d              | Xóa công việc đã lên lịch và nhưng    | 
+                        |                                     | chưa làm trước đó bằng chỉ định số ID |  
+                        |                 -l                  | Hiển thị danh sách đã lên lịch nhưng  |
+                        |                                     | chưa làm                              |
+                        |                 -m                  | Gửi mail cho người dùng sau khi hoàn  |
+                        |                                     | thành công việc                       |
+                        |                 -M                  | Không gửi mail sau khi hoàn thành việc|                   
+## 3. Cách cài đặt và kích hoạt atd trong at
+- Cài đặt at
+```sh
+apt install at
+```
+
+![](images_crontab/anh6.png)
+
+- Kích hoạt atd (Thời gian khởi hành thực tế) của hệ thống:
+```sh
+systemctl enable --now atd
+```
+
+![](images_crontab/anh7.png)
+
+## 4. Ví dụ
+1. Thiết lập thời gian thực hiện công việc vào một thời điểm nhất định
+```sh
+at 10:35
+```
+```sh
+touch file1.txt 
+```
+- Ctrl+D hoàn tất việc lên lịch
+
+![](images_crontab/anh8.png)
+
+2.Chuyển hướng một công việc cần thực hiện vào một thời điểm nhất định
+```sh
+echo "Lên lịch 10:40" >> file1.txt | at 10:40
+```
+![](images_crontab/anh9.png)
+
+3.Liệt kê các công việc chế độ đang xử lý bằng lệnh at
+```sh
+at -l
+```
+![](images_crontab/anh10.png)
