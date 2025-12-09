@@ -2,7 +2,8 @@
 ## 1. Khái niệm 
 - Partition (phân vùng) là cách chia ổ đĩa vật lý thành các phần nhỏ hơn để cài hệ điều hành, lưu dữ liệu, Swap, boot
 - Có 2 cách để partition:
-            
+
+             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
             |                       |               Ưu điểm               |              Nhược điểm               |
             |_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _| _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
             |                       | - Hoạt động tốt trên tất cả các nền | - Dữ liệu MBR được lưu trữ trên 1 vùng|
