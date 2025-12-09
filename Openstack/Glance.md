@@ -28,4 +28,4 @@ Mục tiêu:
 - Giới hạn quyền truy cập vào image theo nhu cầu.
 
 ## 5. Tích hợp
-- Thiết lập endpoints và service trong Keystone để Nova và các dịch vụ khác truy cập Glance.s
+- Thiết lập endpoints và service trong Keystone để Nova và các dịch vụ khác truy cập Glance.ss

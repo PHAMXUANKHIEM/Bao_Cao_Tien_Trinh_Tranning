@@ -683,6 +683,44 @@ Mô hình triển khai:
   ```sh
      apt install cinder-api cinder-scheduler
   ```
+  -Chỉnh sửa file /etc/cinder/cinder.conf
+  ```sh
+     [database]
+     connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
+     [DEFAULT]
+     transport_url = rabbit://openstack:RABBIT_PASS@controller
+     my_ip = 192.168.1.76
+     [keystone_authtoken]
+     www_authenticate_uri = http://controller:5000
+     auth_url = http://controller:5000
+     memcached_servers = controller:11211
+     auth_type = password
+     project_domain_name = default
+     user_domain_name = default
+     project_name = service
+     username = cinder
+     password = CINDER_PASS
+     [oslo_concurrency]
+     lock_path = /var/lib/cinder/tmp
+  ```
+  -Chỉnh sửa file nova.conf:
+  ```sh
+     [cinder]
+      os_region_name = RegionOne
+  ```
+  -Restart lại dịch vụ nova-api, cinder-api và  cinder-scheduler
+  ```sh
+    systemctl restart nova-api
+    systemctl restart cinder-api
+    systemctl restart cinder-scheduler
+  ```
+  -Trên Compute:
+   -Cài đặt các gói cần thiết:
+   ```sh
+     apt install lvm2
+     apt install qemu
+   ```
+   
 ### Cài đặt Horizon (Dashboard)
   -Trên Controller Node:
   ```sh
