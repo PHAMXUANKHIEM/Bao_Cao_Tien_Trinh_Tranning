@@ -65,6 +65,41 @@ journalctl -xe
 ```sh 
 apt install logrotate
 ```
-- Cấu hình logrotate: vào `/etc/logrotate.conf`
+- Cấu hình logrotate: Logrotate có 2 nơi cấu hình là: `/etc/logrotate.conf`(cấu hình cho toàn bộ hệ thống) và `/etc/logrotate.d`(Cấu hình cho services)
+- Cấu hình cho services
 ```sh 
+vi /etc/logrotate.d/haproxy
+```
+```sh
+/var/log/haproxy.log {
+    daily
+    rotate 7
+    missingok
+    notifempty
+    compress
+    delaycompress
+    postrotate
+        [ ! -x /usr/lib/rsyslog/rsyslog-rotate ] || /usr/lib/rsyslog/rsyslog-rotate
+    endscript
+}
+```
+- Kiểm tra:
+```sh
+cat /var/lib/logrotate/status
+```
+
+![](images_syslogd/anh7.png)
+
+- Chạy test:
+```sh
+logrotate -d /etc/logrotate.conf
+```
+
+![](images_syslogd/anh8.png)
+
+- Xoay log ngay lập tức:
+```sh
+logrotate -f /etc/logrotate.conf # Thay cho toàn bộ services
+logrotate -f /etc/logrotate.d/haporxy  #Thay cho 1 services
+```
 
