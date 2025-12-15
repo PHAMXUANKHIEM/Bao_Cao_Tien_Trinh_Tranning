@@ -134,7 +134,7 @@ Mô hình triển khai:
       export OS_PROJECT_NAME=admin
       export OS_USER_DOMAIN_NAME=Default
       export OS_PROJECT_DOMAIN_NAME=Default
-      export OS_AUTH_URL=http://controller:35357/v3
+      export OS_AUTH_URL=http://controller:5000/v3
       export OS_IDENTITY_API_VERSION=3
   ``` 
   -Nguồn file để sử dụng thông tin xác thực:
@@ -767,4 +767,8 @@ Mô hình triển khai:
   - Đăng nhập với tài khoản admin và mật khẩu là pass của KEYSTONE (lấy bằng cách export admin-openrc.sh)
 
   ![](images/deloy_openstack/anh12.png)
+
+# Các lỗi hay gặp trong quá trình cài đặt
+
+![](images/images_error/anh2.png)
 

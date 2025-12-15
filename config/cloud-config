@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# ===== Variables =====
+USERNAME=acadmin
+PASSWORD=123
+
+# ===== Set timezone =====
+timedatectl set-timezone Asia/Ho_Chi_Minh
+
+# ===== Create user if not exists =====
+if ! id "$USERNAME" &>/dev/null; then
+    useradd -m -s /bin/bash "$USERNAME"
+    echo "$USERNAME:$PASSWORD" | chpasswd
+fi
+
+# ===== Grant sudo quyền =====
+if [ -f /etc/sudoers.d/$USERNAME ]; then
+    echo "$USERNAME sudo config exists"
+else
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME
+    chmod 440 /etc/sudoers.d/$USERNAME
+fi
+
+# ===== Enable SSH =====
+systemctl enable sshd
+systemctl start sshd
+
+# ===== Disable SELinux (tạm thời) =====
+if command -v setenforce &>/dev/null; then
+    setenforce 0
+fi
+
+# ===== Disable SELinux vĩnh viễn =====
+if [ -f /etc/selinux/config ]; then
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+fi
+
+# ===== Log =====
+echo "Init config completed for user $USERNAME" > /var/log/eve_config.log
+

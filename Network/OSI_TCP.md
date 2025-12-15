@@ -61,9 +61,9 @@ TCP/IP thường có 4 tầng (hay 5 tùy cách chia):
 | Khía cạnh          | Mô hình OSI               | Mô hình TCP/IP            |
 |--------------------|---------------------------|---------------------------|
 | Số tầng            | 7 tầng                    | 4-5 tầng                  |
-| Mục đích           | Chuẩn hóa giao tiếp mạng   | Thiết kế giao thức Internet    |
+| Mục đích           | Chuẩn hóa giao tiếp mạng  | Thiết kế giao thức Internet    |
 | Tầng vật lý        | Layer 1                   | Link Layer                |
-| Tầng liên kết dữ liệu | Layer 2                   | Link Layer                |
+| Tầng liên kết      | Layer 2                   | Link Layer                |
 | Tầng mạng          | Layer 3                   | Internet Layer            |
 | Tầng vận chuyển    | Layer 4                   | Transport Layer           |
 | Tầng phiên         | Layer 5                   | Không tách riêng          |

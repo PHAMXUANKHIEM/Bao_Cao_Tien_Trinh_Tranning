@@ -20,7 +20,7 @@
 ```sh
    yum install chrony -y
 ```
--Trên tất cả các node thêm cấu hình file /etc/host:
+-Trên tất cả các node thêm cấu hình file /etc/hosts:
 ```sh
    10.2.1.54 ceph1
    10.2.1.81 ceph2     
@@ -35,6 +35,11 @@
 ```sh
   echo "ceph ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/ceph
   sudo chmod 0440 /etc/sudoers.d/ceph
+```
+-Tạo file riêng cho user trong /etc/sudoers.d/
+```sh
+echo "ceph ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ceph
+chmod 440 /etc/sudoers.d/ceph
 ```
 -Đăng nhập bằng user ceph:
 ```sh
@@ -64,6 +69,9 @@ Trên tất cả các node
   sudo dnf module disable -y python38
   sudo dnf module disable -y firewall
 ```
+
+![](imgaes/anh4.png)
+
 -Tạo repo Ceph thủ công
 ```sh
   sudo vi /etc/yum.repos.d/ceph.repo
@@ -87,12 +95,15 @@ Trên tất cả các node
   enabled=0
   gpgcheck=0
 ```
+-Thay đổi cache
+```sh
+sudo dnf clean all
+sudo dnf makecache
+```
 -Cài dependency bắt buộc cho Ceph trên el8
 ```sh
       sudo dnf install -y epel-release
-      sudo dnf install -y python3 python3-pip python3-setuptools \
-      lvm2 chrony smartmontools hdparm \
-      wget curl git jq
+      sudo dnf install -y python3 python3-pip python3-setuptools lvm2 chrony smartmontools hdparm wget curl git jq
 ```
 -Cài Ceph package thủ công  
 ```sh
@@ -163,4 +174,3 @@ Cài đặt Dashboard cho Ceph
 ```
 Truy cập vào địa chỉ ip: https://10.2.1.54:8443  
 ![](imgaes/anh3.png)
- 

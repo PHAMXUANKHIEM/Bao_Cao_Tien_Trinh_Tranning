@@ -41,3 +41,20 @@ Bước 4: Cài lại python
 sudo dnf install -y python3 python3-pip git
 ```
 
+![](images_fix/anh2.png)
+
+Lối không thấy repo. Fix:
+Bước 1: Thay thế repo cũ bằng repo mới
+```sh
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+```
+Bước 2: Update
+```sh
+yum update -y
+```
+Bước 3: Cài lại python
+```sh
+sudo dnf install -y python3 python3-pip git
+```
+
