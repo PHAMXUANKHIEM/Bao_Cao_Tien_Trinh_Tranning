@@ -125,4 +125,8 @@ ceph config set mon mon_warn_on_insecure_global_id_reclaim_allowed false
 
 Lỗi này chịu , để 1 lúc nó thành lỗi ssh. Cách fix ssh permission: Xem cách taoh ssh trong file Ceph/Deploy_Ceph/1. Hướng dẫn cài đặt ceph 18.2.2-Ubuntu 22.04.pdf
 
+![](images_fix/anh9.png)
+
+chown ceph:ceph /var/....
+
 
