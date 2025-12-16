@@ -58,3 +58,71 @@ Bước 3: Cài lại python
 sudo dnf install -y python3 python3-pip git
 ```
 
+![](images_fix/anh3.png)
+
+Lỗi truy cập sai đường dẫn. Fix:
+```sh 
+sudo tee /etc/yum.repos.d/ceph-reef.repo << 'EOF'
+[ceph]
+name=Ceph Reef
+baseurl=https://download.ceph.com/rpm-18.2.1/el8/x86_64/
+enabled=0
+gpgcheck=1
+gpgkey=https://download.ceph.com/keys/release.gpg
+```
+![](images_fix/anh4.png)
+
+Lỗi chưa làm sạch ổ đĩa
+Check xem ổ vdb có sạch không:
+```sh
+lsblk
+```
+Chưa sạch thì xóa:
+```sh
+dmsetup remove_all
+```
+![](images_fix/anh5.png)
+
+Lỗi không có file cepg.admin.keyring. Chay
+```sh
+ceph-deploy gatherkeys ceph1
+```
+
+![](images_fix/anh6.png)
+
+Lỗi cập nhật phiên bản mới nhất. Vào /etc/ceph/ceph.conf
+```sh
+require_osd_release = Reef #Thay the bằng tên bản đang cài
+```
+
+```sh
+ systemctl restart ceph-mon@ceph1  
+ systemctl restart ceph-mon@ceph2
+ systemctl restart ceph-mon@ceph3
+```
+
+![](images_fix/anh6.png)
+
+Lỗi không có file keyring
+```sh
+mkdir /var/lib/ceph/mgr/ceph-ceph1
+```
+```sh
+# Lệnh này sẽ tạo hoặc lấy lại khóa cho mgr.ceph3
+ceph auth get-or-create mgr.ceph1 mon 'allow profile mgr' osd 'allow *' mds 'allow *' -o /var/lib/ceph/mgr/ceph-ceph1/keyring
+```
+```sh   
+systemctl daemon-reload
+systemctl restart ceph-mgr@ceph1
+```
+![](images_fix/anh7.png)
+
+Tắt cảnh báo này
+```sh
+ceph config set mon mon_warn_on_insecure_global_id_reclaim_allowed false
+```
+![](images_fix/anh8.png)
+
+Lỗi này chịu , để 1 lúc nó thành lỗi ssh. Cách fix ssh permission: Xem cách taoh ssh trong file Ceph/Deploy_Ceph/1. Hướng dẫn cài đặt ceph 18.2.2-Ubuntu 22.04.pdf
+
+
