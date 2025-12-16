@@ -78,24 +78,24 @@ Trên tất cả các node
 ```
 ```sh
   [ceph]
-  name=Ceph Octopus
-  baseurl=https://download.ceph.com/rpm-octopus/el8/x86_64/
+  name=Ceph Reef
+  baseurl=https://download.ceph.com/rpm-18.2.1/el8/x86_64/
   enabled=1
   gpgcheck=0
 
   [ceph-noarch]
   name=Ceph noarch
-  baseurl=https://download.ceph.com/rpm-octopus/el8/noarch/
+  baseurl=https://download.ceph.com/rpm-18.2.1/el8/noarch/
   enabled=1
   gpgcheck=0
 
   [ceph-source]
   name=Ceph Source
-  baseurl=https://download.ceph.com/rpm-octopus/el8/SRPMS/
+  baseurl=https://download.ceph.com/rpm-18.2.1/el8/SRPMS/
   enabled=0
   gpgcheck=0
 ```
--Thay đổi cache
+-Thay đổi cache 
 ```sh
 sudo dnf clean all
 sudo dnf makecache
@@ -105,7 +105,7 @@ sudo dnf makecache
       sudo dnf install -y epel-release
       sudo dnf install -y python3 python3-pip python3-setuptools lvm2 chrony smartmontools hdparm wget curl git jq
 ```
--Cài Ceph package thủ công  
+### Cài Ceph package thủ công  
 ```sh
       sudo dnf install -y ceph ceph-mon ceph-mgr ceph-osd ceph-mds ceph-radosgw
 ```
@@ -114,6 +114,7 @@ sudo dnf makecache
     sudo cp /etc/redhat-release /etc/redhat-release.bak
     echo "CentOS Linux release 7.9.2009 (Core)" | sudo tee /etc/redhat-release
 ```
+### Triển Khai
 Trên ceph2 và ceph3 tạo thư mục cho OSD 
 ```sh
    sudo mkdir -p /var/local/osd0
@@ -122,6 +123,10 @@ Trên ceph2 và ceph3 tạo thư mục cho OSD
 Trên ceph1 khởi tạo cụm
 ```sh
     ceph-deploy new ceph1 ceph2 ceph3
+```
+Tạo MON:
+```sh
+ceph-deploy mon create-initial
 ```
 Tạo OSD trên Ceph
 - Kiểm tra ổ cứng trống 
