@@ -9,12 +9,11 @@ Bước 2: PG vào OSD: Thuật toán CRUSH sẽ tính toán xác định chính
 - Giả sử trong cụm OpenStack 9 node của bạn, bạn dành ra 3 Node làm Storage chuyên biệt. Mỗi Node có 4 ổ cứng OSD.
 - Tổng OSD: 3×4=12 OSDs.
 - Replica Size: 3 (Tiêu chuẩn an toàn).
-
-Bước 1: Áp dụng công thức
-Total_PGs=3(12×100)​=31200​=400
+Bước 1: Áp dụng công thức:
+  Total_PGs=3(12×100)​=31200​=400
 Bước 2: Quy tắc Lũy thừa của 2 (Power of 2) Ceph hoạt động tốt nhất khi số lượng PG là lũy thừa của 2 (2n). Điều này giúp thuật toán băm (Bitwise masking) chạy nhanh hơn.
-Các mốc gần 400 là: 256 và 512.
-Ta nên chọn 512. (Thà dư một chút để dữ liệu rải đều hơn là thiếu).
+- Các mốc gần 400 là: 256 và 512.
+- Ta nên chọn 512. (Thà dư một chút để dữ liệu rải đều hơn là thiếu).
 => Vậy Tổng số PG cho cả cụm nên là 512.
 ## Các trạng thái của PG:
   - Active + Clean (Lý tưởng): PG đang hoạt động bình thường, dữ liệu đã được sao chép đủ số bản sao (Clean).
