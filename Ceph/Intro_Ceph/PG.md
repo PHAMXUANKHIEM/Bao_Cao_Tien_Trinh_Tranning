@@ -3,8 +3,8 @@
 - PG (Placement Group) là một nhóm logic dùng để gom các Objects lại với nhau. Thay vì ánh xạ trực tiếp vào Object trong OSD giờ đây Ceph sẽ ánh xạ vào các PG rồi từ PG mới ánh xạ vào OSD. Công thức dòng chảy dữ liệu: File -> Objects -> PGs -> OSDs
 ## Cơ chế hoạt động
 - Việc xác định các Object nào thuộc PG nào và PG thuộc OSD nào hoàn toàn nhờ vào tính toán chứ không tra cứu bảng lookup table
-Bước 1: Object sẽ PG:  Ceph lấy tên Object rồi băm ra thành con số rồi chia lấy dư cho tổng số PG: `PG_ID=hash(Object_Name)%Total_PGs` 
-Bước 2: PG vào OSD: Thuật toán CRUSH sẽ tính toán xác định chính xác xem PG nào nằm trên OSD nào
+- Bước 1: Object sẽ PG:  Ceph lấy tên Object rồi băm ra thành con số rồi chia lấy dư cho tổng số PG: `PG_ID=hash(Object_Name)%Total_PGs`
+- Bước 2: PG vào OSD: Thuật toán CRUSH sẽ tính toán xác định chính xác xem PG nào nằm trên OSD nào
 ## Tính toán số lượng của PG (pg_num)
 - Giả sử trong cụm OpenStack 9 node của bạn, bạn dành ra 3 Node làm Storage chuyên biệt. Mỗi Node có 4 ổ cứng OSD.
 - Tổng OSD: 3×4=12 OSDs.
