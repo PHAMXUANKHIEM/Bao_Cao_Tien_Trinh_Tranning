@@ -3,6 +3,7 @@
 ![](images_fix/anh1.png)
 
 CentOS 8 đã EOL (End-Of-Life) từ 2021, tất cả repo chính thức đều bị gỡ — nên dnf không thể sync repo. Fix lối:
+
 Bước 1: Backup repo cũ
 ```sh
 sudo mkdir /etc/yum.repos.d/backup
