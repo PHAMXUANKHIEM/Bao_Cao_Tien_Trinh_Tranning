@@ -1,6 +1,6 @@
 # RGW
 ## Khái niệm 
-- Là một web server giúp chuyển đổi các yêu cầu HTTP thành lệnh để chuyển xuống RADOS. Nó không có giao diện mà giao tiếp trực tiếp qua API
+- Là một web server giúp chuyển đổi các yêu cầu HTTP thành lệnh để chuyển xuống RADOS. Nó không hiện ra như thư mục mà có giao diện hỗ trợ AWS S3 và Swift mà giao tiếp trực tiếp qua API
 
 ![](images_RADOS/anh11.png)
 
