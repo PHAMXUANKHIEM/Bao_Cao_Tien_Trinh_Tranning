@@ -22,5 +22,5 @@ Bước 2: Quy tắc Lũy thừa của 2 (Power of 2) Ceph hoạt động tốt 
   - Down (Sập): Thảm họa! Dữ liệu của PG này không còn bản sao nào khả dụng. Dữ liệu coi như không thể truy cập (Data offline).
   - Inconsistent (Không nhất quán): Quá trình Scrubbing phát hiện checksum giữa các bản sao không khớp nhau (Lỗi file hỏng). Cần admin can thiệp sửa chữa.
 
-  ![](images_RADOS/anh12.png)
+  ![](images_RADOS/anh14.png)
 
