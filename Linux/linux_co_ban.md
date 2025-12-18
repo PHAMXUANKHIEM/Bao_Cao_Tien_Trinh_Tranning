@@ -67,8 +67,45 @@
  - **Piping**: dùng `|` để lấy `STDOUT` của chương trình này làm `STDIN` của chương trình khác. Ví dụ: `ip a | grep ens32`.
 
 ![](images_linuxcoban/anh11.png)
+## Quản lý user và group 
+ ### Quản lý user
+ 1. useradd: Tạo user mới
+   - Option: 
+     - `-m`: Tạo luôn thư mục /home/ cho user
 
- ## Một số lệnh quan trọng
+     ![](images_linuxcoban/anh40.png)
+
+     - `-s`: Chỉ định Shell
+     - `-g`: Chỉ định nhóm chính
+     - `-G`: Chỉ định nhóm phụ
+ 2. usermod: Chỉnh sửa thông tin user hiện có
+    - Option:
+     - `-aG`: Thêm user vào một nhóm phụ (phải dùng `-a-`(append) nếu không user sẽ rời nhóm cũ)
+     - `-l`: Thay đổi tên đăng nhập
+ 3. userdel: Xóa user 
+    - Option:
+     - `-r`: Xóa sạch user và thư mục của họ
+### Quản lý group
+ 1. groupadd: Tạo group mới
+ 2. groupmod -n [tên_cũ] [tên_mới]: Đổi tên nhóm
+ 3. groupdel [tên_nhóm]: Xóa nhóm
+### Phân biệt su và sudo
+- su: là switch user, đổi sang user khác, mặc định là root
+- sudo: là superuser do, cho phép chạy 1 lệnh với quyền cao hơn và dùng mật khẩu của user hiện tại, không cần pass root
+### Phân biệt /etc/passwd, /etc/groups, /etc/sudoer
+ 1. /etc/passwd: Chứa thông tin cơ bản về tất cả các tài khoản người dùng trên hệ thống
+
+         ![](images_linuxcoban/anh41.png)
+
+ 2. /etc/group: Chứa thông tin và định nghĩa nhóm người dùng trong hệ thống
+
+          ![](images_linuxcoban/anh42.png)
+
+ 3. /etc/sudoers: Quản lý quyền sudo 
+
+          ![](images_linuxcoban/anh43.png)
+ 
+## Một số lệnh quan trọng
 
  ### cat
 
