@@ -222,3 +222,53 @@
 
 
   ![](images_linuxcoban/anh31.png)
+
+### grep 
+ Dùng để lọc dòng có từ khóa hoặc định dạng nhất định
+ ```sh
+ grep [option] 'từ khóa' ten_file
+ ```
+ - Option: 
+  -i : Không phân biệt chữ hoa chữ thường
+
+    ![](images_linuxcoban/anh32.png)
+
+  -v : Tìm những dòng ko có từ đó
+
+    ![](images_linuxcoban/anh33.png)
+
+  -r : Tìm đệ quy trong thư mục
+  
+    ![](images_linuxcoban/anh34.png)
+
+  -n : Hiện số dòng 
+
+    ![](images_linuxcoban/anh35.png)
+### sed 
+ Dùng để chỉnh sửa văn bản theo dòng mà không cần mở file
+ ```sh
+ sed -i 's/từ_tìm_kiếm/từ_thay_thế/g' tên_file
+ ```
+ Trong đó: -i là thay đổi trực tiếp vào trong file
+            s là thay thế 
+            g là thay thế tất cả các lần xuất hiện trên một dòng
+    
+    ![](images_linuxcoban/anh36.png)
+
+### awk 
+- Dùng để  chia dòng thành các cột
+```sh
+awk '{print $cột}' tên_file
+```
+ ![](images_linuxcoban/anh37.png)
+
+ ### fold
+   Dùng để cắt dòng và giới hạn số từ cho 1 dòng
+  ```sh
+  fold [option] [độ rộng] tên file
+  ```
+- Option: 
+  - w: Chiều rộng tối đa của dòng theo từ
+  - s: Chỉ ngắt tại dòng có khoảng trắng 
+
+   ![](images_linuxcoban/anh39.png)
