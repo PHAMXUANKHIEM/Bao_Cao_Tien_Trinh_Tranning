@@ -24,7 +24,9 @@
   ## So sánh JBOD và RAID
   - JBOD và RAID là hai kiến trúc lưu trữ dữ liệu khác nhau với các ưu điểm và nhược điểm riêng
   - JBOD tập trung vào việc cung cấp dung lượng lưu trữ lớn với chi phí thấp và tính linh hoạt cao, trong khi RAID tập trung vào việc cải thiện hiệu suất và độ tin cậy của dữ liệu thông qua việc phân phối và dự phòng dữ liệu
-              |---------------------|-------------------------|---------------------------|
+
+
+              
               |                     |         JBOD            |          RAID             |
               |---------------------|-------------------------|---------------------------|
               | Cách hoạt động      | Kết nối nhiều ổ đĩa     | Kết hợp nhiều ổ đĩa để     |
