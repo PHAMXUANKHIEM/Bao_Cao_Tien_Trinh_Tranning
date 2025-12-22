@@ -29,21 +29,21 @@
               
               |                     |         JBOD            |          RAID             |
               |---------------------|-------------------------|---------------------------|
-              | Cách hoạt động      | Kết nối nhiều ổ đĩa     | Kết hợp nhiều ổ đĩa để     |
-              |                     | vật lý vào một hệ thống  | tạo thành một hệ thống lưu  |
-              |                     | lưu trữ duy nhất         | trữ duy nhất với cơ chế   |
+              | Cách hoạt động      | Kết nối nhiều ổ đĩa     | Kết hợp nhiều ổ đĩa để    |
+              |                     | vật lý vào một hệ thống | tạo thành một hệ thống lưu|
+              |                     | lưu trữ duy nhất        | trữ duy nhất với cơ chế   |
               |                     |                         | phân phối và dự phòng dữ liệu  |
               |---------------------|-------------------------|---------------------------|
-              | Hiệu suất           | Thấp hơn so với RAID     | Cao hơn so với JBOD        |
+              | Hiệu suất           | Thấp hơn so với RAID    | Cao hơn so với JBOD       |
               |---------------------|-------------------------|---------------------------|
-              | Dự phòng dữ liệu     | Không có cơ chế dự phòng  | Có cơ chế dự phòng dữ liệu     |
+              | Dự phòng dữ liệu    | Không có cơ chế dự phòng| Có cơ chế dự phòng dữ liệu|
               |---------------------|-------------------------|---------------------------|
-              | An toàn dự liệu      | Thấp hơn so với RAID do    | Cao hơn so với JBOD        | 
-              |                     | không có cơ chế dự phòng, |                           |
-              |                     | nếu một ổ đĩa bị hỏng, dữ liệu |                           |
-              |                     | trên ổ đĩa đó sẽ bị mất   |                           |
+              | An toàn dự liệu     | Thấp hơn so với RAID do | Cao hơn so với JBOD       | 
+              |                     | không có cơ chế dự phòng|                           |
+              |                     | nếu một ổ đĩa bị hỏng, dữ liệu |                    |
+              |                     | trên ổ đĩa đó sẽ bị mất |                           |
               |---------------------|-------------------------|---------------------------|
-              | Chi phí             | Thấp hơn so với RAID     | Cao hơn so với JBOD        |
+              | Chi phí             | Thấp hơn so với RAID    | Cao hơn so với JBOD       |
               |---------------------|-------------------------|---------------------------|
 ## Use case
 - JBOD thường được sử dụng trong các tình huống sau:
