@@ -26,9 +26,9 @@
   - `-x`: giải nén
   - `-f`: file
   - `-v`: verbose
-  - `-z`: nén .tar.gz
-  - `-j`: nén .tar.bz2
-  - `-J`: nén .tar.xz
+  - `-z`: nén/giải nén .tar.gz
+  - `-j`: nén/giải nén .tar.bz2
+  - `-J`: nén/giải nén .tar.xz
   - `-C`: Đổi thư mục khi giải nến
 - Cú pháp: 
 ```sh

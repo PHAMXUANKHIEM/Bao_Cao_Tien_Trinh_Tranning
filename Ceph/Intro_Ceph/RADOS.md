@@ -17,15 +17,15 @@
 - Ngày nay OSD sử dụng BlueStore làm hệ thống lưu trữ mặc định cho OSD, cho phép OSD ghi trực tiếp vào ổ đĩa vật lý
 4. Mối liên hệ giữa OSD và các thành phần khác
 - OSD và Monitor (MON):
-  -     Báo cáo trạng thái: Các OSD định kỳ gửi "nhịp đập" (heartbeat) đến Monitor để xác nhận chúng vẫn đang hoạt động (trạng thái up).
-  -     Cập nhật bản đồ cụm (Cluster Map): Nếu một OSD bị lỗi hoặc một OSD mới được thêm vào, Monitor sẽ cập nhật OSD Map và gửi bản sao mới nhất cho toàn bộ hệ thống.
-  -     Cơ chế giám sát chéo: Các OSD cũng tự giám sát lẫn nhau. Nếu OSD A nhận thấy OSD B không phản hồi, nó sẽ báo cáo lên Monitor để đánh dấu OSD B là down. 
+   - Báo cáo trạng thái: Các OSD định kỳ gửi "nhịp đập" (heartbeat) đến Monitor để xác nhận chúng vẫn đang hoạt động (trạng thái up).
+   - Cập nhật bản đồ cụm (Cluster Map): Nếu một OSD bị lỗi hoặc một OSD mới được thêm vào, Monitor sẽ cập nhật OSD Map và gửi bản sao mới nhất cho toàn bộ hệ thống.
+   - Cơ chế giám sát chéo: Các OSD cũng tự giám sát lẫn nhau. Nếu OSD A nhận thấy OSD B không phản hồi, nó sẽ báo cáo lên Monitor để đánh dấu OSD B là down. 
 - OSD và Manager (MGR):
-  -     Thu thập chỉ số: OSD gửi các số liệu thống kê về hiệu suất, dung lượng sử dụng và tải hệ thống cho Manager.
-  -     Quản trị và Dashboard: Manager sử dụng dữ liệu từ OSD để hiển thị trạng thái hệ thống trên giao diện web (Ceph Dashboard) và hỗ trợ các mô-đun tự động hóa như cân bằng dữ liệu (balancer). 
+  - Thu thập chỉ số: OSD gửi các số liệu thống kê về hiệu suất, dung lượng sử dụng và tải hệ thống cho Manager.
+  - Quản trị và Dashboard: Manager sử dụng dữ liệu từ OSD để hiển thị trạng thái hệ thống trên giao diện web (Ceph Dashboard) và hỗ trợ các mô-đun tự động hóa như cân bằng dữ liệu (balancer). 
 - OSD và Metadata (MDS): 
-  -     Phân tách dữ liệu và siêu dữ liệu: Trong dịch vụ CephFS, MDS quản lý cấu trúc cây thư mục và tên file (metadata), nhưng không lưu trữ nội dung file.
-  -     Truy xuất thực tế: Khi người dùng muốn đọc file, MDS chỉ cho khách hàng biết dữ liệu nằm ở đâu, sau đó khách hàng sẽ làm việc trực tiếp với OSD để lấy nội dung thực tế. 
+  - Phân tách dữ liệu và siêu dữ liệu: Trong dịch vụ CephFS, MDS quản lý cấu trúc cây thư mục và tên file (metadata), nhưng không lưu trữ nội dung file.
+  - Truy xuất thực tế: Khi người dùng muốn đọc file, MDS chỉ cho khách hàng biết dữ liệu nằm ở đâu, sau đó khách hàng sẽ làm việc trực tiếp với OSD để lấy nội dung thực tế. 
 ### MON (Ceph Monitor)
 
 ![](images_RADOS/anh2.png)

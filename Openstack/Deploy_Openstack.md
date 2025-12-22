@@ -150,11 +150,11 @@ Mô hình triển khai:
   ```sql
     MariaDB [(none)]> CREATE DATABASE keystone;
     Grant proper access to the keystone database:
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' \ 
-    IDENTIFIED BY '123123Aa';
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' \
-    IDENTIFIED BY '123123Aa';
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '123123Aa';
+    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '123123Aa';
   ```
+  ![](images/deloy_openstack/anh14.png)
+
   ### Cài đặt Keystone:
   -Trên Controller Node:
   ```sh
@@ -424,7 +424,7 @@ Mô hình triển khai:
       [oslo_concurrency]
       lock_path = /var/lib/nova/tmp
   ```
-  -Dồng bộ database:
+  -Đồng bộ database:
   ```sh
       su -s /bin/sh -c "nova-manage api_db sync" nova
 
@@ -771,4 +771,5 @@ Mô hình triển khai:
 # Các lỗi hay gặp trong quá trình cài đặt
 
 ![](images/images_error/anh2.png)
+
 

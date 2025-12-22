@@ -76,7 +76,11 @@ lvremove /dev/test_group/l_volume
 vgremove /dev/test_group
 pvremove /dev/loop3
 ```
+  - Xóa type lvm
+  ```sh
+  dmsetup remove_all
+  ```
 
-![](images_LVM/anh8.png)
+  ![](images_LVM/anh8.png)
 
-![](images_LVM/anh9.png)
+  ![](images_LVM/anh9.png)
