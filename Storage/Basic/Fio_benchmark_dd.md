@@ -28,7 +28,7 @@ dd if=/dev/ceph.../... of=file.txt bs=10MB count=1
 
 ![](images_fio_banchmark/anh1.png)
 
-# Fio banchmark 
+# Fio benchmark 
 ## Khái niệm
 - FIO (Flexible I/O Tester): là công cụ chuẩn công nghiệp dùng để kiểm thử áp lực và đánh giá hiệu năng của hệ thống lưu trữ 
 - Khác với dd là đánh giá 1 luồng đơn thuần, FIO có khả năng sinh ra các tải (workload), giả lập được các hành vi thực tế của Database (Random I/O), Webserver (Many files), hoặc Big Data (Throughput)
@@ -55,7 +55,12 @@ dd if=/dev/ceph.../... of=file.txt bs=10MB count=1
 -  `--verify`: Kiểm tra tính toàn vẹn của dữ liệu
 -  `--iodepth_batch_submit`: số lượng I/O gửi xuống cùng lúc tới Kernal, khi không cấu hình thì mặc định bằng iodepth
 -  `--iodepth_batch_complete_max`: Số lượng I/O hoàn thành để thực hiện cái `iodepth_batch_submit` tiếp. Giống cái trên khi không cấu hình thì mặc định bằng iodepth
+** Cách để nhìn câu lệnh mà biết nó đo throughput, IOPS hay latency 
+  - Dựa vào `--bs`: Nếu  giá trị `bs` nhỏ (4KB,8KB) là nó sẽ đo IOPS hoặc latency còn ngược lại nó mà lớn (32KB,64KB) thì nó sẽ đo Throughput
+  - Dựa vào `--rw`: Nếu giá trị này là `randread` hay `randwrite` thì nó sẽ nhắm vào IPOS hoặc latency, còn `read`, `write` thì nó sẽ nhắm vào Throughput
+  - Dựa vào `--iodepth`: Nếu nhỏ (1,2,3,4,..) thì là nhắm vào latency, còn to (32,64,128,..) là đo max IOPS và max Throughput
 ## Ví dụ về cách đọc khi chạy xong lệnh FIO
+- Lệnh ví dụ kiểm tra Throughput
 ```sh
 fio --name=test --bs=1MB --ioengine=libaio --rw=randrw --size=2G --runtime=20s --direct=1 --filename=/dev/vda
 ```
@@ -63,5 +68,17 @@ fio --name=test --bs=1MB --ioengine=libaio --rw=randrw --size=2G --runtime=20s -
 
 ![](images_fio_banchmark/anh2.png)
 
+- Lệnh ví dụ kiểm tra IOPS
+```sh
+fio --name=test --bs=4KB --ioengine=libaio --direct=1 --rw=randwrite --size=1GB --filename=/dev/sda/ --iodepth=32 --numjob=4 --runtime=60s --time_based 
+```
 
-sudo fio --name=write_throughput --filename=/dev/vdb/ceph--2e50406a--a189--494d--8c96--ac500a6ff752-osd--block--ae6a4610--2437--4ef0--bf83--e723329314bf --numjobs=16 --size=10G --time_based --runtime=5m --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+![](images_fio_banchmark/anh3.png)
+
+- Lệnh kiểm tra latenyc 
+```sh
+  fio --name=test1 --filename=/dev/sda --iodepth=4 --size=2GB --ioengine=libaio --direct=1 --rw=randwrite --time_based --runtime=60s 
+```
+
+![](images_fio_banchmark/anh4.png)
+
