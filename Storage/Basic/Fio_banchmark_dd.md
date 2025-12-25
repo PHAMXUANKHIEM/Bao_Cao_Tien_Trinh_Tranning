@@ -46,10 +46,15 @@ dd if=/dev/ceph.../... of=file.txt bs=10MB count=1
                  - `randwrite`: ghi ngẫu nhiên
                  - `randrw`: đọc và ghi ngẫu nhiên hỗn hợp 
 -  `--numjobs`: số tiến trình chạy song song
--  `--iodepth`: là số lượng request đang đợi ổ cứng xử lý. Nếu `iodepth` càng cao thì IOPS càng cao dẫn tới tăng độ trễ . Nên chọn với HDD (1-8), SSD và SATA (32), NVMe (64,128,256). Số request đc tính bằng công thức: `QD = iodepth * numjobs`
+-  `--iodepth`: là tổng số IO outstanding tối đa để tính số lượng request đang đợi ổ cứng xử lý. Nếu `iodepth` càng cao thì IOPS càng cao dẫn tới tăng độ trễ . Nên chọn với HDD (1-8), SSD và SATA (32), NVMe (64,128,256). Số request đc tính bằng công thức: `QD = iodepth * numjobs`
 -  `--runtime`: Thời gian chạy lệnh benchmark (s)
 -  `--filename`: Thiết bị / file để test (dev/sbd1,/mnt/fiotest/testfile)
-   `--size`: kích thước tổng dữ liệu file test
+-  `--size`: kích thước tổng dữ liệu file test
+-  `--time_base`: Chạy benchmark theo thời gian chứ không theo dung lượng nữa
+-  `--ramp_time`: Benchmark sẽ chạy trước 1 khoảng thời gian làm nóng trước khi thu thập dữ liệu
+-  `--verify`: Kiểm tra tính toàn vẹn của dữ liệu
+-  `--iodepth_batch_submit`: số lượng I/O gửi xuống cùng lúc tới Kernal, khi không cấu hình thì mặc định bằng iodepth
+-  `--iodepth_batch_complete_max`: Số lượng I/O hoàn thành để thực hiện cái `iodepth_batch_submit` tiếp. Giống cái trên khi không cấu hình thì mặc định bằng iodepth
 ## Ví dụ về cách đọc khi chạy xong lệnh FIO
 ```sh
 fio --name=test --bs=1MB --ioengine=libaio --rw=randrw --size=2G --runtime=20s --direct=1 --filename=/dev/vda
@@ -57,3 +62,6 @@ fio --name=test --bs=1MB --ioengine=libaio --rw=randrw --size=2G --runtime=20s -
 - Kết quả: 
 
 ![](images_fio_banchmark/anh2.png)
+
+
+sudo fio --name=write_throughput --filename=/dev/vdb/ceph--2e50406a--a189--494d--8c96--ac500a6ff752-osd--block--ae6a4610--2437--4ef0--bf83--e723329314bf --numjobs=16 --size=10G --time_based --runtime=5m --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
