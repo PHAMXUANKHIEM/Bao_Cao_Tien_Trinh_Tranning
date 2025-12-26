@@ -72,6 +72,7 @@
  1. useradd: Tạo user mới
    - Option: 
      - `-m`: Tạo luôn thư mục /home/ cho user
+     - `-d`: Tạo cho user mới home_dir
 
      ![](images_linuxcoban/anh40.png)
 
@@ -259,8 +260,14 @@
 
 
   ![](images_linuxcoban/anh31.png)
-
-### grep 
+ ### less
+ Xem nội dung file lớn nhưng có thể cuộn lên/xuống (khác với cat là cat in 1 phát ra hết còn cái này có thể điều chỉnh)
+ ```sh
+ less file.txt
+ ```
+ ### cut
+ - Là lấy 1 phần dữ liệu của mỗi dòng
+ ### grep 
  Dùng để lọc dòng có từ khóa hoặc định dạng nhất định
  ```sh
  grep [option] 'từ khóa' ten_file
@@ -281,7 +288,7 @@
   -n : Hiện số dòng 
 
     ![](images_linuxcoban/anh35.png)
-### sed 
+ ### sed 
  Dùng để chỉnh sửa văn bản theo dòng mà không cần mở file
  ```sh
  sed -i 's/từ_tìm_kiếm/từ_thay_thế/g' tên_file
@@ -292,7 +299,7 @@
     
     ![](images_linuxcoban/anh36.png)
 
-### awk 
+ ### awk 
 - Dùng để  chia dòng thành các cột
 ```sh
 awk '{print $cột}' tên_file

@@ -13,7 +13,7 @@ sudo reboot
 ### Tạo user stack (khuyến nghị để tránh xung đột)
 - Tạo user stack và tạo thư mục cho nó
 ```sh
-sudo useradd -s /bin/bash -d /opt/stack -m stack
+  sudo useradd -s /bin/bash -d /opt/stack -m stack
 ```
 - Đặt quyên thực thi cho thư mục stack
 ```sh 

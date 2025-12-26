@@ -1,7 +1,4 @@
  # File system
-
- Tổng quan về quản lý file hệ thống: loại filesystem, kiểm tra/khởi tạo filesystem, kiểm tra dung lượng, các lệnh quản lý file/thư mục và công cụ tìm kiếm.
-
  ## 1. Các loại filesystem
 
  - **EXT4**: phổ biến, hỗ trợ file lớn, hiệu năng tốt.
