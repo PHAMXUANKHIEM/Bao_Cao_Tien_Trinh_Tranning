@@ -34,12 +34,12 @@
    - Dữ liệu
    - Metadata
    - ID định danh
-    | Tiêu chí              | Object Storage  | File Storage  |  Block Storage                                     |
-    |-----------------------|-----------------|---------------|----------------------------------------------------|
-    | Cách tổ chức dữ liệu   | Dữ liệu được lưu trữ dưới dạng đối tượng, không có cấu trúc thư mục | Dữ liệu được tổ chức trong các thư mục và tệp tin | Dữ liệu được chia thành các khối (blocks) nhỏ, không phụ thuộc vào tệp |
-    | Khả năng mở rộng       | Mở rộng linh hoạt, không giới hạn                              | Khó mở rộng khi dữ liệu tăng nhanh               | Mở rộng dễ dàng nhưng chi phí cao                  |
-    | Cách truy cập          | Truy cập thông qua mã định danh duy nhất của đối tượng         | Truy cập qua hệ thống thư mục và đường dẫn tệp cụ thể | Truy cập trực tiếp vào từng khối thông qua hệ điều hành |
-    | Hiệu suất              | Tốc độ truy cập không cao nhưng ổn định                        | Tốc độ truy cập nhanh, phù hợp với hệ thống chia sẻ nội bộ | Hiệu suất cao, phù hợp với các ứng dụng yêu cầu về tốc độ truy cập |
-    | Chi phí lưu trữ        | Tiết kiệm chi phí cho dữ liệu lớn, phi cấu trúc                | Chi phí cao hơn do cần quản lý nhiều tệp         | Chi phí cao hơn Object Storage                      |
-    | Ứng dụng chính         | Lưu trữ dữ liệu phi cấu trúc lớn (video, hình ảnh, IoT)       | Lưu trữ tệp chia sẻ nội bộ, tài liệu             | Lưu trữ cơ sở dữ liệu, hệ thống máy chủ ảo yêu cầu hiệu suất cao |
-
+   ## So sánh
+   | Tiêu chí | Object Storage | File Storage | Block Storage |
+| :--- | :--- | :--- | :--- |
+| **Cách tổ chức dữ liệu** | Dữ liệu được lưu trữ dưới dạng đối tượng (objects), cấu trúc phẳng (flat), không có thư mục. | Dữ liệu được tổ chức phân cấp trong các thư mục và tệp tin (hierarchical). | Dữ liệu được chia thành các khối (blocks) nhỏ, thô, quản lý bởi hệ điều hành máy chủ. |
+| **Khả năng mở rộng** | Mở rộng linh hoạt, gần như không giới hạn (Scale-out). | Khó mở rộng khi dữ liệu tăng nhanh, thường giới hạn bởi thiết bị phần cứng. | Mở rộng dễ dàng nhưng chi phí cao, thường giới hạn bởi controller/mảng đĩa. |
+| **Cách truy cập** | Truy cập thông qua API (RESTful) bằng mã định danh (ID) duy nhất. | Truy cập qua giao thức chia sẻ file (NFS, SMB) theo đường dẫn cụ thể. | Truy cập trực tiếp ở cấp độ khối thông qua hệ điều hành (như một ổ đĩa vật lý). |
+| **Hiệu suất** | Tốc độ truy cập không cao bằng Block, độ trễ cao hơn nhưng băng thông lớn. | Tốc độ truy cập nhanh, phù hợp với hệ thống chia sẻ nội bộ, user truy cập đồng thời. | Hiệu suất rất cao (IOPS cao, độ trễ thấp), phù hợp giao tiếp trực tiếp với CPU. |
+| **Chi phí lưu trữ** | Thấp nhất. Tiết kiệm chi phí cho dữ liệu lớn, khổng lồ. | Chi phí trung bình đến cao (do phần cứng NAS chuyên dụng). | Chi phí cao nhất (High performance SAN/SSD). |
+| **Ứng dụng chính** | Lưu trữ backup, archive, static web, dữ liệu phi cấu trúc (video, ảnh, IoT). | Lưu trữ tệp chia sẻ văn phòng, thư mục home directory, repository code. | Cơ sở dữ liệu (Database), ổ đĩa boot cho máy ảo (VM), ứng dụng mission-critical. |
