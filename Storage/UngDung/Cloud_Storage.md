@@ -27,7 +27,7 @@
     - Có thể sẽ không mở rộng được quy mô sau khi đạt đến giới hạn của bộ nhớ
   ## Object Storage
 
-  ![](images_cloud/anh2.png)
+  ![](images_cloud/anh3.png)
 
   - Là dạng lưu trữ hiện đại trong Cloud, lưu trữ dữ liệu dưới dạng Object trong 1 không gian phẳng (Flat namespace), nơi mà không có phân cấp thư mục 
   - Khi đó mỗi dữ liệu sẽ được chia thành các đối tượng riêng lẻ và được gắn mã định danh duy nhất. Mỗi đối tượng (object) sẽ gồm 3 thành phần chính:
