@@ -1,4 +1,4 @@
-# Loadbalance
+# Load balancer
 ## Khái niệm
 ### 1. Nginx
 - Là một mã nguồn mở dùng để làm máy chủ web, proxy ngược, cân bằng tải và bộ nhớ đệm HTTP
@@ -15,6 +15,12 @@
  - Cân bằng tải lớp 4 và 7: Điều hướng lưu lượng dựa trên thông tin kết nối hoặc nội dung ứng dụng
  - Health Check nâng cao: Liên tục kiểm tra trạng thái máy chủ backend và tự động loại bỏ các máy chủ lỗi ra khỏi hệ thống
  - Bảo mật: Giới hạn tốc độ và chống DDOS
+### 3. Các thuật toán trong load balancer
+- Round Robin: Các request sẽ được phân phối tuần tự cho 1 nhóm server
+- Weighted Round Robin: Dựa trên thuật toán Round Robin, người quản trị có thể cấu hình và dựa vào khả năng sử lý request của từng server,đánh thứ tự ưu tiên cho từng server và request sẽ gửi tới từng server theo độ ưu tiên của chúng
+- Least Connection: Request sẽ được gửi tới server ít được kết nối nhất 
+- Weighted Least Connection: Request sẽ được gửi cho server có tốc độ phản hồi response cao nhất và ít kết nối nhất
+- IP Hash: Phân phối request dựa trên địa chỉ IP của Client (Các request từ Client có cùng IP luôn được chuyển tới cùng 1 backend server)
 ### So sánh
 
 | Tiêu chí | HAProxy | Nginx |
@@ -29,6 +35,137 @@
 
 # Triển khai loadbalance
 ## Nginx 
+### Mô tả
+- Tạo ra 3 web server và cấu hình Nginx để cân bằng tải chúng
+### Cấu hình 
+- Dùng npm tạo mô phỏng 3 web server
+```sh
+apt install npm -y
+cd /var/html/www
+mkdir node_app_1
+cd node_app_1
+npm install express
+nano app.js
+cd ..
+mkdir node_app_2
+cd node_app_2
+npm install express
+nano app.js
+cd ..
+mkdir node_app_3
+cd node_app_3
+npm install express
+nano app.js
+```
+- Trong `app.js` cấu hình:
+```sh
+#app_1
+app.get('/', (req, res) => res.send('Hey Buddy! Your request is processed by Server 1\n'));
+app.listen(3000, () => console.log('Server is running on port 3000!'));
+#app_2
+app.get('/', (req, res) => res.send('Hey Buddy! Your request is processed by Server 1\n'));
+app.listen(3000, () => console.log('Server is running on port 3001!'));
+#app_3
+app.get('/', (req, res) => res.send('Hey Buddy! Your request is processed by Server 1\n'));
+app.listen(3000, () => console.log('Server is running on port 3002!'));
+```
+- Vào lại thư mục `/var/html/www`
+```sh
+npm install pm2
+pm2 start node_app_1/app.js  node_app_2/app.js node_app_3/app.js 
+```
+![](images_load/anh1.png)
+
+- Cấu hình cân bằng tải trên Nginx
+  - Round Robin: 
+    - Vào chỉnh `/etc/hosts`
+    ```sh
+    127.0.0.1 nginx-tutorial.test
+    ```
+    - Vào file cấu hình `/etc/nginx/nginx.conf`
+    ```sh
+            upstream backend_server {
+          server localhost:3000;
+          server localhost:3001;
+          server localhost:3002;
+        }
+        server {
+          listen 80;
+          server_name nginx-tutorial.test;
+          location / {
+            proxy_pass http://backend_server;
+          }
+    ```
+    - Test 
+    ```sh
+    while sleep 0.5; do curl nginx-tutorial.test; done
+    ```
+    ![](images_load/anh2.png)
+    - Weighted Round Robin: 
+      - Vào file cấu hình `/etc/nginx/nginx.conf`
+      ```sh
+              upstream backend_server {
+            server localhost:3000 weight = 1;
+            server localhost:3001 weight = 3;
+            server localhost:3002 weight = 2;
+          }
+          server {
+            listen 80;
+            server_name nginx-tutorial.test;
+            location / {
+              proxy_pass http://backend_server;
+            }
+      ```
+    - Test 
+    ```sh
+    while sleep 0.5; do curl nginx-tutorial.test; done
+    ```
+
+    ![](images_load/anh3.png)
+
+    - Least Connection:
+      - Vào file cấu hình `/etc/nginx/nginx.conf`
+        ```sh
+            upstream backend_server {
+              least_conn;
+              server localhost:3000;
+              server localhost:3001;
+              server localhost:3002;
+            }
+            server {
+              listen 80;
+              server_name nginx-tutorial.test;
+              location / {
+                proxy_pass http://backend_server;
+              }
+        ```
+      - Test 
+      ```sh
+      while sleep 0.5; do curl nginx-tutorial.test; done
+      ```
+          ![](images_load/anh2.png)
+    - IP Hash: 
+      - Vào file cấu hình `/etc/nginx/nginx.conf`
+        ```sh
+            upstream backend_server {
+              ip_hash;
+              server localhost:3000;
+              server localhost:3001;
+              server localhost:3002;
+            }
+            server {
+              listen 80;
+              server_name nginx-tutorial.test;
+              location / {
+                proxy_pass http://backend_server;
+              }
+        ```
+      - Test 
+      ```sh
+      while sleep 0.5; do curl nginx-tutorial.test; done
+      ``` 
+                ![](images_load/anh4.png)
+
 ## Keepalived + HAProxy 
 ###  1. Khai niệm
 - Keepalived là một phần mềm mã nguồn mở dùng để cung cấp tính năng High Availability (HA) cho các dịch vụ mạng, đặc biệt là trong môi trường Linux. Nó thường được sử dụng kết hợp với HAProxy để đảm bảo rằng các dịch vụ web hoặc ứng dụng luôn sẵn sàng và có thể chịu lỗi.
