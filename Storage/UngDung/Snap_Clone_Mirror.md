@@ -57,3 +57,30 @@ Bước 3: Xóa clone
 rbd snap rm snapshot/new_images_snapshot
 ```
 
+## Tạo và xóa Mirror
+
+- Chuẩn bị: 
+  - Phải có ít nhất 2 cụm ceph và đảm bảo rằng chúng giao tiếp được với nhau qua IP
+  - Cài đặt `rbd-mirror`
+  ```sh
+  apt install rbd-mirror
+  ``` 
+  - Copy và đổi tên file thư mục `keyring` và `ceph.conf` từ máy client sang máy backup
+- Cấu hình:
+  - Đăng kí peer để 2 cụm nhận diện nhau
+```sh
+  rbd mirror pool peer test client.admin@ceph_bp
+  ```
+  - Bật chế độ snaphot
+```sh
+  rbd mirror pool enable test image 
+  ```
+  - Bật Mirroring cho images cụ thể :
+```sh
+  rdb mirror image enable test/images_test snapshot
+  ```
+  - Khởi tạo daemon services:
+```sh
+  sudo systemctl enable ceph-rbd-mirror@admin.service
+sudo systemctl start ceph-rbd-mirror@admin.service
+```
