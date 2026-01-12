@@ -2,12 +2,12 @@
 ## Cephadm
 Bước 1: Tạo pool trên Ceph để test
 ```sh 
-cephadm shell -- ceph osd create pool  create test 128 128
-cephadm shell -- ceph osd pool application enable test rdb
+cephadm shell -- ceph osd pool  create test 128 128
+cephadm shell -- ceph osd pool application enable test rbd
 ```
 Bước 2: Tạo images
 ```sh
-rbd create test/images --size 10G
+rbd create test/images_test --size 10G
 ```
 Bước 3: Trên host cần có file `/etc/ceph/ceph.conf` và file keyring. Cần cài đặt `ceph-common` trên host để container trong cephadm có thể mount ra được vào kernal của máy host
 ```sh 
@@ -41,3 +41,16 @@ fio --name=test --bs=4k --iodepth=1 -direct=1 --rw=write --ioengine=libaio --siz
 KẾT QUẢ
 
 ![](images_RADOS/anh13.png)
+
+
+Xóa pool 
+
+Bước 1: Bật mon cho phép xóa pool
+```sh
+ceph config set mon mon_allow_delete_pool true
+```
+Bước 2 Xóa pool
+```sh
+ceph osd pool delete test test --yes-i-really-really-mean-it #(tên pool viết 2 lần)
+```
+
