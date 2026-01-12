@@ -148,10 +148,9 @@ Mô hình triển khai:
   ```
   -Tạo database và người dùng cho Keystone:
   ```sql
-    MariaDB [(none)]> CREATE DATABASE keystone;
-    Grant proper access to the keystone database:
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '123123Aa';
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '123123Aa';
+     CREATE DATABASE keystone;
+     GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '123123Aa';
+     GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '123123Aa';
   ```
   ![](images/deloy_openstack/anh14.png)
 
@@ -185,12 +184,7 @@ Mô hình triển khai:
   ```
   -Bootstrap Keystone để tạo dịch vụ ban đầu và tài khoản admin:
   ```sh
-    keystone-manage bootstrap \                                                
-    --bootstrap-password ADMIN_PASS \                                                                   
-    --bootstrap-admin-url http://controller:5000/v3/ \                                                    
-    --bootstrap-internal-url http://controller:5000/v3/ \                                               
-    --bootstrap-public-url http://controller:5000/v3/ \                                                 
-    --bootstrap-region-id RegionOne 
+    keystone-manage bootstrap  --bootstrap-password 123123Aa  --bootstrap-admin-url http://controller:5000/v3/                                                                                                                      --bootstrap-internal-url http://controller:5000/v3/                                             --bootstrap-public-url http://controller:5000/v3/                                               --bootstrap-region-id RegionOne 
   ``` 
   -Kiểm tra cài đặt Keystone:
   ```sh
@@ -203,12 +197,9 @@ Mô hình triển khai:
     sudo mysql -u root -p
   ```
   ```sql
-    MariaDB [(none)]> CREATE DATABASE glance;
-    Grant proper access to the glance database:
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \ 
-    IDENTIFIED BY 'GLANCE_DBPASS';
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
-    IDENTIFIED BY 'GLANCE_DBPASS';
+    CREATE DATABASE glance;
+    GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
+    GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';
   ```
   -Vào lại môi trường admin:
   ```sh
@@ -216,7 +207,7 @@ Mô hình triển khai:
   ``` 
   -Tạo người dùng, vai trò, dịch vụ và endpoint cho Glance:
   ```sh
-    openstack user create --domain default --password GLANCE_PASSWORD glance
+    openstack user create --domain default --password 123123Aa glance
     openstack role add --project service --user glance admin
     openstack service create --name glance --description "OpenStack Image" image
     openstack endpoint create --region RegionOne image public http://controller:9292
@@ -248,7 +239,7 @@ Mô hình triển khai:
       user_domain_name = Default
       project_name = service
       username = glance
-      password = GLANCE_PASS
+      password = 123123Aa
 
       [paste_deploy]
       # ...
@@ -276,10 +267,8 @@ Mô hình triển khai:
   ```sql
     DROP DATABASE IF EXISTS placement;
     CREATE DATABASE IF NOT EXISTS placement;
-    GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'localhost' \
-    IDENTIFIED BY 'PLACEMENT_DBPASS'; 
-    GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'%' \
-    IDENTIFIED BY 'PLACEMENT_DBPASS';
+    GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'localhost' IDENTIFIED BY 'PLACEMENT_DBPASS'; 
+    GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'%'  IDENTIFIED BY 'PLACEMENT_DBPASS';
   ```
   -Vào lại môi trường admin:
   ```sh
@@ -287,7 +276,7 @@ Mô hình triển khai:
   ``` 
   -Tạo người dùng, vai trò, dịch vụ và endpoint cho Placement:
   ```sh
-    openstack user create --domain default --password PLACEMENT_PASS placement
+    openstack user create --domain default --password 123123Aa placement
     openstack role add --project service --user placement admin
     openstack service create --name placement --description "OpenStack Placement" placement
     openstack endpoint create --region RegionOne placement public http://controller:8778
@@ -299,7 +288,7 @@ Mô hình triển khai:
   -Cài đặt Placement:
   -Trên Controller Node:
   ```sh
-    sudo apt install placement-api -y
+      sudo apt install placement-api -y
   ``` 
   -Sửa file cấu hình Placement:
   ```sh
@@ -307,7 +296,7 @@ Mô hình triển khai:
   ```
   -Cấu hình database trong file `placement.conf`:
   ```sh
-      [database]
+      [placement_database]
       connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement  
       [keystone_authtoken]
       www_authenticate_uri = http://controller:5000
@@ -318,7 +307,7 @@ Mô hình triển khai:
       user_domain_name = Default
       project_name = service
       username = placement
-      password = PLACEMENT_PASS
+      password = 123123Aa
   ```
   ```sh
     su -s /bin/sh -c "placement-manage db sync" placement
@@ -338,18 +327,12 @@ Mô hình triển khai:
     CREATE DATABASE nova;
     CREATE DATABASE nova_cell0;
 
-    GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' \
-      IDENTIFIED BY 'NOVA_DBPASS';
-    GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' \
-      IDENTIFIED BY 'NOVA_DBPASS';
-    GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
-      IDENTIFIED BY 'NOVA_DBPASS';
-    GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
-      IDENTIFIED BY 'NOVA_DBPASS';
-    GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' \
-      IDENTIFIED BY 'NOVA_DBPASS';
-    GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' \
-      IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost'  IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+    GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
   ```
   -Vào lại môi trường admin:
   ```sh
@@ -357,7 +340,7 @@ Mô hình triển khai:
   ```
   -Tạo người dùng, vai trò, dịch vụ và endpoint cho Nova:
   ```sh
-    openstack user create --domain default --password NOVA_PASS nova
+    openstack user create --domain default --password 123123Aa nova
     openstack role add --project service --user nova admin
     openstack service create --name nova --description "OpenStack Compute" compute
     openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
@@ -392,7 +375,7 @@ Mô hình triển khai:
       user_domain_name = Default
       project_name = service
       username = nova
-      password = NOVA_PASS
+      password = 123123Aa
       [placement]
       region_name = RegionOne
       project_domain_name = Default
@@ -401,24 +384,25 @@ Mô hình triển khai:
       user_domain_name = Default
       auth_url = http://controller:5000/v3
       username = placement
-      password = PLACEMENT_PASS
+      password = 123123Aa
       [vnc]
       enabled = true
       server_listen = $my_ip
       server_proxyclient_address = $my_ip
+      novncproxy_base_url = http://10.2.0.94:6080/vnc_auto.html
       [DEFAULT]
       transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
       myip = 192.168.1.76
       [service_user]
       send_service_user_token = true
-      auth_url = https://controller/identity
+      auth_url = https://controller/identity ###### DDUNGS THI SUA
       auth_strategy = keystone
       auth_type = password
       project_domain_name = Default
       project_name = service
       user_domain_name = Default
       username = nova
-      password = NOVA_PASS
+      password = 123123Aa
       [glance]
       api_servers = http://controller:9292
       [oslo_concurrency]
@@ -467,7 +451,7 @@ Mô hình triển khai:
       user_domain_name = Default
       project_name = service
       username = nova
-      password = NOVA_PASS
+      password = 123123Aa
       [placement]
       region_name = RegionOne
       project_domain_name = Default
@@ -503,10 +487,8 @@ Mô hình triển khai:
   ```
   ```sql
     CREATE DATABASE neutron;
-    GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' \
-      IDENTIFIED BY 'NEUTRON_DBPASS';
-    GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
-      IDENTIFIED BY 'NEUTRON_DBPASS';
+    GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'NEUTRON_DBPASS';
+    GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'NEUTRON_DBPASS';
   ```
   -Vào lại môi trường admin:
   ```sh
@@ -514,7 +496,7 @@ Mô hình triển khai:
   ``` 
   -Tạo người dùng, vai trò, dịch vụ và endpoint cho Neutron:
   ```sh 
-    openstack user create --domain default --password NEUTRON_PASS neutron
+    openstack user create --domain default --password 123123Aa neutron
     openstack role add --project service --user neutron admin
     openstack service create --name neutron --description "OpenStack Networking" network
     openstack endpoint create --region RegionOne network public http://controller:9696
@@ -531,9 +513,12 @@ Mô hình triển khai:
   -Tạo bridge br-ex trên Controller Node:
   ```sh
     sudo ovs-vsctl add-br br-ex
-    sudo ovs-vsctl add-port br-ex enp0s8  #Thay enp0s8 bằng tên interface kết nối mạng ngoài
   ```
-
+  -Tạo card mạng mới (Phải cấu hình tĩnh cho nó) để add br-ex vào card mạng đó:
+  ```sh
+  ip link add name enp0s8 type bridge # Có thể đổi tên card mạng
+  sudo ovs-vsctl add-port br-ex enp0s8 # Thay enp0s8 bằng card mạng không có IP 
+  ```
 ![](images/deloy_openstack/anh10.png)
 
   -Sửa file cấu hình Neutron:
@@ -546,7 +531,8 @@ Mô hình triển khai:
       connection = mysql+pymysql://neutron:NEUTRON_DBPASS@controller/neutron
       [DEFAULT] 
       core_plugin = ml2
-      service_plugins = 
+      service_plugins = router
+      allow_overlapping_ips = True
       transport_url = rabbit://openstack:RABBIT_PASS@controller
       auth_strategy = keystone
       notify_nova_on_port_status_changes = true
@@ -560,7 +546,7 @@ Mô hình triển khai:
       user_domain_name = Default
       project_name = service
       username = neutron
-      password = NEUTRON_PASS
+      password = 123123Aa
       [nova]
       auth_url = http://controller:5000
       auth_type = password
@@ -569,7 +555,7 @@ Mô hình triển khai:
       region_name = RegionOne
       project_name = service
       username = nova
-      password = NOVA_PASS
+      password = 123123Aa
       [oslo_concurrency]
       lock_path = /var/lib/neutron/tmp
   ```
@@ -581,11 +567,13 @@ Mô hình triển khai:
   ```sh
       [ml2]
       type_drivers = flat,vlan,vxlan
-      tenant_network_types = 
-      mechanism_drivers = openvswitch
+      tenant_network_types = vxlan
+      mechanism_drivers = openvswitch, l2population
       extension_drivers = port_security
       [ml2_type_flat]
       flat_networks = provider
+      [ml2_type_vxlan]
+      vni_ranges =1:1000
   ``` 
   -Cấu hình Open vSwitch Agent:
   ```sh
@@ -595,10 +583,23 @@ Mô hình triển khai:
   ```sh
       [ovs]
       bridge_mappings = provider:br-ex
+      local_ip = 10.2.0.94
       [securitygroup]
       enable_security_group = true
       firewall_driver = openvswitch
       #firewall_driver = iptables_hybrid
+      [agent]
+      # Bật tính năng VXLAN cho mạng private
+      tunnel_types = vxlan
+      l2_population = True
+  ```
+  -Cấu hình l3_agent:
+  ```sh
+  vi /etc/neutron/l3_agent.ini
+  ```
+  -Cấu hình file l3_agent.ini:
+  ```sh
+  interface_driver = openvswitch
   ```
   -Cấu hình DHCP Agent:
   ```sh
@@ -609,6 +610,7 @@ Mô hình triển khai:
       [DEFAULT]
       dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
       enable_isolated_metadata = true
+      interface_driver = openvswitch
   ```
   -Cấu hình metadata_agent:
   ```sh
@@ -634,14 +636,13 @@ Mô hình triển khai:
       region_name = RegionOne
       project_name = service
       username = neutron
-      password = NEUTRON_PASS
+      password = 123123Aa
       service_metadata_proxy = true
       metadata_proxy_shared_secret = METADATA_SECRET
   ```
   -Đồng bộ database Neutron:
   ```sh
-    su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
-    --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
+    su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
   ```
   ![](images/deloy_openstack/anh11.png)
 
@@ -660,9 +661,9 @@ Mô hình triển khai:
     mysql -u root -p
   ```
   ```sh
-    MariaDB [(none)]> CREATE DATABASE cinder;
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'CINDER_DBPASS';
-    MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'CINDER_DBPASS';
+    CREATE DATABASE cinder;
+    GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'CINDER_DBPASS';
+    GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'CINDER_DBPASS';
   ```
   -Vào lại môi trường admin:
   ```sh
@@ -670,7 +671,7 @@ Mô hình triển khai:
   ```
   -Tạo và cấu hình user, service cho cinder:
   ```sh
-    openstack user create --domain default --password-prompt cinder
+    openstack user create --domain default --password 123123Aa cinder
     openstack role add --project service --user cinder admin
     openstack service create --name cinder --description "OpenStack Block Storage" block-storage
     openstack endpoint create --region RegionOne block-storage public http://controller:8776/v3
@@ -681,7 +682,7 @@ Mô hình triển khai:
 
   -Cài đặt các gói cần thiết:
   ```sh
-     apt install cinder-api cinder-scheduler
+     apt install cinder-api cinder-scheduler -y
   ```
   -Chỉnh sửa file /etc/cinder/cinder.conf
   ```sh
@@ -699,7 +700,7 @@ Mô hình triển khai:
      user_domain_name = default
      project_name = service
      username = cinder
-     password = CINDER_PASS
+     password = 123123Aa
      [oslo_concurrency]
      lock_path = /var/lib/cinder/tmp
   ```
@@ -708,10 +709,13 @@ Mô hình triển khai:
      [cinder]
       os_region_name = RegionOne
   ```
-  -Restart lại dịch vụ nova-api, cinder-api và  cinder-scheduler
+  -Đồng bộ database:
+  ```sh
+  su -s /bin/sh -c "cinder-manage db sync" cinder
+  ```
+  -Restart lại dịch vụ nova-api và  cinder-scheduler
   ```sh
     systemctl restart nova-api
-    systemctl restart cinder-api
     systemctl restart cinder-scheduler
   ```
   -Trên Compute:
@@ -739,7 +743,7 @@ Mô hình triển khai:
       SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
       CACHES = {
           'default': {
-              'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+              'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
               'LOCATION': 'controller:11211',
                     }
                 }
@@ -759,7 +763,7 @@ Mô hình triển khai:
     }
       TIME_ZONE = "Asia/Ho_Chi_Minh"
   ```
-  -Cấu hình file `/etc/httpd/conf.d/openstack-dashboard.conf`:
+  -Cấu hình file `/etc/apache2/conf-available/openstack-dashboard.conf`:
   ```sh
       WSGIApplicationGroup %{GLOBAL}
   ```
@@ -767,8 +771,51 @@ Mô hình triển khai:
   - Đăng nhập với tài khoản admin và mật khẩu là pass của KEYSTONE (lấy bằng cách export admin-openrc.sh)
 
   ![](images/deloy_openstack/anh12.png)
+  - Tạo project service:
+  ```
+  openstack project create  --domain default service
 
-# Các lỗi hay gặp trong quá trình cài đặt
+  ```
+  -Gán role:
+```sh
+  
+ openstack role add --project service --user nova admin
+ openstack role add --project service --user cinder admin
+ openstack role add --project service --user neutron admin
+ openstack role add --project service --user glance  admin
+ openstack role add --project service --user placement  admin
+```
+  -Tạo Flavour
+```sh
+openstack flavor create --id 1 --vcpus 1 --ram 512 --disk 1 m1.tiny
+openstack flavor create --id 2 --vcpus 1 --ram 2048 --disk 20 m1.small
+openstack flavor create --id 3 --vcpus 2 --ram 4096 --disk 40 m1.large
+openstack flavor create --id 4 --vcpus 2 --ram 8196 --disk 80 m1.exlarge
+```
+ - Tạo network
+ ```sh
+ openstack network create --share --external \
+  --provider-physical-network provider \
+  --provider-network-type flat provider
+ openstack subnet create --network provider \
+  --allocation-pool start=10.3.0.150,end=10.3.0.200 \
+  --dns-nameserver 8.8.8.8 --gateway 10.3.0.1 \
+  --subnet-range 10.3.0.0/24 provider-subnet
+```
+ - Tạo mạng nội bộ
+ ```sh
+ openstack network create selfservice
+ openstack subnet create --network selfservice \
+  --dns-nameserver 8.8.8.8 --gateway 192.168.1.1 \
+  --subnet-range 192.168.1.0/24 selfservice-subnet
+ ```
+ - Tạo router 
+ ```sh
+ openstack router create router1
+ openstack router add subnet router1 selfservice-subnet
+ openstack router set --external-gateway provider router1
+ ```
+ # Các lỗi hay gặp trong quá trình cài đặt
 
 ![](images/images_error/anh2.png)
 
