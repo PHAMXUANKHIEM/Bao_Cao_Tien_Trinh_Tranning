@@ -25,4 +25,3 @@
 - Lưu trữ đa phương tiện: Ceph phù hợp cho việc lưu trữ và quản lý các tệp tin đa phương tiện lớn như video và hình ảnh.
 - Ứng dụng doanh nghiệp: Ceph cung cấp giải pháp lưu trữ hiệu quả cho các ứng dụng doanh nghiệp với yêu cầu cao về hiệu suất và độ tin cậy.
 - Nghiên cứu và phát triển: Ceph được sử dụng trong các dự án nghiên cứu và phát triển để thử nghiệm các giải pháp lưu trữ mới và cải tiến hiệu suất hệ thống.
-## 4. Kiến trúc của Ceph
