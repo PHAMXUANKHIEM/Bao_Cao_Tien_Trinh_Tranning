@@ -1,6 +1,6 @@
-# RDB
+# RBD
 ## Khái niệm 
-- RDB (RADOS Block Devices): lưu trữ khối làm backend cho Cinder và Nova trong Openstack. 
+- RBD (RADOS Block Devices): lưu trữ khối làm backend cho Cinder và Nova trong Openstack. 
 
 ![](images_RADOS/anh10.png)
 
