@@ -15,21 +15,22 @@
 ## Tạo rgw trên Cephadm
  Bước 1: Tạo enable services rgw 
  ```sh
- ceph orch module enable rgw
+ ceph mgr module enable rgw
  ceph orch apply rgw foo --placement="3 ceph1 ceph2 ceph3" --port=8000 # foo là tên có thể đổi, placement là các node muốn cài rgw
  ```
- Bước 2: Tạo tên miền, vùng 
+ Bước 2: Tạo tên miền, vùng và tạo user
  ```sh
-ceph orch apply rgw east --realm=myorg --zonegroup=us-east-zg-1 --zone=us-east-1 --placement="3 ceph1 ceph2 ceph3"
+ceph orch apply rgw east --realm=myorg --zonegroup=us-east-zg-1 --zone=us-east-1 --placement="3 host-192-168-1-216 ceph2 ceph3"
+radosgw-admin user create --uid=admin --display-name="testuser"
 ```
 Bước 3: Lấy `access_key` và `secret_key`:
  - Liệt kê user:
 ```sh 
-rgwosgw-admin user list
+radosgw-admin user list
 ```
  - Xem chi tiết từng user và lấy `access_key`, `secret_key`
 ```sh
-rgwosgw-admin user info --uuid=testuser
+rgwosgw-admin user info --uid=testuser
 ```
 ![](images_RADOS/anh41.png)
 
@@ -107,3 +108,5 @@ spec:
 
 
 
+            "access_key": "R255F3364T1OFZ8M17YS",
+            "secret_key": "e6jLlv1vbVWrBVQXvZWSrN98ycHQ6G6DhpN4B623"
