@@ -44,7 +44,7 @@ ceph auth get-or-create client.cinder-backup | ssh lab-hapu-ctl tee /etc/ceph/ce
 ssh lab-hapu-ctl chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
 
 ceph auth get-or-create client.glance | ssh lab-hapu-ctl sudo tee /etc/ceph/ceph.client.glance.keyring
-ssh lab-hapu-ctl chown glance:glance /etc/ceph/ceph.client.glance.keyring
+ssh 10.2.1.202 chown glance:glance /etc/ceph/ceph.client.glance.keyring
 ```
 ![](imgaes/anh21.png)
 
@@ -147,6 +147,31 @@ systemctl restart openstack-cinder-volume
 systemctl restart openstack-cinder-backup
 systemctl restart openstack-glance-api
 systemctl restart openstack-nova-compute
+```
+6. Tạo file XML cho Secret `vi /root/secret.xml`
+```sh
+<secret ephemeral='no' private='no'>
+  <uuid>4b5fd580-360c-4f8c-abb5-c83bb9a3f964</uuid>
+  <usage type='ceph'>
+    <name>client.openstack secret</name>
+  </usage>
+</secret>
+```
+7. Định nghĩa secret trong libvirt
+```sh
+virsh secret-define --file secret.xml
+```
+8. Gán giá trị secret
+```sh
+# Lấy giá trị key (chuỗi ký tự sau 'key = ')
+export KEY=$(grep -oP 'key\s*=\s*\K.+' /etc/ceph/ceph.client.openstack.keyring)
+
+# Gán key vào secret
+virsh secret-set-value --secret 4b5fd580-360c-4f8c-abb5-c83bb9a3f964 --base64 $KEY
+```
+9. Test lại
+```sh
+virsh secret-list
 ```
 6. Test tạo 1 images trên openstack
 
