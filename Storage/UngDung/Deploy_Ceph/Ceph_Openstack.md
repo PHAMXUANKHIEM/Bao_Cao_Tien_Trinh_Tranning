@@ -37,14 +37,14 @@ Bước 2: Cài đặt và cấu hình Ceph Clients
 ```
  - Tạo và copy chúng đúng vào các nodes đang cài đặt dịch vụ trùng khớp
  ```sh
- ceph auth get-or-create client.cinder | ssh {your-volume-server} sudo tee /etc/ceph/ceph.client.cinder.keyring
-ssh {your-cinder-volume-server} chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+ ceph auth get-or-create client.cinder | ssh lab-hapu-ctl sudo tee /etc/ceph/ceph.client.cinder.keyring
+ssh lab-hapu-ctl chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
 
-ceph auth get-or-create client.cinder-backup | ssh {your-cinder-backup-server} tee /etc/ceph/ceph.client.cinder-backup.keyring
-ssh {your-cinder-backup-server} chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
+ceph auth get-or-create client.cinder-backup | ssh lab-hapu-ctl tee /etc/ceph/ceph.client.cinder-backup.keyring
+ssh lab-hapu-ctl chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
 
-ceph auth get-or-create client.glance | ssh {your-glance-api-server} sudo tee /etc/ceph/ceph.client.glance.keyring
-ssh {your-glance-api-server} chown glance:glance /etc/ceph/ceph.client.glance.keyring
+ceph auth get-or-create client.glance | ssh lab-hapu-ctl sudo tee /etc/ceph/ceph.client.glance.keyring
+ssh lab-hapu-ctl chown glance:glance /etc/ceph/ceph.client.glance.keyring
 ```
 ![](imgaes/anh21.png)
 
@@ -58,8 +58,8 @@ Bước 3: Cấu hình Openstack sử dụng Ceph
    Tạo `[ceph]` trong `cinder.conf`:
    ```sh
    [ceph]
-   volume_driver = cinder.volume.drivers.rbd.RBDDriver #Cấu hình và chỉnh để dùng Ceph block device driver
-   rbd_cluster_name = ceph # set tên cụm ( mặc định là ceph)
+   volume_driver = cinder.volume.drivers.rbd.RBDDriver 
+   rbd_cluster_name = ceph 
    rbd_pool = volumes
    rbd_user = cinder
    rbd_ceph_conf = /etc/ceph/ceph.conf
@@ -93,10 +93,10 @@ Bước 3: Cấu hình Openstack sử dụng Ceph
     backup_ceph_stripe_count = 0
     restore_discard_excess_bytes = true
 ```
-  - Cấu hình trong horizon :
-  ```sh 
-  OPENSTACK_CINDER_FEATURES = {
-    'enable_backup': True,
+  -Cấu hình trong horizon :
+```sh 
+OPENSTACK_CINDER_FEATURES = {
+  'enable_backup': True,
 }
  ```
  3. Cấu hình Glance
