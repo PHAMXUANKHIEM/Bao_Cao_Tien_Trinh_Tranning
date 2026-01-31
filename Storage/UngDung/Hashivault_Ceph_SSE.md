@@ -222,6 +222,7 @@ Bước 5: Nhập Unseal Vaule (3 lần) và mỗi lần nhập 1 loại Unseal 
 vault operator unseal
 ```
 ![](images_sse_s3/anh11.png)
+
 Bước 6: Đăng nhập và bật chế độ transit secret 
 ```sh
 vault login
@@ -289,7 +290,7 @@ Bước 6: Reset lại dịch vụ
 ```sh
 ceph orch restart rgw.sse
 ```
-Bước 7: Vào container chứa dịch vụ rgw tạo file `/etc/ceph/vault-root.token`, copy token vào đó và chỉnh quyền 600 + own là ceph:ceph (quyền 600 quan trọng)
+Bước 7: Vào container chứa dịch vụ rgw tạo file `/etc/ceph/vault-root.token`, copy token vào đó và chỉnh quyền 600 + own là ceph:ceph (quyền 600 quan trọng). Nếu sử dụng systemd thì chỉ cần chỉnh sửa trong thư mục /etc/ceph bên ngoài máy chạy dịch vụ rgw
 
 Bước 8 Upload file sử dụng sse-s3 và sse-ks
 - Sử dụng aws-cli 
