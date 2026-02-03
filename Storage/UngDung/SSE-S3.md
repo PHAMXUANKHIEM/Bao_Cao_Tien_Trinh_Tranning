@@ -81,7 +81,7 @@ vi /etc/ceph/vault.token
 chmod 600 /etc/ceph/vault.token
 chown ceph:ceph /etc/ceph/vault.token
 ```
-***LƯU Ý: NẾU RESTART LẠI CONTAINER THÌ MẶC ĐỊNH CẤU HÌNH ĐƯỜNG DẪN TỚI VAULT.TOKEN SẼ MẤT, PHẢI VÀO CẤU HÌNH LẠI ***
+***LƯU Ý: NẾU RESTART LẠI CONTAINER THÌ MẶC ĐỊNH CẤU HÌNH ĐƯỜNG DẪN TỚI VAULT.TOKEN SẼ MẤT, PHẢI VÀO CẤU HÌNH LẠI***
 
 - Để dùng dịch vụ SSE-S3 khi upload file cần phải có thêm trường gọi mã hóa `--sse AES256`, nếu không mặc định nó vẫn sẽ upload file thường không mã hóa lên s3
   - Upload mac dinh
