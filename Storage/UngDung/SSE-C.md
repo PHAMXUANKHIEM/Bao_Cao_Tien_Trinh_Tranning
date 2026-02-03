@@ -1,4 +1,18 @@
-# Triển khai SSE-C
+# SSE-C
+## Khái niệm
+1. Khái niệm
+- SSE-C cho phép bạn tự quản lý các khóa mã hóa của mình. Khi upload hoặc download dữ liệu, bạn phải gửi kèm khóa mã hóa trong yêu cầu HTTP. Hệ thống lưu trữ (như Ceph RGW) sẽ sử dụng khóa đó để thực hiện mã hóa/giải mã và sau đó tự hủy khóa khỏi bộ nhớ tạm, không lưu trữ khóa trong hệ thống.
+2. Cách hoạt động 
+- Quá trình Upload (PUT)
+  - Client: Gửi đối tượng (Object) kèm theo khóa mã hóa (256-bit AES key) qua kết nối HTTPS bảo mật.
+  - RGW: Nhận khóa từ header, thực hiện mã hóa dữ liệu.
+  - Lưu trữ: Dữ liệu đã mã hóa được lưu vào OSD. RGW tính toán mã hash (salted HMAC) của khóa để đối chiếu sau này nhưng không lưu bản thân cái khóa đó.
+  - Hủy khóa: RGW xóa khóa khỏi bộ nhớ sau khi hoàn tất.
+- Quá trình Download (GET)
+  - Client: Gửi yêu cầu lấy Object kèm đúng khóa đã dùng khi upload.
+  - RGW: Kiểm tra mã hash của khóa gửi lên có khớp với metadata lưu kèm Object không.
+  - Giải mã: Nếu khớp, RGW giải mã dữ liệu và trả về cho Client.
+## Triển khai SSE-C
 Bước 1: Tạo key mã hóa ngẫu nhiên 256 bits 
 ```sh
 openssl rand 32 > sse.key # mỗi byte có 8 bits thì 32*8=256 bits
