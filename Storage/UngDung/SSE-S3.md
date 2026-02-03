@@ -81,15 +81,14 @@ vi /etc/ceph/vault.token
 chmod 600 /etc/ceph/vault.token
 chown ceph:ceph /etc/ceph/vault.token
 ```
-*** LƯU Ý: NẾU RESTART LẠI CONTAINER THÌ MẶC ĐỊNH CẤU HÌNH ĐƯỜNG DẪN TỚI VAULT.TOKEN SẼ MẤT, PHẢI VÀO CẤU HÌNH LẠI ***
+***LƯU Ý: NẾU RESTART LẠI CONTAINER THÌ MẶC ĐỊNH CẤU HÌNH ĐƯỜNG DẪN TỚI VAULT.TOKEN SẼ MẤT, PHẢI VÀO CẤU HÌNH LẠI ***
 
 - Để dùng dịch vụ SSE-S3 khi upload file cần phải có thêm trường gọi mã hóa `--sse AES256`, nếu không mặc định nó vẫn sẽ upload file thường không mã hóa lên s3
   - Upload mac dinh
 ```sh
  aws --endpoint-url http://192.168.1.142:8000 s3 cp test_folder s3://khiem.mmt.test/test1 --recursive # --recursive cho phép thực hiện dối với tất cả các đối tượng file trong 1 folder thay vì 1 file duy nhất
 ```
-  - Upload khi thêm trường SSE-S3
-```
+  - Upload khi thêm trường SSE
 ```sh
 aws --endpoint-url http://192.168.1.142:8000 s3 cp test.txt s3://khiem.mmt.test/test   --sse AES256
 ```
