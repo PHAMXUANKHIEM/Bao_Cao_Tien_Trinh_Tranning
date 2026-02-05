@@ -4,7 +4,7 @@
 
 ![](images_test_case/anh3.png)
 
-- Thử lại upload file với dịch vụ SSE sẽ hiện lỗi kết nối tới Vault fail
+- Thử lại upload file với dịch vụ SSE sẽ hiện lỗi kết nối tới Vault fail từ đó ko upload đc file do không có key mã hóa
 
 ![](images_test_case/anh4.png)
 
