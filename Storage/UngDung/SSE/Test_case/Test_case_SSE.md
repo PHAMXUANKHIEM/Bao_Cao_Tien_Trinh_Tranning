@@ -59,6 +59,14 @@ ceph config set client.rgw rgw_crypt_sse_s3_vault_auth token
 ceph config set client.rgw rgw_crypt_sse_s3_vault_token_file /etc/ceph/vault.token
 ceph config set client.rgw rgw_crypt_sse_s3_vault_prefix transit
 ceph config set client.rgw rgw_crypt_require_ssl false
+ceph config set client.rgw rgw_crypt_default_encryption_key ceph-bucket-key
+ceph config set client.rgw rgw_crypt_s3_kms_backend vault
+ceph config set client.rgw rgw_crypt_vault_addr http://192.168.1.100:8200
+ceph config set client.rgw  rgw_crypt_vault_auth token
+ceph config set client.rgw rgw_crypt_vault_prefix /v1/transit 
+ceph config set client.rgw rgw_crypt_vault_secret_engine transit
+ceph config set client.rgw  rgw_crypt_vault_token_file /etc/ceph/vault.token 
+ceph config set client.rgw rgw_crypt_require_ssl false
 ```
 
 Sau đó khởi động lại dịch vụ RGW trên các node.
@@ -86,13 +94,15 @@ Sau đó khởi động lại dịch vụ RGW trên các node.
 
 ![](images_test_case/anh7.png)
 
-3.3. Kiểm tra upload có mã hóa (SSE-S3)
+3.3. Kiểm tra upload có mã hóa 
 
 Đây là phần quan trọng nhất để xác nhận Vault đang hoạt động:
 ```sh
 aws --endpoint-url http://192.168.1.97:8000 s3 cp my_data/test.txt s3://khiem.mmt204.test/ --sse AES256
+aws --endpoint-url http://192.168.1.197:8000 s3 cp test.txt s3://khiem.mmt204.test/test   --sse aws:kms   --sse-kms-key-id ceph-bucket-key
 ```
-![](images_test_case/anh8.png)
+
+![](images_test_case/anh13.png)
 
 ## GIAI ĐOẠN 4: Thử nghiệm sự ảnh hưởng của Vault 
 - Vì ta dùng thuật toán Raft. Với n=3, bạn cần ít nhất 2 node chạy để cụm làm việc.
