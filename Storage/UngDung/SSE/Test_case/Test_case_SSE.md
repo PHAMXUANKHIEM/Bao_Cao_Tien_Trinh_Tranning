@@ -8,7 +8,8 @@
   - Giai đoạn 2: Cấu hình SSE rồi xem có đọc được các dữ liệu cũ ở giai đoạn 1 hay ko
   - Giai đoạn 3: Sau khi config SSE rồi upload theo cách bình thường được không 
   - Giai đoạn 4: Thử nghiệm sẽ như thế nào nếu trong cụm Vault 3 node có 1 node chết, 2 node chết và tất cả đều chết, nó ảnh hưởng gì tới Ceph
-GIAI ĐOẠN 1: KIỂM THỬ TRƯỚC KHI CẤU HÌNH MÃ HÓA
+  
+## GIAI ĐOẠN 1: KIỂM THỬ TRƯỚC KHI CẤU HÌNH MÃ HÓA
 
 Mục tiêu: Đảm bảo cụm Ceph RGW hoạt động bình thường ở chế độ lưu trữ thuần túy.
 1.1. Tạo 1,000 file dữ liệu mẫu
@@ -35,7 +36,7 @@ aws --endpoint-url http://192.168.1.97:8000 s3 cp s3://khiem.mmt204.test/file_50
 
 ![](images_test_case/anh2.png)
 
-GIAI ĐOẠN 2: CẤU HÌNH MÃ HÓA (SSE-S3)
+## GIAI ĐOẠN 2: CẤU HÌNH MÃ HÓA (SSE-S3)
 
 Mục tiêu: Liên kết Ceph RGW với cụm Vault VIP.
 2.1. Chuẩn bị trên HashiCorp Vault
@@ -61,7 +62,8 @@ ceph config set client.rgw rgw_crypt_require_ssl false
 ```
 
 Sau đó khởi động lại dịch vụ RGW trên các node.
-GIAI ĐOẠN 3: KIỂM THỬ SAU KHI CẤU HÌNH
+
+## GIAI ĐOẠN 3: KIỂM THỬ SAU KHI CẤU HÌNH
 3.1. Dữ liệu cũ (ở Giai đoạn 1) có xem được không?
 
     Câu trả lời: có, do SSE-S3 là thuộc tính được gán cho từng Object tại thời điểm upload. Các file đã upload trước khi cấu hình Vault không mang cờ mã hóa trong Metadata, nên RGW sẽ đọc trực tiếp từ OSD mà không đi qua Vault.
@@ -92,7 +94,7 @@ aws --endpoint-url http://192.168.1.97:8000 s3 cp my_data/test.txt s3://khiem.mm
 ```
 ![](images_test_case/anh8.png)
 
-Giai đoạn 4: Thử nghiệm sự ảnh hưởng của Vault 
+## GIAI ĐOẠN 4: Thử nghiệm sự ảnh hưởng của Vault 
 - Vì ta dùng thuật toán Raft. Với n=3, bạn cần ít nhất 2 node chạy để cụm làm việc.
 - Kịch bản 1: 1 Node chết
 
