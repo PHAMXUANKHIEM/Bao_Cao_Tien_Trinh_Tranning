@@ -92,17 +92,3 @@ aws s3api head-object --bucket khiem.mmt204.test --key test2 --endpoint-url http
 ```
 ![](images_sse_s3/anh37.png)
 
-# Cấu hình backend cho sse-s3 là vault
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_backend vault
-# Cấu hình địa chỉ truy cập Vault cho sse-s3
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_addr http://192.168.1.70:8200
-# Cấu hình auth để truy cập vault là token 
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_auth token
-# Cấu hình nơi để export thông tin dữ liệu để mã hóa
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_prefix /v1/transit 
-# Cấu hình nói lưu trữ là transit
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_secret_engine transit
-# Cấu hình đường dẫn tới file token 
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_token_file /etc/ceph/vault.token 
-# Cấu hình tắt truy cập bằng cert 
-ceph config set client.rgw.sse.host-192-168-1-70.kblhzrrgw_crypt_require_ssl false
