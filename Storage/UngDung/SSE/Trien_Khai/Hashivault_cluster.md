@@ -116,10 +116,6 @@ vault operator init
 ```
 ***LƯU Ý: LƯU KĨ LẠI CÁC KEY NÀY ĐỂ CẤU HÌNH VỀ SAU***
 
-Bước 6: Trên tất cả các node đăng nhập bằng Root Token
-```sh
-vault login <root-token ở trên>
-```
 Bước 7: Chỉ trên node muốn làm Leader, Unseal trên node đó 
 (VD trên node 1)
 ```sh
@@ -128,14 +124,11 @@ vault operator unseal
 ***LÀM LIÊN TIẾP 3 LẦN ĐẾN KHI NHẬN ĐƯỢC GIÁ TRỊ `Sealed` bằng false***
 - Kiểm tra:
 ```sh
+vault login <root-token ở trên>
 vault operator raft list-peers
 ```
 ![](images_vault_cluster/anh3.png)
 
-Bước 8: Trên các node còn lại trước khi Unseal cần phải cho join vào trong cụm trước:
-```sh
-vault operator raft join http://192.168.1.244:8200
-```
 Bước 9: Unseal trên các node còn lại để trở thành follower cho leader
 ***LƯU Ý MÃ UNSEAL KEY Ở ĐÂY KHÔNG PHẢI LÀ CỦA CÁC NODE FOLLOWER MÀ PHẢI NHẬP MÃ UNSEAL KEY CỦA NODE LEADER***
 ```sh
@@ -154,19 +147,17 @@ yum install keepalived -y
 ```
 - Cấu hình `check_vault.sh` check vault sống hay chết: 
 ```sh
-cat <<EOF > /etc/keepalived/check_vault.sh
+cat <<'EOF' > /etc/keepalived/check_vault.sh
 #!/bin/bash
 
-# Tự động lấy IP của card mạng ens3 (hoặc card mạng chính của bạn)
-NODE_IP=$(ip -4 addr show ens3 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+CODE=$(curl -s --connect-timeout 2 -o /dev/null -w "%{http_code}" \
+  http://127.0.0.1:8200/v1/sys/health)
 
-# Gọi đến Vault qua IP vừa lấy được
-STATUS_CODE=$(curl -s --connect-timeout 2 -o /dev/null -w "%{http_code}" http://${NODE_IP}:8200/v1/sys/health)
-
-if [ "$STATUS_CODE" = "200" ]; then
-            exit 0
-    else
-                exit 1
+# Chỉ leader/active mới được giữ VIP
+if [[ "$CODE" == "200" ]]; then
+  exit 0
+else
+  exit 1s
 fi
 EOF
 
