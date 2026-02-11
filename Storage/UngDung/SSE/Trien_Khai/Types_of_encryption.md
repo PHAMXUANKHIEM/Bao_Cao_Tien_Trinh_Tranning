@@ -1,5 +1,5 @@
 # CƠ CHẾ MÃ HÓA DỮ LIỆU (ENCRYPTION) TRONG CEPH RGW & HASHICORP VAULT
-1. Tổng quan kiến trúc
+## 1. Tổng quan kiến trúc
 
 Trong hệ thống lưu trữ đối tượng, việc mã hóa dữ liệu tại chỗ được thực hiện thông qua sự phối hợp giữa RadosGW và một hệ thống quản lý khóa tập trung.
 
@@ -9,7 +9,7 @@ Thành phần chính:
   - Data Encryption Key (DEK): Là khóa dùng để trực tiếp mã hóa nội dung file (Object). Khóa này được sinh ra ngẫu nhiên cho từng Object.
 
   - Key Encryption Key (KEK): Là "khóa chủ" (Master Key) nằm trong Vault. Khóa này dùng để mã hóa (khóa lại) chính cái DEK.
-2. Các loại thuật toán và chuẩn mã hóa
+## 2. Các loại thuật toán và chuẩn mã hóa
 2.1. Tại Data Layer (DEK - Trong Ceph RGW)
 
 Đây là các thuật toán trực tiếp "xào nấu" dữ liệu trên đĩa. RGW hỗ trợ:
@@ -32,7 +32,7 @@ Vault Transit Engine cho phép khởi tạo nhiều loại Master Key:
 
   - AES-CBC (128, 256-bit): Khóa đối xứng, dùng ở chế độ Cipher Block Chaining, có hỗ trợ mã hóa hội tụ, chỉ dùng trong bản Enterprise của Vault
 
-3. Quy trình vận hành SSE-KMS (Vault Backend)
+## 3. Quy trình vận hành SSE-KMS (Vault Backend)
 
   - Client: Gửi lệnh Upload (PUT Object) kèm tham số --sse aws:kms.
 
@@ -44,7 +44,7 @@ Vault Transit Engine cho phép khởi tạo nhiều loại Master Key:
 
   - RGW: Mã hóa file bằng DEK thực tế, sau đó lưu file kèm theo DEK đã mã hóa vào metadata của Object trên Ceph OSD.
 
-4. Hướng dẫn cấu hình thực tế
+## 4. Hướng dẫn cấu hình thực tế
 4.1. Khởi tạo Master Key trong Vault
 ```sh
 # Tạo và đọc khóa Master loại RSA
@@ -63,21 +63,21 @@ vault read  transit/keys/ceph-bucket-key-aes256-gcm96
 - Để RGW nhận diện và sử dụng Vault:
 ```sh
 # Cấu hình loại hình mã hóa dành cho RGW (AES256, AES128, SM4)
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs rgw_crypt_default_encryption_key AES256 
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzrrgw_crypt_default_encryption_key AES256 
 # Cấu hình backend cho sse-kms là vault
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs  rgw_crypt_s3_kms_backend vault
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_s3_kms_backend vault
 # Cấu hình địa chỉ truy cập Vault cho sse-kms
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs  rgw_crypt_vault_addr http://192.168.1.142:8200
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_vault_addr http://192.168.1.142:8200
 # Cấu hình auth để truy cập vault là token 
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs  rgw_crypt_vault_auth token
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_vault_auth token
 # Cấu hình nơi để export thông tin dữ liệu để mã hóa
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs  rgw_crypt_vault_prefix /v1/transit 
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_vault_prefix /v1/transit 
 # Cấu hình nói lưu trữ là transit
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs  rgw_crypt_vault_secret_engine transit
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_vault_secret_engine transit
 # Cấu hình đường dẫn tới file token 
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs  rgw_crypt_vault_token_file /etc/ceph/vault.token 
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_vault_token_file /etc/ceph/vault.token 
 # Cấu hình tắt truy cập bằng cert 
-ceph config set client.rgw.sse.host-192-168-1-138.dovwzs rgw_crypt_require_ssl false
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzrrgw_crypt_require_ssl false
 ```
 4.3. Lệnh kiểm tra và xác thực
 - Kiểm tra xem RGW đang sử dụng loại mã hóa nào:
@@ -92,3 +92,17 @@ aws s3api head-object --bucket khiem.mmt204.test --key test2 --endpoint-url http
 ```
 ![](images_sse_s3/anh37.png)
 
+# Cấu hình backend cho sse-s3 là vault
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_backend vault
+# Cấu hình địa chỉ truy cập Vault cho sse-s3
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_addr http://192.168.1.70:8200
+# Cấu hình auth để truy cập vault là token 
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_auth token
+# Cấu hình nơi để export thông tin dữ liệu để mã hóa
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_prefix /v1/transit 
+# Cấu hình nói lưu trữ là transit
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_secret_engine transit
+# Cấu hình đường dẫn tới file token 
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzr rgw_crypt_sse_s3_vault_token_file /etc/ceph/vault.token 
+# Cấu hình tắt truy cập bằng cert 
+ceph config set client.rgw.sse.host-192-168-1-70.kblhzrrgw_crypt_require_ssl false
