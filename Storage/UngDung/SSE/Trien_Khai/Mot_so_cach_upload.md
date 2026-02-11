@@ -95,6 +95,14 @@ export MC_ENCRYPT_KEY="myminio/my-bucket=7u5v...v8A="
 mc encrypt clear myaistor/mydata
 ```
 ## Upload bằng Python 
+- Cài đặt python3.11 trở lên và thư viện boto3
+```sh
+sudo dnf install python3.11
+python3.11 -m venv venv
+source venv/bin/active
+pip install boto3
+```
+
 ### SSE-S3
 ```sh
 import boto3
@@ -136,3 +144,160 @@ def upload_with_sse_s3(bucket, key, data):
     return response
 upload_with_sse_s3('khiem.mmt2004.test', 'test1.txt', 'Nội dung bảo mật')
 ```
+### SSE-C
+```sh
+import boto3
+from botocore.config import Config
+
+endpoint = "http://192.168.1.70:8000"
+access_key = "SSUYD0ZI5FYA5FR96W5D"
+secret_key = "YCC56y9qouAK3mT7lO5igbaEI5xWv15y1fp3xK6h"
+
+bucket = "khiem.mmt204.test"
+key = "test-sse-s3.txt"
+
+# Đọc RAW key giống awscli fileb://sse.key
+with open("sse.key", "rb") as f:
+        raw_key = f.read()
+
+print("Key length:", len(raw_key))  # phải = 32
+
+s3 = boto3.client(
+     "s3",
+     endpoint_url=endpoint,
+     aws_access_key_id=access_key,
+     aws_secret_access_key=secret_key,
+     config=Config(signature_version="s3v4"),
+     use_ssl=False
+     )
+
+sse_args = {
+    "SSECustomerAlgorithm": "AES256",
+    "SSECustomerKey": raw_key
+    }
+s3.put_object(Bucket=bucket, Key=key, Body=b"data", **sse_args)
+```
+## Upload bằng NodeJS
+- Cài đặt NodeJS và thư viện
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+\. "$HOME/.nvm/nvm.sh"
+nvm install 24
+node -v # Should print "v24.13.1".
+npm -v # Should print "11.8.0".
+npm init -y
+npm i @aws-sdk/client-s3
+```
+### SSE-S3
+```sh
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import fs from "fs";
+
+const s3 = new S3Client({
+          region: "us-east-1",
+          endpoint: "http://192.168.1.70:8000",
+          credentials: {
+                      accessKeyId: "SSUYD0ZI5FYA5FR96W5D",
+                      secretAccessKey: "YCC56y9qouAK3mT7lO5igbaEI5xWv15y1fp3xK6h",
+                    },
+          forcePathStyle: true, // QUAN TRỌNG khi dùng Ceph RGW
+});
+const bucket = "khiem.mmt204.test";
+const key = "sse-s3/test-sse-s3.txt";
+
+async function main() {
+      const body = fs.readFileSync("./test.txt");
+      const cmd = new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: body,
+        ServerSideEncryption: "AES256",
+ });
+      const res = await s3.send(cmd);
+      console.log("Upload OK:", res);
+}
+
+main().catch(console.error);
+```
+
+![](images_sse_s3/anh48.png)
+
+### SSE-KMS
+
+```sh
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import fs from "fs";
+
+const s3 = new S3Client({
+          region: "us-east-1",
+          endpoint: "http://192.168.1.70:8000",
+          credentials: {
+                      accessKeyId: "SSUYD0ZI5FYA5FR96W5D",
+                      secretAccessKey: "YCC56y9qouAK3mT7lO5igbaEI5xWv15y1fp3xK6h",
+                    },
+          forcePathStyle: true, // QUAN TRỌNG khi dùng Ceph RGW
+});
+const bucket = "khiem.mmt204.test";
+const key = "sse-s3/test-sse-s3.txt";
+
+async function main() {
+      const body = fs.readFileSync("./test.txt");
+      const cmd = new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: body,
+        ServerSideEncryption: "aws:kms",
+        SSEKMSKeyId: "ceph-bucket-key",
+
+ });
+      const res = await s3.send(cmd);
+      console.log("Upload OK:", res);
+}
+
+main().catch(console.error);
+```
+
+![](images_sse_s3/anh49.png)
+
+### SSE-C
+```sh
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import fs from "fs";
+import crypto from "crypto";
+
+const s3 = new S3Client({
+  region: "us-east-1",
+  endpoint: "http://192.168.1.70:8000",
+  credentials: {
+    accessKeyId: "YOUR_ACCESS_KEY",
+    secretAccessKey: "YOUR_SECRET_KEY",
+  },
+  forcePathStyle: true,
+});
+
+const bucket = "khiem.mmt204.test";
+const key = "sse-c/test-sse-c.txt";
+
+async function main() {
+  const body = Buffer.from("hello sse-c ceph");
+  const rawKey = fs.readFileSync("./sse.key");
+  const b64Key = rawKey.toString("base64");
+  const md5Key = crypto.createHash("md5").update(rawKey).digest("base64");
+
+  const cmd = new PutObjectCommand({
+    Bucket: bucket,
+    Key: key,
+    Body: body,
+    SSECustomerAlgorithm: "AES256",
+    SSECustomerKey: b64Key,
+    SSECustomerKeyMD5: md5Key,
+  });
+
+  const res = await s3.send(cmd);
+  console.log("Upload SSE-C OK:", res);
+}
+
+main().catch(console.error);
+```
+
+![](images_sse_s3/anh50.png)
