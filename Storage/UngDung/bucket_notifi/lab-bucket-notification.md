@@ -108,8 +108,8 @@ import requests
 from confluent_kafka import Consumer
 from datetime import datetime, timedelta
 
-TELE_TOKEN = '8764634735:AAH3Lhn6vztQ_gqN_GEwGjVf93LgRf4z2_Q'
-CHAT_ID = '8379540291'
+TELE_TOKEN = ''
+CHAT_ID = ''
 
 def format_size(size_bytes):
     if size_bytes == 0:
