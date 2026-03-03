@@ -316,3 +316,29 @@ aws --endpoint-url http://10.2.6.128:8000 s3api put-object --bucket khiem.mmt204
 
 ![](images_lab_bucket/anh13.png)
 
+5. Copy file có sẵn sang 1 tên mới trong cùng một bucket hoặc copy từ bucket này sang bucket khác
+```sh
+    aws --endpoint http://10.2.6.128:8000 s3 cp s3://khiem.mmt.test/test s3://khiem.mmt204.test/test1 --sse AES256 --metadata "x-encrypt-mode=sse-s3"
+```
+![](images_lab_bucket/anh14.png)
+
+- Đoạn Json gửi sang Kafka
+
+![](images_lab_bucket/anh15.png)
+
+- Thông tin gửi về Telegram
+
+![](images_lab_bucket/anh16.png)
+
+6. Xóa bucket
+```sh
+aws --endpoint http://10.2.6.128:8000 s3 rm s3://khiem.mmt.test/test 
+```
+- Json Kafka 
+
+![](images_lab_bucket/anh17.png)
+
+- Telegram
+
+![](images_lab_bucket/anh18.png)
+
