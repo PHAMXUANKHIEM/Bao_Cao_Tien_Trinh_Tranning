@@ -1,0 +1,33 @@
+# CÁC LOẠI EVENT TYPE
+
+## Nhóm sự kiện S3 
+- Tạo file (ObjectCreated): Hỗ trợ đầy đủ từ việc tải lên trực tiếp (Put), dùng form (Post), sao chép (Copy) cho đến tải lên nhiều phần (MultipartUpload).Cụ thể: 
+  - s3:ObjectCreated:* 
+  - s3:ObjectCreated:Put
+  - s3:ObjectCreated:Post
+  - s3:ObjectCreated:Copy
+  - s3:ObjectCreated:CompleteMultipartUpload
+- Xóa file (ObjectRemoved): Thông báo khi file bị xóa vĩnh viễn hoặc khi một "dấu vết xóa" (DeleteMarker) được tạo ra (trong bucket có lưu version).
+  - s3:ObjectRemoved:*
+  - s3:ObjectRemoved:Delete
+  - s3:ObjectRemoved:DeleteMarkerCreated
+- Khôi phục file (ObjectRestore): Thông báo khi bạn yêu cầu khôi phục file từ các lớp lưu trữ lưu trữ lạnh (như Glacier).
+ - s3:ObjectRestore:*
+ - s3:ObjectRestore:Post
+ - s3:ObjectRestore:Completed
+ - s3:ObjectRestore:Delete
+- Tự động xóa dữ liệu (ObjectLifecycle): Khi một file đạt đến tuổi thọ nhất định và bị Ceph tự động loại bỏ để tiết kiệm dữ liệu
+ - s3:ObjectLifecycle:Expiration:Current
+ - s3:ObjectLifecycle:Expiration:NonCurrent
+ - s3:ObjectLifecycle:Expiration:DeleteMarker
+ - s3:ObjectLifecycle:Expiration:AbortMultipartUpload
+ - s3:ObjectLifecycle:Transition:Current
+- Các loại event được Ceph bản Reef 18.x hỗ trợ:
+ - s3:ObjectCreated:*
+ - s3:ObjectRemoved:*
+ - s3:ObjectSynced:*"
+ - s3:ObjectLifecycle:Expiration:Current
+ - s3:ObjectLifecycle:Expiration:DeleteMarker
+ - s3:ObjectLifecycle:Expiration:AbortMultipartUpload
+ - s3:ObjectLifecycle:Transition:Current
+ - s3:ObjectSynced:DeletionMarkerCreated
