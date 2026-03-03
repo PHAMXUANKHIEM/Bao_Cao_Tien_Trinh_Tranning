@@ -342,3 +342,19 @@ aws --endpoint http://10.2.6.128:8000 s3 rm s3://khiem.mmt.test/test
 
 ![](images_lab_bucket/anh18.png)
 
+7. Sync giữa 2 site
+- upload bình thường 
+```sh
+aws --endpoint http://10.2.6.128:8000 s3 cp test1.txt s3://khiem.mmt.test/test 
+```
+
+- Json Kafka
+
+![](images_lab_bucket/anh19.png)
+
+- Telegram sẽ nhận 2 thông báo: 1 là put, 2 là sync
+
+![](images_lab_bucket/anh19.png)
+
+
+
