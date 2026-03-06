@@ -48,18 +48,21 @@
    - Metadata
    - ID định danh
   2. Client trong Object Storage
-   - Client là các ứng dụng, công cụ (API) tương tác trực tiếp qua API S3/Swift. Dữ liệu được quản lý dưới dạng các object trong các bucket, không sử dụng hệ thống tệp truyền thống.\
-
-  ![](images_cloud/anh4.png)
+   - Client là các ứng dụng, công cụ (API) tương tác trực tiếp qua API S3/Swift. Dữ liệu được quản lý dưới dạng các object trong các bucket, không sử dụng hệ thống tệp truyền thống.
 
   3. Luồng Client tới Disk của Object Storage
   
   ![](images_cloud/anh6.png)
   
-   Giai đoạn 1: Ceph tạo một người dùng RGW User mới và cấp cho người dùng đó cặp chìa khóa API (access-key và secret-key)
-   Giai đoạn 2: Client sử dụng cặp Access/Secret Key này để gọi đến RGW GATEWAY. RGW Gateway kiểm tra chìa khóa và nếu hợp lệ, nó sẽ trả về danh sách các bucket hiện có.
-   Giai đoạn 3: Client sử dụng một công cụ S3 hoặc một thư viện code (ví dụ Boto3) để gửi lệnh. Nó gửi lệnh tạo một Bucket. RGW Gateway xử lý lệnh, tạo siêu dữ liệu (metadata) của bucket và lưu trữ nó. Client sẽ thấy các Buckets/Objects (Folder và File) thông qua API.
-   Giai đoạn 4: Khi tải dữ liệu lên sử dụng thư viện API để gửi lệnh tải file lên (PUT Object) với dữ liệu ảnh và siêu dữ liệu đi kèm. Dữ liệu chạy qua mạng đến RGW Gateway. RGW Gateway tự động tiếp nhận dữ liệu, băm nhỏ và phân tán (nhân bản hoặc erasure coding) xuống các OSDs của Ceph Storage Cluster. Client không giao tiếp trực tiếp với OSD như Block Storage.
+    - Giai đoạn 1: Ceph tạo một người dùng RGW User mới và cấp cho người dùng đó cặp chìa khóa API (access-key và secret-key)
+    - Giai đoạn 2: Client sử dụng cặp Access/Secret Key này để gọi đến RGW GATEWAY. RGW Gateway kiểm tra chìa khóa và nếu hợp lệ, nó sẽ trả về danh sách các bucket hiện có.
+    - Giai đoạn 3: Client sử dụng một công cụ S3 hoặc một thư viện code (ví dụ Boto3) để gửi lệnh. Nó gửi lệnh tạo một Bucket. RGW Gateway xử lý lệnh, tạo siêu dữ liệu (metadata) của bucket và lưu trữ nó. Client sẽ thấy các Buckets/Objects (Folder và File) thông qua API.
+    - Giai đoạn 4: Khi tải dữ liệu lên sử dụng thư viện API để gửi lệnh tải file lên (PUT Object) với dữ liệu ảnh và siêu dữ liệu đi kèm. Dữ liệu chạy qua mạng đến RGW Gateway. RGW Gateway tự động tiếp nhận dữ liệu, băm nhỏ và phân tán (nhân bản hoặc erasure coding) xuống các OSDs của Ceph Storage Cluster. Client không giao tiếp trực tiếp với OSD như Block Storage.
+
+
+
+   ![](images_cloud/anh4.png)
+
   ## So sánh
    | Tiêu chí | Object Storage | File Storage | Block Storage |
 | :--- | :--- | :--- | :--- |
