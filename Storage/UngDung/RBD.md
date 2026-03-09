@@ -66,6 +66,9 @@ OSDs (Lưu trữ objects)
 
 - **Erasure Coding**: là kĩ thuật bảo vệ dữ liệu nâng cao được sử dụng thay thế cho Replication để tối ưu dung lượng lưu trữ vật lý và đảm bảo chịu lỗi tối đa. Cơ chế hoạt động là sẽ chia các dữ liệu thành nhiều mảnh khác nhau và lưu trữ rải rác trên các OSD. Khi 1 ổ bị lỗi, dữ liệu sẽ được tính toán ngược lại để tự sinh ra.
 
+### Object Map
+
+- **Object Map**: Trong RBD, Object Map sẽ lưu metadata trạng thái của ổ đĩa đó (trống hay đầy)
 ## 3. Cấu hình RBD
 
 ### Tạo Pool cho RBD
