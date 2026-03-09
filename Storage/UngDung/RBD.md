@@ -106,38 +106,49 @@ rbd create --size 10G --stripe-unit 4M --stripe-count 4 rbd/myimage #--stripe-co
 # Tạo từ snapshot
 rbd clone rbd/myimage@snap1 rbd/myimage-clone
 ```
+![](images_RADOS/anh59.png)
 
+```bash
+# Map và sử dụng clone
+sudo rbd map rbd/myimage-clone
+```
+![](images_RADOS/anh60.png)
 
 ### Liệt kê và Xem thông tin
 
 ```bash
-# Liệt kê images
-rbd ls rbd
-
 # Thông tin chi tiết
 rbd info rbd/myimage
+```
+![](images_RADOS/anh61.png)
 
+```bash
 # Dung lượng sử dụng
 rbd du rbd/myimage
 ```
+![](images_RADOS/anh62.png)
 
 ### Resize Image
 
 ```bash
 # Mở rộng
 rbd resize --size 20G rbd/myimage
+```
+![](images_RADOS/anh63.png)
 
+```bash
 # Thu nhỏ (cẩn thận, có thể mất dữ liệu)
 rbd resize --size 5G --allow-shrink rbd/myimage
 ```
+![](images_RADOS/anh64.png)
 
 ### Xóa Image
 
 ```bash
+rbd unmap /dev/rbd0
 rbd rm rbd/myimage
 ```
-
----
+![](images_RADOS/anh66.png)
 
 ## 5. Mapping và Mounting RBD
 
@@ -158,6 +169,7 @@ sudo mkfs.ext4 /dev/rbd0
 sudo mkdir /mnt/rbd
 sudo mount /dev/rbd0 /mnt/rbd
 ```
+![](images_RADOS/anh65.png)
 
 ### Unmapping
 
@@ -176,22 +188,19 @@ sudo rbd unmap /dev/rbd0
 ```bash
 # Tạo snapshot
 rbd snap create rbd/myimage@snap1
-
-# Liệt kê snapshots
-rbd snap ls rbd/myimage
-
-# Bảo vệ snapshot (để clone)
-rbd snap protect rbd/myimage@snap1
 ```
-
-### Clone từ Snapshot
+![](images_RADOS/anh57.png)
 
 ```bash
-# Clone
-rbd clone rbd/myimage@snap1 rbd/myimage-clone
+# Liệt kê snapshots
+rbd snap ls rbd/myimage
+```
 
-# Map và sử dụng clone
-sudo rbd map rbd/myimage-clone
+![](images_RADOS/anh58.png)
+
+```bash
+# Bảo vệ snapshot (để clone)
+rbd snap protect rbd/myimage@snap1
 ```
 
 ### Quản lý Snapshots
@@ -199,15 +208,15 @@ sudo rbd map rbd/myimage-clone
 ```bash
 # Unprotect snapshot
 rbd snap unprotect rbd/myimage@snap1
-
 # Xóa snapshot
 rbd snap rm rbd/myimage@snap1
+```
+![](images_RADOS/anh67.png)
 
-# Rollback image về snapshot
+```bash
+# Rollback image về thời điểm snapshot
 rbd snap rollback rbd/myimage@snap1
 ```
-
----
 
 ## 7. Mirroring và Disaster Recovery
 
@@ -245,27 +254,7 @@ rbd mirror image demote rbd/myimage
 rbd mirror image promote rbd/myimage
 ```
 
----
-
 ## 8. Tối ưu hóa Hiệu năng
-
-### Cấu hình Striping
-
-```bash
-# Tạo image với striping tùy chỉnh
-rbd create --size 100G --stripe-unit 4M --stripe-count 8 rbd/large-image
-```
-
-### Caching
-
-```bash
-# Bật write-back cache
-rbd feature enable rbd/myimage exclusive-lock journaling
-
-# Cấu hình cache size
-echo "rbd_cache = true" >> /etc/ceph/ceph.conf
-echo "rbd_cache_size = 134217728" >> /etc/ceph/ceph.conf  # 128MB
-```
 
 ### QoS (Quality of Service)
 
@@ -338,24 +327,6 @@ sudo tail -f /var/log/ceph/ceph-client.log
 echo "debug rbd = 20" >> /etc/ceph/ceph.conf
 echo "debug rados = 20" >> /etc/ceph/ceph.conf
 sudo systemctl restart ceph.target
-```
-
----
-
-## 10. Tích hợp với Công cụ Ảo hóa
-
-### OpenStack Cinder
-
-```yaml
-# cinder.conf
-[DEFAULT]
-enabled_backends = ceph
-[ceph]
-volume_driver = cinder.volume.drivers.rbd.RBDDriver
-rbd_pool = rbd
-rbd_ceph_conf = /etc/ceph/ceph.conf
-rbd_user = cinder
-rbd_keyring = /etc/ceph/ceph.client.cinder.keyring
 ```
 
 ## 11. Kiến trúc Nội bộ và Data Path
