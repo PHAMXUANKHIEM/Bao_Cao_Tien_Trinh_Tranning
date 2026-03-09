@@ -97,8 +97,10 @@ rbd create --size 10G rbd/myimage
 
 ```bash
 # Tạo với striping
-rbd create --size 10G --stripe-unit 4M --stripe-count 4 rbd/myimage #--stripe-count 4 là số object chỉ định 
+rbd create --size 10G --stripe-unit 4M --stripe-count 4 rbd/myimage 
 ```
+- **Stripe Unit**: Kích thước mỗi stripe (mặc định 4MB).
+- **Stripe Count**: Số OSD để stripe (mặc định 1, không stripe).
 
 ![](images_RADOS/anh56.png)
 
@@ -233,6 +235,7 @@ rbd mirror image enable rbd/myimage
 rbd mirror pool status rbd
 rbd mirror image status rbd/myimage
 ```
+![](images_RADOS/anh68.png)
 
 ### Peer Cluster
 
@@ -245,6 +248,8 @@ rbd mirror pool peer bootstrap import rbd --direction rx-only <token>
 ```
 
 ### Failover và Failback
+
+- Khi dữ liệu ở cụm A bị mất do mất điện hay dây cáp thì ta đã có dữ liệu ở cụm B nhờ mirror nhưng dữ liệu cụm B chỉ ở trạng thái read-only. Hành động Failover sẽ giúp cụm B lập tức bẻ khóa trở thành Primary và dữ liệu sử dụng bình thường. Sau khi đã khắc phục sự cố xong thì Failback sẽ giúp cụm A trở về Primary và cụm B trở về như ban đầu
 
 ```bash
 # Demote primary
@@ -274,62 +279,7 @@ ceph osd pool set rbd pg_num 256
 ceph osd pool set rbd pgp_num 256
 ```
 
----
-
-## 9. Troubleshooting RBD
-
-### Vấn đề thường gặp
-
-#### Không thể map image
-
-```bash
-# Kiểm tra cluster health
-ceph health
-
-# Kiểm tra pool
-ceph osd pool stats rbd
-
-# Kiểm tra permissions
-ceph auth list | grep client.admin
-```
-
-#### Hiệu năng chậm
-
-```bash
-# Kiểm tra OSD I/O
-ceph osd perf
-
-# Kiểm tra network latency
-ping <osd-ip>
-
-# Tăng objecter timeout
-echo "rados_mon_op_timeout = 10" >> /etc/ceph/ceph.conf
-```
-
-#### Image corrupted
-
-```bash
-# Kiểm tra và sửa chữa
-rbd export rbd/myimage /tmp/backup
-rbd import /tmp/backup rbd/myimage-fixed
-```
-
-### Logs và Debugging
-
-```bash
-# RBD logs
-sudo dmesg | grep rbd
-
-# Ceph logs
-sudo tail -f /var/log/ceph/ceph-client.log
-
-# Debug mode
-echo "debug rbd = 20" >> /etc/ceph/ceph.conf
-echo "debug rados = 20" >> /etc/ceph/ceph.conf
-sudo systemctl restart ceph.target
-```
-
-## 11. Kiến trúc Nội bộ và Data Path
+## 9. Kiến trúc Nội bộ và Data Path
 
 ### Object Layout trong RBD
 
@@ -346,18 +296,6 @@ rbd info rbd/myimage
 ```
 
 - Tổng số objects = kích thước / object size (mặc định 4MB).
-
-### Striping Chi tiết
-
-- **Stripe Unit**: Kích thước mỗi stripe (mặc định 4MB).
-- **Stripe Count**: Số OSD để stripe (mặc định 1, không stripe).
-
-Với stripe-count > 1, dữ liệu được phân tán trên nhiều OSD để tăng I/O parallelism.
-
-```bash
-# Tạo image với striping
-rbd create --size 100G --stripe-unit 4M --stripe-count 4 rbd/striped-image
-```
 
 ### Data Path
 
@@ -396,190 +334,55 @@ rbd feature enable rbd/myimage layering exclusive-lock
 rbd info rbd/myimage | grep features
 ```
 
----
-
-## 12. Bảo mật và Authentication
-
-### Ceph Authentication
-
-RBD sử dụng CephX cho authentication:
-
-```bash
-# Tạo user cho RBD
-ceph auth get-or-create client.rbd-user mon 'allow r' osd 'allow rwx pool=rbd'
-
-# Xuất keyring
-ceph auth get client.rbd-user > /etc/ceph/ceph.client.rbd-user.keyring
-```
-
-### Encryption
-
-RBD hỗ trợ LUKS encryption:
-
-```bash
-# Tạo encrypted image
-sudo cryptsetup luksFormat /dev/rbd0
-sudo cryptsetup luksOpen /dev/rbd0 rbd-encrypted
-sudo mkfs.ext4 /dev/mapper/rbd-encrypted
-```
-
-### SELinux và AppArmor
-
-Trên systems với SELinux:
-
-```bash
-# Cho phép RBD access
-sudo setsebool -P virt_use_samba 1
-```
-
-### Network Security
-
-- Sử dụng TLS cho RADOS traffic (nếu bật msgr2).
-- Firewall: Mở port 6789 (monitors), 6800-7300 (OSDs).
-
----
-
-## 13. Monitoring và Metrics
-
-### Ceph Metrics
-
-Sử dụng ceph-mgr với prometheus:
-
-```bash
-# Cài đặt prometheus module
-ceph mgr module enable prometheus
-
-# Metrics cho RBD
-curl http://mgr-node:9283/metrics | grep rbd
-```
-
-### RBD-Specific Metrics
-
-- **IOPS**: Số operations per second.
-- **Throughput**: Bandwidth usage.
-- **Latency**: Thời gian phản hồi.
-
-### Monitoring Tools
-
-#### ceph-dashboard
-
-```bash
-# Truy cập dashboard
-# Pools > rbd > Images
-```
-
-#### Grafana Dashboards
-
-Import dashboard Ceph từ Grafana community.
-
-### Alerts
-
-```yaml
-# Prometheus alert rule
-groups:
-- name: rbd
-  rules:
-  - alert: RBDImageUnhealthy
-    expr: rbd_image_status{status="unhealthy"} > 0
-    for: 5m
-    labels:
-      severity: warning
-```
-
----
-
-## 14. Benchmarks và Performance Analysis
+## 10. Benchmarks và Performance Analysis
 
 ### Công cụ Benchmark
 
 #### rbd bench
 
+- Dùng khi ta tạo xong cụm Ceph mới muốn test xem các node có liên lạc với nhau ổn định không, ổ cứng có bị nghẽn cổ chai không
+
 ```bash
 # Benchmark write
 rbd bench --io-type write --io-size 4K --io-threads 16 --io-total 1G rbd/myimage
+```
 
+![](images_RADOS/anh69.png)
+
+Giải thích:
+- elapsed: 38: Toàn bộ quá trình ghi 1GB dữ liệu mất 38 giây.
+
+- ops/sec: 6875.05 (Con số quan trọng nhất): Cụm Ceph của bạn xử lý trung bình được khoảng 6.875 lệnh ghi mỗi giây.
+
+- bytes/sec: 27 MiB/s: Tốc độ băng thông (Throughput).
+
+```bash 
 # Benchmark read
 rbd bench --io-type read --io-size 4K --io-threads 16 --io-total 1G rbd/myimage
 ```
 
+![](images_RADOS/anh70.png)
+
+Giải thích:
+- 
+- elapsed: 63: Toàn bộ quá trình ghi 1GB dữ liệu mất 63 giây.
+
+- ops/sec: 4127.6: Cụm Ceph của bạn xử lý trung bình được khoảng 4.127 lệnh đọc mỗi giây.
+
+- bytes/sec: 16 MiB/s: Tốc độ băng thông (Throughput).
 #### fio
+
+- Dùng khi cụm Ceph đã chạy cùng với các máy ảo để xem có thể kéo được bao nhiêu IOPS để cam kết chất lượng máy ảo với khách hàng hoặc để tinh chỉnh tunning các tham số trong kernal Linux
 
 ```bash
 # Fio với RBD
 fio --name=rbd-test --rw=randwrite --bs=4k --size=1G --numjobs=4 --runtime=60 --filename=/dev/rbd0
 ```
+![](images_RADOS/anh71.png)
 
-### Phân tích Hiệu năng
-
-#### Factors ảnh hưởng
-
-- **Network**: Latency và bandwidth giữa client và OSDs.
-- **OSD Performance**: CPU, disk I/O của OSDs.
-- **Striping**: Tăng parallelism.
-- **Caching**: RBD cache và OSD cache.
-
-#### Tuning Tips
-
-- **Increase PGs**: Cho parallelism cao hơn.
-- **Use SSDs**: Cho OSD DB và WAL.
-- **Tune OSD**: `osd_op_threads`, `filestore_queue_max_ops`.
-
-### So sánh với Local Disk
-
-RBD thường chậm hơn local SSD nhưng tốt hơn HDD. Với tuning, có thể đạt 80-90% hiệu năng của local storage.
-
-## 15. Troubleshooting Nâng cao
-
-### Vấn đề Phức tạp
-
-#### Watchdog Errors
-
-```bash
-# Kiểm tra kernel logs
-dmesg | grep rbd
-
-# Tăng watchdog timeout
-echo "rbd_watchdog_timeout = 60" >> /etc/ceph/ceph.conf
-```
-
-#### Split-Brain trong Mirroring
-
-```bash
-# Force resync
-rbd mirror image resync rbd/myimage
-```
-
-### Recovery Scenarios
-
-#### Image Corruption
-
-```bash
-# Export good parts
-rbd export rbd/good-image /tmp/good.raw --offset 0 --length 50G
-
-# Import lại
-rbd import /tmp/good.raw rbd/recovered
-```
-
-#### Lost Snapshots
-
-- Sử dụng `rbd-nbd` để mount và recover.
-
-### Advanced Debugging
-
-```bash
-# Trace RADOS calls
-export CEPH_ARGS="--debug-rados 20 --debug-ms 1"
-
-# Use blktrace
-blktrace -d /dev/rbd0 -o trace.out
-blkparse trace.out
-```
-
-### CephFS Integration
-
-RBD có thể kết hợp với CephFS cho hybrid storage.
-
+Giải thích:
+- bw=2697KiB/s: 4 tiến trình numjobs gộp lại được 2.6 Mb/s
+- util=99.15% : 99.15% thời gian ổ bận rộn
 ## Các lệnh RBD hữu ích
 
 ```bash
