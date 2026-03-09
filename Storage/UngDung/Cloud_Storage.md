@@ -34,16 +34,20 @@
 
   ![](images_cloud/anh5.png)
     
-  -  Giai đoạn 1: Ceph sẽ tạo ổ đĩa ảo trống và cấp chìa khóa (Keyring) cho máy khách (Client)
+  -  Giai đoạn 1: Ceph sẽ tạo ổ đĩa ảo trống. Đê Client connect tới Ceph thì cần copy 2 file từ Ceph sang Client là file cấu hình `ceph.conf` chứa địa chỉ của các MON và file Keyring để cấp quyền hạn cho phép Client định danh và truy cập
 
-  -  Giai đoạn 2: Máy Client sẽ dùng Keyring hợp lệ để gửi đến MON, MON kiểm tra nếu Keyring hợp lệ sẽ gửi cho Client bản đồ CRUSH MAP
+  -  Giai đoạn 2: Khi đã có file cấu hình và Keyring, Client sẽ đọc cấu hình file `ceph.conf` để biết được địa chỉ các MON, sau đó sẽ gửi gói tin chứa Keyring hợp lệ để gửi đến MON, MON kiểm tra nếu Keyring hợp lệ sẽ gửi cho Client bản đồ CRUSH MAP
 
-  -  Giai đoạn 3: Máy Client sẽ dùng CRUSH MAP để kết nối tới ổ đĩa ảo trống đã tạo trước đó. Thao tác này gọi là MAPPING và trên hệ điều hành sẽ nhận diện ổ cứng mới
+  -  Giai đoạn 3: Máy Client sẽ gọi module rbd thông qua Kernal Linux. Module này sẽ sử dụng CRUSH MAP để đọc và tính toán đường đi tới ổ đĩa ảo trống đã tạo trước đó. Thao tác này gọi là MAPPING và trên hệ điều hành sẽ nhận diện ổ cứng mới thường là `/dev/rbd0`
   
-  -  Giai đoạn 4: Các ứng dụng sẽ ghi xuống ổ cứng này
+  -  Giai đoạn 4: Khi một ứng dụng được ghi xuống file `/dev/rbd0`, dữ liệu sẽ đi qua Block Layer của Linux đến module RBD. Lúc này RBD sẽ bắm nhỏ các luồng dữ liệu thành các object (có kích thước 4MB)
+
+  - Giai đoạn 5: Khi file đã được băm nhỏ, Client sẽ chạy thuật toán CRUSH trực tiếp trên máy mình để thực hiện hàm băm `object --> PG --> OSD` để biết chính xác dữ liệu đang được OSD nào quản lý
+
   ## Object Storage
 
   ![](images_cloud/anh3.png)
+
   1. Khái niệm
   - Là dạng lưu trữ hiện đại trong Cloud, lưu trữ dữ liệu dưới dạng Object trong 1 không gian phẳng (Flat namespace), nơi mà không có phân cấp thư mục 
   - Khi đó mỗi dữ liệu sẽ được chia thành các đối tượng riêng lẻ và được gắn mã định danh duy nhất. Mỗi đối tượng (object) sẽ gồm 3 thành phần chính:
@@ -57,14 +61,13 @@
   
   ![](images_cloud/anh6.png)
   
-  - Giai đoạn 1: Ceph tạo một người dùng RGW User mới và cấp cho người dùng đó cặp chìa khóa API (access-key và secret-key)
+  - Giai đoạn 1: Ceph sẽ sử dụng RGW tạo một người dùng RGW User mới và tạo ra cặp chìa khóa API (access-key và secret-key)
 
-  - Giai đoạn 2: Client sử dụng cặp Access/Secret Key này để gọi đến RGW GATEWAY. RGW Gateway kiểm tra chìa khóa và nếu hợp lệ, nó sẽ trả về danh sách các bucket hiện có.
+  - Giai đoạn 2: Client (aws, swift, s3cmd) sử dụng cặp Access/Secret Key này để gọi đến RGW GATEWAY. RGW Gateway kiểm tra chìa khóa và nếu hợp lệ, nó sẽ cho Client thực thi các lệnh trên nó
 
   - Giai đoạn 3: Client sử dụng một công cụ S3 hoặc một thư viện code (ví dụ Boto3) để gửi lệnh. Nó gửi lệnh tạo một Bucket. RGW Gateway xử lý lệnh, tạo siêu dữ liệu (metadata) của bucket và lưu trữ nó. Client sẽ thấy các Buckets/Objects (Folder và File) thông qua API.
+
   - Giai đoạn 4: Khi tải dữ liệu lên sử dụng thư viện API để gửi lệnh tải file lên (PUT Object) với dữ liệu ảnh và siêu dữ liệu đi kèm. Dữ liệu chạy qua mạng đến RGW Gateway. RGW Gateway tự động tiếp nhận dữ liệu, băm nhỏ và phân tán (nhân bản hoặc erasure coding) xuống các OSDs của Ceph Storage Cluster. Client không giao tiếp trực tiếp với OSD như Block Storage.
-
-
 
    ![](images_cloud/anh4.png)
 
