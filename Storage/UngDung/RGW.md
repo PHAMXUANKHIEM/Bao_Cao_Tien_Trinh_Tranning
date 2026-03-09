@@ -2,9 +2,7 @@
 ## 1. Tổng quan RGW 
 ### Định nghĩa và chức năng chính
 
-- **RGW (RADOS Gateway)** không chỉ là một proxy mà là một tầng trừu tượng cao cấp.
-- Cung cấp các API RESTful compatible với **Amazon S3** và **OpenStack Swift** trên nền tảng RADOS.
-- Dịch các HTTP requests thành các RADOS operations được thực thi trực tiếp trên cluster.
+- RGW (Object Storage): Phục vụ S3/Bucket cho ứng dụng. Dữ liệu chạy từ Client -> RGW Gateway -> RGW tự băm nhỏ -> Lưu thẳng xuống RADOS.
 
 ### Thiết kế không trạng thái (Stateless)
 
@@ -13,8 +11,6 @@
   - Cho phép horizontal scaling gần tuyến tính: chỉ cần thêm RGW instances phía sau load balancer.
   - Nếu một RGW daemon bị hỏng, load balancer tự động chuyển hướng traffic đến các instances còn lại (transparent failover).
   - Tất cả state quan trọng (user metadata, bucket definitions, ACLs, object data) được lưu trong RADOS pools.
-
----
 
 ## 2. RGW Frontends
 
@@ -177,7 +173,7 @@ Bucket index là một structure dùng để:
 - Logging cho multi-zone synchronization.
 
 ### OMAPs (Object Maps) — Nền tảng của Bucket Index
-
+- OMAP bản chất là một cơ sở dữ liệu Key-Value đa năng của tầng RADOS. Trong luồng Object Storage (RGW), nó được sử dụng làm backend cực kỳ hiệu quả để lưu trữ toàn bộ danh sách tên file và siêu dữ liệu (metadata) của các Bucket Index
 - **OMAP**: key-value store được kết hợp với mỗi RADOS object.
 - Mỗi bucket, RGW tạo một hoặc nhiều **index objects** trong `.rgw.buckets.index` pool.
 - Listing information của objects trong bucket được lưu trong **OMAP** của các index objects.
