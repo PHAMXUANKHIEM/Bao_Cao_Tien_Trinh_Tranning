@@ -63,7 +63,7 @@
   
   - Giai đoạn 1: Ceph sẽ sử dụng RGW tạo một người dùng RGW User mới và tạo ra cặp chìa khóa API (access-key và secret-key)
 
-  - Giai đoạn 2: Client (aws, swift, s3cmd) sử dụng cặp Access/Secret Key này để gọi đến RGW GATEWAY. RGW Gateway kiểm tra chìa khóa và nếu hợp lệ, nó sẽ cho Client thực thi các lệnh trên nó
+  - Giai đoạn 2: Client (aws, swift, s3cmd) sẽ đi qua cổng 80 hoặc 443 (thường RGW sẽ đứng sau LB để đảm bảo tính HA).Client sử dụng cặp Access/Secret Key này để gọi đến RGW GATEWAY. RGW Gateway sẽ sử dụng giao thức RESTful API để nhận yêu cầu từ Client. Mỗi yêu cầu từ Client sẽ gôm 1 dãy số được tạo ra từ Secret-key. RGW sẽ kiểm tra chìa khóa và nếu hợp lệ, nó sẽ cho Client thực thi các lệnh trên nó
 
   - Giai đoạn 3: Client sử dụng một công cụ S3 hoặc một thư viện code (ví dụ Boto3) để gửi lệnh. Nó gửi lệnh tạo một Bucket. RGW Gateway xử lý lệnh, tạo siêu dữ liệu (metadata) của bucket và lưu trữ nó. Client sẽ thấy các Buckets/Objects (Folder và File) thông qua API.
 
