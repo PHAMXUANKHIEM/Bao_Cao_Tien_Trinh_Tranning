@@ -1,5 +1,8 @@
 # Versioning
-
+## Khái niệm
+- Là cơ chế lưu nhiều phiên bản của cùng 1 object trong cùng một bucket
+- Cho phép mỗi lần PUT hoặc Delete một object trong cùng 1 object sẽ tạo ra một hay nhiều phiên bản mới mà không xóa đi phiên bản cũ
+## Triển khai  
 1. Bật chế độ Versioning cho bucket
 
 ```sh
