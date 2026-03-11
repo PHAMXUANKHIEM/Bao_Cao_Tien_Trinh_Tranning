@@ -17,3 +17,19 @@
 ![](images_RADOS/anh84.png)
 
 
+3. Cấu hình bật tính năng
+
+- Thêm tính năng
+```sh
+radosgw-admin zonegroup modify --enable-feature=compress-encrypted
+radosgw-admin zonegroup modify --enable-feature=resharding
+```
+
+![](images_RADOS/anh85.png)
+
+- Xóa tính năng
+
+```sh
+radosgw-admin zonegroup modify --disable-feature=compress-encrypted
+```
+![](images_RADOS/anh86.png)
