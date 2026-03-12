@@ -65,4 +65,13 @@ hoặc dùng radosgw-admin
 radosgw-admin lc get --bucket=BUCKET_NAME
 ```
 
-![](images_RADOS/anh79.png) 
+![](images_RADOS/anh79.png)
+
+
+
+## Setting
+
+- Có 2 thống số chính ảnh hưởng tới tốc độ của quá trình xử lý vòng đời lifecycle:
+  - `rgw_lc_max_worker` (Mặc định là 3): Số luồng worker chạy song song để xử lý đồng thời các bucket và các index shard
+
+  - `rgw_lc_max_wp_worker` (Mặc định là 128): Số lượng coroutine trong nhóm công việc (work pool) của mỗi worker, giúp tăng tốc độ xử lý bên trong từng bucket.
