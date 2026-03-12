@@ -4,6 +4,13 @@
 
 - RGW (Object Storage): Phục vụ S3/Bucket cho ứng dụng. Dữ liệu chạy từ Client -> RGW Gateway -> RGW tự băm nhỏ -> Lưu thẳng xuống RADOS.
 
+### Định nghĩa của Object
+
+- Là một dữ liệu hoàn chỉnh được cấu thành từ 3 thành phần cốt lõi 
+  - Data/Payload: Là nội dung bạn tải lên
+  - Metadata: Mô tả chi tiết khối dữ liệu thực tế 
+  - Key/Object Name: Là chuỗi định danh tên của Object và là duy nhất trong bucket
+  
 ### Thiết kế không trạng thái (Stateless)
 
 - **Nguyên lý cốt lõi**: RGW daemon không lưu trữ bất kỳ state nào liên quan đến client session.
@@ -150,6 +157,11 @@ ceph osd pool autoscale-status
 ```
 ![](images_rgw/anh2.png)
 
+Giải thích:
+  - RATIO: tỉ lệ dung lượng giữa pool so với cluster 
+  - BIAS: là hệ số nhân mà PG autoscaler sẽ cấp phát. PG đề xuất = PG chuẩn * BIAS
+  - BULK: là cờ để đánh dấu sự ưu tiên cấp nhiều PG hơn cho pool đó do dự đoán pool này sẽ chứa nhiều data
+  
 **Với PG autoscaler được bật**, recommend tăng:
 ```bash
 ceph config set global mon_target_pg_per_osd 300
@@ -160,20 +172,21 @@ Check lại cấu hình
 ceph config dump | grep global
 ```
 
-`BIAS` là hệ số ưu tiên. Index pools nên có **BIAS value = 4** để ép Ceph cấp nhiều hơn bình thường số PGs cho chúng
-
 ## 5. Bucket Index và OMAPs — Chi tiết toàn diện
 
 ### The Bucket Index là gì?
 
+- Là một thành phần trong Ceph Object Gateway dùng để lưu danh sách và các metadata của 1 object trong bucket
 Bucket index là một structure dùng để:
-- Listing bucket contents.
-- Maintaining journal cho versioned operations.
-- Storing quota metadata.
-- Logging cho multi-zone synchronization.
+- Object name
+- Object size
+- Version
+- Etag
+- last modified
+- location trong data pool
 
 ### OMAPs (Object Maps) — Nền tảng của Bucket Index
-- OMAP bản chất là một cơ sở dữ liệu Key-Value đa năng của tầng RADOS. Trong luồng Object Storage (RGW), nó được sử dụng làm backend cực kỳ hiệu quả để lưu trữ toàn bộ danh sách tên file và siêu dữ liệu (metadata) của các Bucket Index
+- OMAP bản chất là một cơ sở dữ liệu Key-Value đa năng của tầng RADOS. Trong luồng Object Storage (RGW), nó được sử dụng làm backend cực kỳ hiệu quả để lưu trữ toàn bộ danh sách tên file và siêu dữ liệu (metadata) của các Bucket Index. Object map sẽ lưu metadata của file upload lên. 
 - **OMAP**: key-value store được kết hợp với mỗi RADOS object.
 - Mỗi bucket, RGW tạo một hoặc nhiều **index objects** trong `.rgw.buckets.index` pool.
 - Listing information của objects trong bucket được lưu trong **OMAP** của các index objects.
