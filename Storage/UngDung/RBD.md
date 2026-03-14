@@ -68,7 +68,8 @@ OSDs (Lưu trữ objects)
 
 ### Object Map
 
-- **Object Map**: Trong RBD, Object Map sẽ lưu metadata trạng thái của ổ đĩa đó (trống hay đầy)
+- **Object Map**: Trong RBD, Object Map sẽ lưu metadata trạng thái của Blocks (trống hay đầy 4MB)
+
 ## 3. Cấu hình RBD
 
 ### Tạo Pool cho RBD
@@ -386,6 +387,69 @@ fio --name=rbd-test --rw=randwrite --bs=4k --size=1G --numjobs=4 --runtime=60 --
 Giải thích:
 - bw=2697KiB/s: 4 tiến trình numjobs gộp lại được 2.6 Mb/s
 - util=99.15% : 99.15% thời gian ổ bận rộn
+## 11. Giải phẫu RBD dưới tầng RADOS
+
+Khi bạn thực hiện lệnh `rbd create`, RADOS không chỉ tạo ra một đống dữ liệu. Nó tạo ra một hệ thống các Object có vai trò khác nhau để quản lý cấu trúc ổ đĩa.
+
+### Cấu trúc định danh Object (Naming Convention)
+
+Trong RADOS, không có "thư mục". Để quản lý hàng triệu mảnh nhỏ của một ổ đĩa, Ceph sử dụng quy tắc đặt tên Object rất chặt chẽ:
+
+- **rbd_directory**: Đây là "danh bạ" của Pool. Nó là một Object duy nhất trong Pool lưu danh sách tên của tất cả các RBD Image hiện có.
+
+- **rbd_id.<image-name>**: Chứa ID duy nhất của Image đó (ví dụ: 10636b8b4567). ID này sẽ được dùng làm tiền tố cho các data objects để tránh trùng lặp khi bạn đổi tên Image.
+
+- **rbd_header.<id>**: Lưu trữ Metadata (Features, Size, Snapshots). Khi bạn chạy `rbd info`, thực chất client đang đọc Object này.
+
+- **rbd_data.<id>.<sequence_number>**: Đây là các mảnh dữ liệu thực tế (thường là 4MB).
+
+### Cách RBD Client tìm dữ liệu trong RADOS
+
+Quá trình này không thông qua một máy chủ trung tâm nào (loại bỏ nghẽn cổ chai):
+
+1. **Tính toán Object Name**: Nếu máy ảo muốn đọc byte thứ 5.000.000 của Image. RBD lấy 5.000.000 / 4.194.304 (4MB) = Object số 1, vị trí (offset) 805.696.
+
+2. **CRUSH Algorithm**: Client cầm cái tên `rbd_data.<id>.0000000000000001` ném vào thuật toán CRUSH cùng với bản đồ cụm (Cluster Map).
+
+3. **Kết nối trực tiếp**: CRUSH trả về vị trí chính xác của 3 OSD chứa Object đó. Client kết nối thẳng tới OSD để lấy dữ liệu.
+
+## 12. Tương tác trực tiếp với RADOS để quản lý RBD
+
+Để thực sự hiểu RBD nằm ở tầng RADOS như thế nào, bạn có thể dùng công cụ `rados` (thay vì `rbd`) để can thiệp:
+
+### Xem danh sách các Object "thật" của một Image
+
+Dùng lệnh này để thấy cách Ceph băm nhỏ ổ đĩa của bạn:
+
+```bash
+# Liệt kê các object thuộc về pool 'rbd' có chứa ID của image
+rados -p rbd ls | grep rbd_data.<image_id>
+```
+
+### Kiểm tra vị trí vật lý của một mảnh RBD
+
+Bạn muốn biết mảnh dữ liệu số 0 của ổ đĩa đang nằm ở ổ cứng vật lý nào, trên server nào?
+
+```bash
+ceph osd map rbd rbd_data.<image_id>.0000000000000000
+# Output sẽ cho bạn biết chính xác tên OSD và IP của server chứa mảnh đó.
+```
+
+## 13. Cơ chế nâng cao tại tầng RADOS: Exclusive Lock & Watch/Notify
+
+Đây là lý do tại sao hai máy ảo không thể cùng ghi vào một ổ đĩa RBD (trừ khi có cluster filesystem), giúp chống hỏng dữ liệu (corruption):
+
+- **Watch/Notify**: RBD Client đăng ký một kết nối "Watch" vào Object Header của Image dưới tầng RADOS. Nếu có một Client khác muốn ghi, RADOS sẽ gửi một thông báo "Notify" tới Client hiện tại.
+- **Exclusive Lock**: Đây là một tính năng của RADOS cho phép một Client chiếm giữ "khóa" trên Object Header. Khi OSD nhận được lệnh ghi, nó kiểm tra xem Client gửi lệnh có giữ Khóa hay không. Nếu không, OSD sẽ từ chối lệnh ghi ngay lập tức tại tầng lưu trữ.
+
+## 14. RBD Snapshot dưới tầng RADOS hoạt động ra sao?
+
+Tại tầng RADOS, Snapshot không phải là việc copy file. Nó sử dụng cơ chế Redirect-on-Write (RoW) của OSD:
+
+1. Khi bạn tạo Snap, RADOS đánh dấu các Object hiện tại là "Read-only".
+2. Khi có lệnh ghi mới vào khối đó, RADOS sẽ tạo một Object mới hoàn toàn để ghi dữ liệu mới.
+3. Metadata của RBD sẽ quản lý danh sách: "Nếu đọc tại thời điểm Snap1 thì lấy Object cũ, nếu đọc hiện tại thì lấy Object mới".
+
 ## Các lệnh RBD hữu ích
 
 ```bash
@@ -416,7 +480,7 @@ rbd mirror pool status rbd                 # Trạng thái
 rbd bench --io-type write --io-size 4K --io-threads 16 --io-total 1G rbd/myimage
 
 # Export/Import
-rbd export rbd/myimage /tmp/image.raw      # Export
+rbd export rbd/myimage /tmp/image.raw      # Export 
 rbd import /tmp/image.raw rbd/newimage     # Import
 ```
 
