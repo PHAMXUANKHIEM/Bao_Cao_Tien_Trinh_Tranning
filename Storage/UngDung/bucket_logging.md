@@ -1,4 +1,4 @@
-# Bucket Logging
+# Bucket Logging 
 
 ## Khái niệm
 
@@ -149,4 +149,183 @@ aws --endpoint-url http://192.168.1.88:8000 s3 cp s3://log.bucket.test/logs/khie
 
 ![](images_RADOS/anh91.png)
 
-10. Ta có thể triển khai cho bucket này bucket lifecycle để tự động xóa các file log 
+10. Thêm đoạn code python để dễ xem log
+
+```sh
+import re
+
+LOG_PATTERN = re.compile(
+    r'(?P<owner>\S+) '
+    r'(?P<bucket>\S+) '
+    r'\[(?P<time>.*?)\] '
+    r'(?P<ip>\S+) '
+    r'(?P<requester>\S+) '
+    r'(?P<req_id>\S+) '
+    r'(?P<operation>\S+) '
+    r'(?P<key>\S+) '
+    r'"(?P<request_uri>.*?)" '
+    r'(?P<status>\S+) '
+    r'(?P<error_code>\S+) '
+    r'(?P<bytes_sent>\S+) '
+    r'(?P<obj_size>\S+) '
+    r'(?P<total_time>\S+) '
+    r'(?P<turnaround_time>\S+) '
+    r'(?P<referer>\S+|".*?") '
+    r'"(?P<user_agent>.*?)"'
+)
+
+# ── Bảng dịch hành động ──────────────────────────────────────────────────────
+ACTION_MAP = {
+    "PUT":       "📤 Tải lên",
+    "GET":       "📥 Tải xuống",
+    "DELETE":    "🗑️  Xóa file",
+    "HEAD":      "🔍 Kiểm tra",
+    "LIST":      "📂 Liệt kê",
+    "COPY":      "📋 Sao chép",
+    "OPTIONS":   "🔒 Kiểm tra quyền",
+    "POST":      "✨ Tạo mới",
+    "COMPLETE":  "✅ Hoàn thành upload",
+    "ABORT":     "❌ Hủy upload",
+    "INIT":      "▶️  Bắt đầu upload",
+}
+
+# ── Bảng dịch mã HTTP ─────────────────────────────────────────────────────────
+STATUS_MAP = {
+    "200": "✅ Thành công",
+    "204": "✅ Thành công (không có nội dung)",
+    "206": "✅ Tải một phần",
+    "304": "ℹ️  Không thay đổi",
+    "400": "⚠️  Yêu cầu không hợp lệ",
+    "403": "🚫 Bị từ chối truy cập",
+    "404": "❓ Không tìm thấy file",
+    "405": "⚠️  Phương thức không được phép",
+    "409": "⚠️  Xung đột dữ liệu",
+    "500": "💥 Lỗi máy chủ",
+    "503": "💥 Dịch vụ không khả dụng",
+}
+
+
+def translate_action(operation):
+    """Lấy phần động từ chính từ chuỗi như REST.PUT.OBJECT → Tải lên"""
+    parts = operation.split(".")
+    for part in reversed(parts):
+        if part in ACTION_MAP:
+            return ACTION_MAP[part]
+    return f"⚙️  {operation}"
+
+
+def translate_status(status):
+    return STATUS_MAP.get(status, f"HTTP {status}")
+
+
+def format_size(value):
+    """Đổi bytes sang KB/MB cho dễ đọc"""
+    if value in ("-", "0"):
+        return None
+    try:
+        n = int(value)
+        if n == 0:
+            return None
+        if n < 1024:
+            return f"{n} B"
+        if n < 1024 ** 2:
+            return f"{n / 1024:.1f} KB"
+        return f"{n / 1024 ** 2:.1f} MB"
+    except ValueError:
+        return None
+
+
+def format_time_ms(value):
+    """Đổi milliseconds sang dạng dễ đọc"""
+    if value in ("-",):
+        return None
+    try:
+        n = int(value)
+        return f"{n} ms" if n < 1000 else f"{n / 1000:.1f} giây"
+    except ValueError:
+        return None
+
+
+def short_user(requester):
+    """Rút gọn ARN dài thành tên người dùng ngắn"""
+    if requester == "-":
+        return "Khách (ẩn danh)"
+    # arn:aws:iam::123456789:user/alice  →  alice
+    if "user/" in requester:
+        return requester.split("user/")[-1]
+    if "assumed-role/" in requester:
+        return requester.split("assumed-role/")[-1].split("/")[0]
+    return requester[:30]
+
+
+def parse_and_print(input_file):
+    print()
+    print("=" * 60)
+    print("  NHẬT KÝ HOẠT ĐỘNG LƯU TRỮ")
+    print("=" * 60)
+
+    success = error = skipped = 0
+
+    with open(input_file, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+
+            match = LOG_PATTERN.search(line)
+            if not match:
+                skipped += 1
+                continue
+
+            d = match.groupdict()
+
+            action   = translate_action(d["operation"])
+            status   = translate_status(d["status"])
+            user     = short_user(d["requester"])
+            filename = d["key"] if d["key"] != "-" else "(không có tên)"
+            size     = format_size(d["bytes_sent"])
+            duration = format_time_ms(d["turnaround_time"])
+
+            # Xác định thành công / lỗi để đếm thống kê
+            code = int(d["status"]) if d["status"].isdigit() else 0
+            if 200 <= code < 300:
+                success += 1
+            elif code >= 400:
+                error += 1
+
+            # ── In ra ────────────────────────────────────────────────────────
+            print()
+            print(f"  🕐 {d['time']}")
+            print(f"  {action}  →  {filename}")
+            print(f"     Người dùng : {user}")
+            print(f"     Địa chỉ IP : {d['ip']}")
+            print(f"     Kết quả    : {status}", end="")
+            if d["error_code"] != "-":
+                print(f"  (lỗi: {d['error_code']})", end="")
+            print()
+            if size:
+                print(f"     Dung lượng : {size}")
+            if duration:
+                print(f"     Thời gian  : {duration}")
+            print("  " + "─" * 48)
+
+    # ── Tóm tắt cuối ─────────────────────────────────────────────────────────
+    total = success + error
+    print()
+    print("=" * 60)
+    print("  TÓM TẮT")
+    print(f"  Tổng sự kiện   : {total + skipped}")
+    print(f"  Đọc được       : {total}")
+    print(f"  ✅ Thành công  : {success}")
+    print(f"  ❌ Có lỗi      : {error}")
+    if skipped:
+        print(f"  ⚠️  Bỏ qua      : {skipped} dòng không đúng định dạng")
+    print("=" * 60)
+    print()
+
+
+if __name__ == "__main__":
+    parse_and_print("check.txt")
+```
+
+11. Ta có thể triển khai cho bucket này bucket lifecycle để tự động xóa các file log 
