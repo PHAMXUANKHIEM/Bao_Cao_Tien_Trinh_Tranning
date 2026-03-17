@@ -481,7 +481,7 @@ rados -p images_ok listomapvals rbd_header.12df7ee23ef80c
 ceph osd map images_ok rbd_header.12df7ee23ef80c --format json | jq
 ```
 
-![](images_RADOS/anh99.png)
+![](images_RADOS/anh100.png)
 
 Giải thích: 
    - `epoch`: Số thứ tự phiên bản của OSDMap
