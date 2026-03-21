@@ -8,6 +8,8 @@
 
 - Phần mềm DRBD sẽ đảm nhận việc đồng bộ này. Khi được cài đặt trên hai hay nhiều máy chủ trong một nhóm cluster, drbd sẽ thực hiện liên tục đồng bộ các partition ổ cứng được chỉ định thông qua mạng. Nói cách khác khi một lệnh ghi ổ cứng trên máy chủ chính chỉ được tính là hoàn thành khi lệnh đó cũng được thực hiện xong trên các máy khác ở trong cluster
 
+- Cơ chế Quorum & TieBreaker: Nhấn mạnh tính năng chống phân liệt não (Split-Brain) của phân hệ DRBD 9. Bằng cách dùng số lượng node lẻ hoặc các node "trọng tài" (TieBreaker) không chứa đĩa, hệ thống đảm bảo tính toàn vẹn dữ liệu khi mạng nội bộ bị đứt.
+
 ## Linstor
 
 - Là giải pháp quản trị và điều phối lưu trữ
@@ -23,5 +25,11 @@
   - Linstor controller: Bộ não điều khiển trung tâm, chịu trách nghiệm sao lưu metadata của cụm, tính toán thuật toán cấp phát và phân phối lệnh
 
   - Linstor Satellite: Các agent được cài đặt trên từng máy chủ vật lý làm nhiệm vụ lắng nghe và trực tiếp thực thi các lệnh từ Controller xuống cấp độ hệ điều hành
+
+- Lớp Giao tiếp (API & Client): LINSTOR cung cấp REST API và CLI mạnh mẽ. Nhờ có API này, nó mới có thể giao tiếp được với các hệ thống cấp trên chứ không đứng cô lập.
+
+- Khả năng tích hợp (Ecosystem/Drivers): LINSTOR sinh ra là để làm backend lưu trữ cho các nền tảng điện toán đám mây và container hóa. Cần nhắc đến việc LINSTOR có sẵn các driver native (tích hợp sâu) cho OpenStack (Cinder), Kubernetes (CSI), Proxmox VE, hay OpenNebula.
+
+- Tính năng Diskless (Node không ổ cứng): LINSTOR cho phép cấu hình các node không cần bộ nhớ cục bộ (như máy chủ chạy dịch vụ ảo hóa/compute) vẫn có thể gắn và truy cập ổ đĩa DRBD qua mạng nhờ chế độ Diskless, biến cụm máy chủ thành cấu trúc Compute/Storage tách biệt.
 
 
