@@ -88,7 +88,7 @@ linstor storage-pool create lvmthin linstor1 storage_data linstor_vg/thin_pool
 linstor storage-pool create lvmthin linstor2 storage_data linstor_vg/thin_pool
 ```
 
-  - Tải driver của linstor cho Cinder
+  - Tải driver của linstor cho Cinder 
 ```sh
 cd /tmp
 git clone https://github.com/LINBIT/openstack-cinder.git
@@ -114,7 +114,7 @@ linstor_volume_type = lvmthin
 [Default]
 enabled_backends = linstor-drbd
 ```
-  - Cài đặt linstor, DRBD trên node openstack 
+  - Cài đặt linstor, DRBD trên node openstack sử dụng tính năng Diskless để join node openstack vào cụm linstor
 ```sh
 
 sudo apt install drbd-utils -y
