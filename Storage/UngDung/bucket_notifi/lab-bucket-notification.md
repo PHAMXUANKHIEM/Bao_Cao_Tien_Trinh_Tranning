@@ -85,6 +85,103 @@ aws --endpoint-url http://10.2.4.209:8000 sns create-topic --name ceph-kafka-top
 ```sh
 aws --endpoint-url http://10.2.4.209:8000 s3api put-bucket-notification-configuration --bucket khiem.mmt.test     --notification-configuration file://notification.json 
 ```
+## Tạo LB cho cụm Kafka
+
+- Trên các node cài kafka cài đặt keepalived
+
+```sh 
+apt install keepalived
+```
+
+- Tạo file và cấu hình `check_kafka.sh` trên cả 3 node kafka
+```sh
+#!/bin/bash
+# =============================================================
+# check_kafka.sh  –  Keepalived health check cho Kafka broker
+# Đặt tại: /etc/keepalived/check_kafka.sh trên cả 3 node
+# Cấp quyền: chmod +x /etc/keepalived/check_kafka.sh
+# =============================================================
+
+KAFKA_PORT=9092
+KAFKA_LOG="/var/log/keepalived_kafka_check.log"
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+
+# ── 1. Kiểm tra process Kafka có đang chạy không ────────────
+if ! pgrep -x "java" > /dev/null 2>&1; then
+    echo "[$TIMESTAMP] FAIL – Kafka process không tồn tại" >> "$KAFKA_LOG"
+    exit 1
+fi
+
+# ── 2. Kiểm tra port 9092 có đang lắng nghe không ───────────
+if ! ss -tlnp 2>/dev/null | grep -q ":${KAFKA_PORT}"; then
+    echo "[$TIMESTAMP] FAIL – Port $KAFKA_PORT không lắng nghe" >> "$KAFKA_LOG"
+    exit 1
+fi
+
+echo "[$TIMESTAMP] OK – Kafka đang hoạt động bình thường" >> "$KAFKA_LOG"
+exit 0
+```
+
+- Cấu hình file keepalived.conf
+```sh
+KAFKA_PORT=9092
+KAFKA_LOG="/var/log/keepalived_kafka_check.log"
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+
+# ── 1. Kiểm tra process Kafka có đang chạy không ────────────
+if ! pgrep -x "java" > /dev/null 2>&1; then
+    echo "[$TIMESTAMP] FAIL – Kafka process không tồn tại" >> "$KAFKA_LOG"
+    exit 1
+fi
+
+# ── 2. Kiểm tra port 9092 có đang lắng nghe không ───────────
+if ! ss -tlnp 2>/dev/null | grep -q ":${KAFKA_PORT}"; then
+    echo "[$TIMESTAMP] FAIL – Port $KAFKA_PORT không lắng nghe" >> "$KAFKA_LOG"
+    exit 1
+fi
+
+echo "[$TIMESTAMP] OK – Kafka đang hoạt động bình thường" >> "$KAFKA_LOG"
+exit 0
+```
+- Phân quyền cho file script và restart lại dịch vụ
+```sh
+chmod +x /etc/keepalived/check_kafka.sh
+systemctl restart keepalived
+```
+
+- Cấu hình trong file `server.properties` (cả 3 node kafka) để nó lắng nghe về bất kì ip nào có trong node 
+```sh
+listeners=PLAINTEXT://0.0.0.0:9092,CONTROLLER://192.168.1.193:9093
+```
+- Tạo systemd cho Kafka trên cả 3 node
+
+```sh
+vi /etc/systemd/system/kafka.service
+
+[Unit]
+Description=Apache Kafka Server
+Documentation=http://kafka.apache.org/documentation.html
+
+[Service]
+Type=simple
+User=root
+Group=root
+# Tăng giới hạn file mở cho Kafka (quan trọng)
+LimitNOFILE=65536
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+```
+- Reload dịch vu
+```sh
+systemctl daemon-reload
+systemctl enable kafka.service
+systemctl start kafka.service
+```
+
 ## Cấu hình để đẩy thông tin lên Telegram
 
 - Cấu hình Tele để nhận thông báo từ kafka
@@ -262,6 +359,8 @@ systemctl enable ceph-kafka-tele
 systemctl start ceph-kafka-tele
 ```
 ## Thử nghiệm
+
+### Thử nghiệm upload file
 1. Upload file thường 
 ```sh
 aws --endpoint http://10.2.6.128:8000 s3 cp test1.txt s3://khiem.mmt204.test/test 
@@ -354,7 +453,20 @@ aws --endpoint http://10.2.6.128:8000 s3 cp test1.txt s3://khiem.mmt.test/test
 
 - Telegram sẽ nhận 2 thông báo: 1 là put, 2 là sync
 
-![](images_lab_bucket/anh19.png)
+![](images_lab_bucket/anh20.png)
 
+### Thử nghiệm khả năng chịu lỗi 
 
+- Kịch bản: Cluster Kafka có 3 node. Các trường hợp:
 
+  - 1 node down: cụm vẫn hoạt động bình thường do có 2/3 node còn sống 
+
+![](images_lab_bucket/anh21.png)
+
+![](images_lab_bucket/anh23.png)
+
+  - 2 nodes down: Do cluster Kafka các phiên bản từ 3.3.1 đã chuyển từ ZooKeeper sang KRaft nên cụm sẽ chỉ hoạt động khi có số đông các node sống sót. Vì thế nếu 2/3 node trong cụm chết ---> cụm sập và sẽ không nhận được tin 
+
+![](images_lab_bucket/anh22.png)
+
+  
